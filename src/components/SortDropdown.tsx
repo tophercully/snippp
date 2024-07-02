@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Snippet } from "../typeInterfaces";
 
 type SortOrder = "asc" | "desc";
 
 interface SortDropdownProps {
-  sortMethod: string;
-  setSortMethod: (method: string) => void;
+  sortMethod: keyof Snippet;
+  setSortMethod: (method: keyof Snippet) => void;
   sortOrder: SortOrder;
   setSortOrder: (order: SortOrder) => void;
 }
@@ -20,10 +21,6 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortMethod(e.target.value);
   };
 
   const handleOrderChange = (order: SortOrder) => {
@@ -62,32 +59,50 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         className="aspect-square h-full cursor-pointer p-3"
       />
       {isOpen && (
-        <div className="absolute right-1/2 top-full z-50 flex flex-col items-center gap-8 bg-base-50 p-10 shadow-lg">
-          <div>
-            <label htmlFor="sortOptions">Sort By: </label>
-            <select
-              id="sortOptions"
-              value={sortMethod}
-              onChange={handleOptionChange}
-            >
-              <option value="name">Relevance</option>
-              <option value="snippetID">Date</option>
-              <option value="favoriteCount">Popularity</option>
-            </select>
+        <div className="absolute right-1/2 top-full z-50 flex w-44 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500">
+          <div className="flex w-full flex-col gap-2">
+            <h1>SORT BY </h1>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 dark:bg-base-950 ${sortMethod == "name" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-800"}`}
+                onClick={() => setSortMethod("name")}
+              >
+                <img
+                  src="az.svg"
+                  className={`invert`}
+                />
+              </button>
+              <button
+                className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 dark:bg-base-950 ${sortMethod == "snippetID" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-800"}`}
+                onClick={() => setSortMethod("snippetID")}
+              >
+                <img
+                  src="clock.svg"
+                  className={`invert`}
+                />
+              </button>
+              <button
+                className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 dark:bg-base-950 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-800"}`}
+                onClick={() => setSortMethod("favoriteCount")}
+              >
+                <img src="heart-full.svg" />
+              </button>
+            </div>
           </div>
-          <div className="flex justify-between">
+          <div className="h-1 w-full border-b border-base-200"></div>
+          <div className="grid w-full grid-cols-2 items-center justify-center gap-2">
             <button
-              className="w-full"
+              className={`flex w-full items-center justify-center bg-base-50 dark:bg-base-950 ${sortOrder == "asc" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-800"}`}
               onClick={() => handleOrderChange("asc")}
               disabled={sortOrder === "asc"}
             >
               <img
                 src="up.svg"
-                className={`h80 p-3 invert dark:invert-0 ${sortOrder == "asc" ? "bg-base-800" : ""}`}
+                className={`h80 p-3 invert dark:invert-0`}
               />
             </button>
             <button
-              className="w-full"
+              className={`flex w-full items-center justify-center bg-base-50 dark:bg-base-950 ${sortOrder == "desc" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-800"}`}
               onClick={() => handleOrderChange("desc")}
               disabled={sortOrder === "desc"}
             >

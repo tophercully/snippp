@@ -1,3 +1,4 @@
+import { Snippet } from "../typeInterfaces";
 import SortDropdown from "./SortDropdown";
 
 type SortOrder = "asc" | "desc";
@@ -5,8 +6,8 @@ interface SearchBarProps {
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   placeHolder?: string;
-  sortMethod: string;
-  setSortMethod: (method: string) => void;
+  sortMethod: keyof Snippet;
+  setSortMethod: (method: keyof Snippet) => void;
   sortOrder: SortOrder;
   setSortOrder: (method: SortOrder) => void;
 }

@@ -1,5 +1,5 @@
+import React, { useState, useEffect, useCallback } from "react";
 import { SearchBar } from "../components/SearchBar";
-import { useState, useEffect } from "react";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
 import { SelectionsList } from "../components/SelectionsList";
@@ -8,6 +8,7 @@ import { Display } from "../components/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loadFavorites";
 import { loadUserSnippets } from "../backend/loadUserSnippets";
+
 type SortOrder = "asc" | "desc";
 
 function sortByProperty<T>(
@@ -26,77 +27,69 @@ function sortByProperty<T>(
   });
 }
 
-export const MySnippets = () => {
+export const MySnippets: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
+  const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
+    Snippet[]
+  >([]);
   const [page, setPage] = useState<string>("mysnippets");
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
-  const [sortMethod, setSortMethod] = useState<string>("relevance");
+  const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
-  useEffect(() => {
-    const fetchSnippets = async () => {
-      if (userProfile && userProfile.id) {
-        const snippetsArray = await loadUserSnippets({
-          userID: userProfile.id,
-        });
-        if (
-          snippetsArray.length !== snippets.length ||
-          !snippetsArray.every(
-            (val, index) => val.snippetID === snippets[index]?.snippetID,
-          )
-        ) {
-          setSnippets(snippetsArray as Snippet[]);
-          setSelection(snippetsArray[0] as Snippet);
-        }
-      }
-    };
+  // Fetch snippets data
+  const fetchSnippets = useCallback(async () => {
+    if (userProfile && userProfile.id) {
+      const snippetsArray =
+        page === "mysnippets" ?
+          await loadUserSnippets({ userID: userProfile.id })
+        : await loadFavorites({ userID: userProfile.id });
 
-    const fetchFavorites = async () => {
-      if (userProfile && userProfile.id) {
-        const favoritesArray = await loadFavorites({
-          userID: userProfile.id,
-        });
-        if (
-          favoritesArray.length !== snippets.length ||
-          !favoritesArray.every(
-            (val, index) => val.snippetID === snippets[index]?.snippetID,
-          )
-        ) {
-          setSnippets(favoritesArray as Snippet[]);
-          setSelection(favoritesArray[0] as Snippet);
-        }
-      }
-    };
-
-    if (userProfile) {
-      if (page === "mysnippets") {
-        fetchSnippets();
-      } else {
-        fetchFavorites();
+      if (
+        snippetsArray.length !== snippets.length ||
+        !snippetsArray.every(
+          (val, index) => val.snippetID === snippets[index]?.snippetID,
+        )
+      ) {
+        setSnippets(snippetsArray as Snippet[]);
       }
     }
   }, [page, userProfile, snippets]);
 
-  let filteredSnippets = snippets;
-  if (query) {
-    filteredSnippets = snippets.filter(
-      (a) =>
-        a.tags.includes(query) ||
-        a.name.includes(query) ||
-        a.author.includes(query),
-    );
-  }
+  useEffect(() => {
+    fetchSnippets();
+  }, [fetchSnippets]);
 
-  // Sort
-  const filteredAndSortedSnippets = sortByProperty(
-    filteredSnippets,
-    sortMethod as keyof Snippet,
-    sortOrder,
-  );
+  useEffect(() => {
+    const filterAndSortSnippets = () => {
+      let filteredSnippets = snippets;
 
-  console.log(snippets.length);
+      // Filter
+      if (query) {
+        filteredSnippets = snippets.filter(
+          (a) =>
+            a.tags.includes(query) ||
+            a.name.includes(query) ||
+            a.author.includes(query),
+        );
+      }
+
+      // Sort
+      const sortedSnippets = sortByProperty(
+        filteredSnippets,
+        sortMethod,
+        sortOrder,
+      );
+
+      setFilteredAndSortedSnippets(sortedSnippets);
+      setSelection(sortedSnippets[0] || null);
+    };
+
+    filterAndSortSnippets();
+  }, [snippets, query, sortMethod, sortOrder]);
+
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
       <Navbar />
@@ -106,13 +99,13 @@ export const MySnippets = () => {
             <div className="flex w-full">
               <button
                 onClick={() => setPage("mysnippets")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page == "mysnippets" ? "flex-[1.5] invert" : "flex-1"}`}
+                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "mysnippets" ? "flex-[1.5] invert" : "flex-1"}`}
               >
                 MY SNIPPPETS
               </button>
               <button
                 onClick={() => setPage("myfavorites")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page == "myfavorites" ? "flex-[1.5] invert" : "flex-1"}`}
+                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "myfavorites" ? "flex-[1.5] invert" : "flex-1"}`}
               >
                 FAVORITES
               </button>
@@ -121,7 +114,7 @@ export const MySnippets = () => {
               query={query}
               setQuery={setQuery}
               placeHolder={
-                page == "mysnippets" ? "search creations" : "search favorites"
+                page === "mysnippets" ? "search creations" : "search favorites"
               }
               setSortMethod={setSortMethod}
               sortMethod={sortMethod}
@@ -142,13 +135,13 @@ export const MySnippets = () => {
             <div className="flex w-full">
               <button
                 onClick={() => setPage("mysnippets")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page == "mysnippets" ? "flex-[1.5] invert" : "flex-1"}`}
+                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "mysnippets" ? "flex-[1.5] invert" : "flex-1"}`}
               >
                 MY SNIPPPETS
               </button>
               <button
                 onClick={() => setPage("myfavorites")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page == "myfavorites" ? "flex-[1.5] invert" : "flex-1"}`}
+                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "myfavorites" ? "flex-[1.5] invert" : "flex-1"}`}
               >
                 FAVORITES
               </button>
@@ -157,10 +150,10 @@ export const MySnippets = () => {
               NO SNIPPPETS TO DISPLAY
             </h1>
             <a
-              href={page == "mysnippets" ? "/builder" : "/browse"}
+              href={page === "mysnippets" ? "/builder" : "/browse"}
               className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 dark:bg-base-50 dark:text-base-950"
             >
-              {page == "mysnippets" ? "CREATE SNIPPPET" : "DISCOVER SNIPPPETS"}
+              {page === "mysnippets" ? "CREATE SNIPPPET" : "DISCOVER SNIPPPETS"}
             </a>
           </div>
         )}

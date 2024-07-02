@@ -1,6 +1,6 @@
+import React, { useState, useEffect, useCallback } from "react";
 import { loadAllSnippets } from "../backend/loadAllSnippets";
 import { SearchBar } from "../components/SearchBar";
-import { useState, useEffect } from "react";
 import { Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
 import { SelectionsList } from "../components/SelectionsList";
@@ -25,12 +25,16 @@ function sortByProperty<T>(
   });
 }
 
-export const Browser = () => {
+export const Browser: React.FC = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  const [selection, setSelection] = useState<Snippet | null>(snippets[0]);
+  const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
-  const [sortMethod, setSortMethod] = useState<string>("relevance");
+  const [sortMethod, setSortMethod] = useState<keyof Snippet>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
+    Snippet[]
+  >([]);
+
   useEffect(() => {
     const fetchSnippets = async () => {
       const snippetsArray = await loadAllSnippets();
@@ -41,30 +45,33 @@ export const Browser = () => {
     fetchSnippets();
   }, []);
 
-  let filteredSnippets = snippets;
-  // Filter
-  if (query) {
-    filteredSnippets = [];
-    snippets.map((a) => {
-      if (
-        a.tags.includes(query) ||
-        a.name.includes(query) ||
-        a.author.includes(query)
-      ) {
-        filteredSnippets.push(a);
-      }
-    });
-  }
-  // Sort
-  let sortKey = "snippetID";
-  if (sortMethod == "relevance") {
-    sortKey = "popularity";
-  }
-  const filteredAndSortedSnippets = sortByProperty(
-    filteredSnippets,
-    sortKey as keyof Snippet,
-    sortOrder,
-  );
+  const filterAndSortSnippets = useCallback(() => {
+    let filteredSnippets = snippets;
+
+    // Filter
+    if (query) {
+      filteredSnippets = snippets.filter(
+        (a) =>
+          a.tags.includes(query) ||
+          a.name.includes(query) ||
+          a.author.includes(query),
+      );
+    }
+
+    // Sort
+    const sortedSnippets = sortByProperty(
+      filteredSnippets,
+      sortMethod,
+      sortOrder,
+    );
+
+    setFilteredAndSortedSnippets(sortedSnippets);
+    setSelection(sortedSnippets[0] || null);
+  }, [snippets, query, sortMethod, sortOrder]);
+
+  useEffect(() => {
+    filterAndSortSnippets();
+  }, [snippets, query, sortMethod, sortOrder, filterAndSortSnippets]);
 
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
