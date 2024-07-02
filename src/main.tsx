@@ -7,6 +7,7 @@ import { Browser } from "./pages/Browser.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Builder } from "./pages/Builder.tsx";
 import { MySnippets } from "./pages/MySnippets.tsx";
+import { Analytics } from "@vercel/analytics/react";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId="673717995116-smr2d3etjmkfqt4p0ns5puq7forh2lc8.apps.googleusercontent.com">
     <React.StrictMode>
       <RouterProvider router={router} />
+      <Analytics />
     </React.StrictMode>
   </GoogleOAuthProvider>,
 );
