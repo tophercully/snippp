@@ -35,11 +35,11 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
           <h1 className="text-2xl">{name}</h1>
           <h1 className="text-sm">{author}</h1>
         </div>
-        <div className="flex w-1/5 flex-col items-center justify-center">
+        <div className="flex w-1/5 flex-col items-end justify-center">
           <div className="flex items-center justify-end gap-1">
             <img
               src="heart-empty.svg"
-              className="h-5"
+              className="ml-auto h-5"
               alt="Favorites"
             />
             <p>{favoriteCount}</p>

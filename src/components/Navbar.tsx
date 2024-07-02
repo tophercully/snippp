@@ -6,6 +6,11 @@ import axios from "axios";
 import { newUser } from "../backend/newUser";
 
 export const Navbar = () => {
+  const [isUserCreated, setIsUserCreated] = useLocalStorage<boolean>(
+    "isUserCreated",
+    false,
+  );
+
   const [userToken, setUserToken] = useLocalStorage<string | null>(
     "user",
     null,
@@ -14,7 +19,6 @@ export const Navbar = () => {
     "userProfile",
     null,
   );
-  const [loggedIn, setLoggedIn] = useLocalStorage<boolean>("loggedIn", false);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const toggleDropdown = () => {
@@ -34,6 +38,7 @@ export const Navbar = () => {
       setUserToken(null);
       setUserProfile(null);
       setIsDropdownOpen(false);
+      setIsUserCreated(false);
     } else {
       //sign in
       login();
@@ -65,13 +70,18 @@ export const Navbar = () => {
   }, [userToken, userProfile, setUserProfile]);
 
   useEffect(() => {
-    if (userProfile) {
+    if (userProfile && !isUserCreated) {
       console.log("user check");
-      newUser(userProfile);
-      setLoggedIn(true);
+      newUser(userProfile)
+        .then(() => {
+          setIsUserCreated(true);
+        })
+        .catch((error) => {
+          console.error("Error creating user:", error);
+        });
       setUserToken(null);
     }
-  }, [userProfile, loggedIn, setLoggedIn, setUserToken]);
+  }, [userProfile, isUserCreated, setUserToken, setIsUserCreated]);
 
   return (
     <div className="absolute left-0 right-0 top-0 w-full p-2 md:px-10">

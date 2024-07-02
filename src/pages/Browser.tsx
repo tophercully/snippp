@@ -21,8 +21,6 @@ export const Browser = () => {
     fetchSnippets();
   }, []);
 
-  console.log(selection);
-
   let filteredSnippets = snippets;
   if (query) {
     filteredSnippets = [];
