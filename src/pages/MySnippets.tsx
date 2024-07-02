@@ -94,6 +94,9 @@ export const MySnippets = () => {
             <SearchBar
               query={query}
               setQuery={setQuery}
+              placeHolder={
+                page == "mysnippets" ? "search creations" : "search favorites"
+              }
             />
             <div className="h-full w-full overflow-hidden">
               <SelectionsList

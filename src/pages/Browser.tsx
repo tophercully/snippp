@@ -43,6 +43,7 @@ export const Browser = () => {
           <SearchBar
             query={query}
             setQuery={setQuery}
+            placeHolder={"search all"}
           />
           <div className="h-full w-full overflow-hidden">
             <SelectionsList

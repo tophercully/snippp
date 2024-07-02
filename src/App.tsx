@@ -1,3 +1,4 @@
+import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 
 const Home = () => {
@@ -22,6 +23,9 @@ const Home = () => {
       >
         BUILD
       </a>
+      <div className="absolute bottom-0 w-full p-2">
+        <Footer />
+      </div>
     </div>
   );
 };
