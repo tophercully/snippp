@@ -3,8 +3,14 @@ import { createPool } from "@vercel/postgres";
 const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
 });
-
-export const addFavorite = async (userID, snippetIDToAdd) => {
+interface Params {
+  userID: string;
+  snippetIDToAdd: number;
+}
+export const addSnippetToFavorites = async ({
+  userID,
+  snippetIDToAdd,
+}: Params) => {
   try {
     // Check if the exact pair exists
     const { rows } = await pool.sql`

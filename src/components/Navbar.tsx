@@ -30,7 +30,6 @@ export const Navbar = () => {
     onError: (error) => console.log("Login Failed:", error),
   });
 
-  console.log(userProfile);
   const handleSignIn = () => {
     if (userToken || userProfile) {
       //sign out

@@ -4,7 +4,15 @@ const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
 });
 
-export const deleteFavorite = async (userID, snippetIDToRemove) => {
+interface Params {
+  userID: string;
+  snippetIDToRemove: number;
+}
+
+export const removeSnippetFromFavorites = async ({
+  userID,
+  snippetIDToRemove,
+}: Params) => {
   try {
     // Check if the exact pair exists
     const { rows } = await pool.sql`

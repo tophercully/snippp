@@ -27,6 +27,7 @@ function sortByProperty<T>(
 
 export const Browser: React.FC = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
+  const [favoriteMods, setFavoriteMods] = useState<number[]>([]);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("name");
@@ -35,15 +36,24 @@ export const Browser: React.FC = () => {
     Snippet[]
   >([]);
 
-  useEffect(() => {
-    const fetchSnippets = async () => {
-      const snippetsArray = await loadAllSnippets();
-      setSnippets(snippetsArray);
-      setSelection(snippetsArray[0] || null); // Set the initial selection
-    };
-
-    fetchSnippets();
+  const fetchSnippets = useCallback(async () => {
+    const snippetsArray = await loadAllSnippets();
+    setSnippets(snippetsArray);
+    setFavoriteMods(new Array(snippetsArray.length).fill(0)); // Initialize favoriteMods
+    setSelection(snippetsArray[0] || null); // Set the initial selection
   }, []);
+
+  useEffect(() => {
+    fetchSnippets();
+  }, [fetchSnippets]);
+
+  const updateFavorites = (index: number, increment: boolean) => {
+    setFavoriteMods((prevMods) => {
+      const newMods = [...prevMods];
+      newMods[index] += increment ? 1 : -1;
+      return newMods;
+    });
+  };
 
   const filterAndSortSnippets = useCallback(() => {
     let filteredSnippets = snippets;
@@ -90,6 +100,7 @@ export const Browser: React.FC = () => {
           <div className="h-full w-full overflow-hidden">
             <SelectionsList
               snippets={filteredAndSortedSnippets}
+              favoriteMods={favoriteMods}
               selection={selection}
               setSelection={setSelection}
             />
@@ -97,7 +108,10 @@ export const Browser: React.FC = () => {
         </div>
         {selection && (
           <div className="h-full w-2/3 overflow-y-auto">
-            <Display selection={selection} />
+            <Display
+              selection={selection}
+              updateFavorites={updateFavorites}
+            />
           </div>
         )}
       </div>

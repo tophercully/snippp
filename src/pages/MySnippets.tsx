@@ -16,20 +16,33 @@ function sortByProperty<T>(
   property: keyof T,
   order: SortOrder = "asc",
 ): T[] {
-  return array.slice().sort((a, b) => {
-    if (a[property] < b[property]) {
-      return order === "asc" ? -1 : 1;
-    } else if (a[property] > b[property]) {
-      return order === "asc" ? 1 : -1;
-    } else {
-      return 0;
-    }
-  });
+  if (property == "name") {
+    return array.slice().sort((a, b) => {
+      if (a[property] < b[property]) {
+        return order === "desc" ? -1 : 1;
+      } else if (a[property] > b[property]) {
+        return order === "desc" ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+  } else {
+    return array.slice().sort((a, b) => {
+      if (a[property] < b[property]) {
+        return order === "asc" ? -1 : 1;
+      } else if (a[property] > b[property]) {
+        return order === "asc" ? 1 : -1;
+      } else {
+        return 0;
+      }
+    });
+  }
 }
 
 export const MySnippets: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
+  const [favoriteMods, setFavoriteMods] = useState<number[]>([]);
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
@@ -38,6 +51,14 @@ export const MySnippets: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+
+  const updateFavorites = (index: number, increment: boolean) => {
+    setFavoriteMods((prevMods) => {
+      const newMods = [...prevMods];
+      newMods[index] += increment ? 1 : -1;
+      return newMods;
+    });
+  };
 
   // Fetch snippets data
   const fetchSnippets = useCallback(async () => {
@@ -124,6 +145,7 @@ export const MySnippets: React.FC = () => {
             <div className="h-full w-full overflow-hidden">
               <SelectionsList
                 snippets={filteredAndSortedSnippets}
+                favoriteMods={favoriteMods}
                 selection={selection}
                 setSelection={setSelection}
               />
@@ -159,7 +181,10 @@ export const MySnippets: React.FC = () => {
         )}
         {selection && (
           <div className="h-full w-2/3 overflow-y-auto">
-            <Display selection={selection} />
+            <Display
+              selection={selection}
+              updateFavorites={updateFavorites}
+            />
           </div>
         )}
       </div>

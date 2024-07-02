@@ -4,12 +4,14 @@ interface DisplaySelectionsProps {
   selection: Snippet | null;
   setSelection: React.Dispatch<React.SetStateAction<Snippet | null>>;
   snippets: Snippet[] | null;
+  favoriteMods: number[]; // New prop
 }
 
 export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
   selection,
   setSelection,
   snippets,
+  favoriteMods,
 }) => {
   const handleClick = (input: Snippet) => {
     if (input !== selection) {
@@ -17,8 +19,10 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
     }
   };
 
-  const Item = ({ item }: { item: Snippet }) => {
+  const Item = ({ item, index }: { item: Snippet; index: number }) => {
     const { snippetID, name, author, favoriteCount } = item;
+    const modifiedFavoriteCount =
+      Number(favoriteCount) + (Number(favoriteMods[index]) || 0);
 
     const selectedClass =
       selection === item ?
@@ -42,7 +46,7 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
               className="ml-auto h-5"
               alt="Favorites"
             />
-            <p>{favoriteCount}</p>
+            <p>{modifiedFavoriteCount}</p>
           </div>
         </div>
       </div>
@@ -52,9 +56,10 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
   return (
     <div className="h-full w-full overflow-y-auto">
       {snippets &&
-        snippets.map((a) => (
+        snippets.map((a, index) => (
           <Item
             item={a}
+            index={index}
             key={a.snippetID}
           />
         ))}

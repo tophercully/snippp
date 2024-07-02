@@ -5,10 +5,39 @@ import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascr
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
 import { useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { removeSnippetFromFavorites } from "../backend/deleteFavorite";
+import { addSnippetToFavorites } from "../backend/addFavorite";
 SyntaxHighlighter.registerLanguage("javascript", javascript);
 SyntaxHighlighter.registerLanguage("python", python);
 
-export const Display = ({ selection }: { selection: Snippet }) => {
+const addFavorite = async (
+  userID: string,
+  snippetID: number,
+  updateFavorites: (id: number, isFavorite: boolean) => void,
+) => {
+  await addSnippetToFavorites({ userID: userID, snippetIDToAdd: snippetID });
+  updateFavorites(snippetID, true); // Update local state
+};
+
+const removeFavorite = async (
+  userID: string,
+  snippetID: number,
+  updateFavorites: (id: number, isFavorite: boolean) => void,
+) => {
+  await removeSnippetFromFavorites({
+    userID: userID,
+    snippetIDToRemove: snippetID,
+  });
+  updateFavorites(snippetID, false); // Update local state
+};
+
+export const Display = ({
+  selection,
+  updateFavorites,
+}: {
+  selection: Snippet;
+  updateFavorites: (id: number, isFavorite: boolean) => void;
+}) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const { name, author, code, authorID } = selection;
   let darkMode = false;
@@ -16,7 +45,6 @@ export const Display = ({ selection }: { selection: Snippet }) => {
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   ) {
-    // dark mode
     darkMode = true;
   }
   const [selectedStyle, setSelectedStyle] = useState(
@@ -47,30 +75,57 @@ export const Display = ({ selection }: { selection: Snippet }) => {
             {code}
           </SyntaxHighlighter>
         </div>
-        <div
-          id="controls"
-          className="flex items-center justify-start gap-5"
-        >
-          <button className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800">
-            <img
-              src="heart-full.svg"
-              className="h-5 dark:invert"
-            />
-            ADD FAVORITE
-          </button>
-          {userProfile && userProfile.id == authorID && (
-            <a
-              href={`/builder?snippetid=${selection.snippetID}`}
+        {userProfile && selection && (
+          <div
+            id="controls"
+            className="flex items-center justify-start gap-5"
+          >
+            <button
               className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+              onClick={() =>
+                addFavorite(
+                  userProfile.id,
+                  selection.snippetID as number,
+                  updateFavorites,
+                )
+              }
             >
               <img
-                src="edit.svg"
+                src="heart-full.svg"
                 className="h-5 dark:invert"
               />
-              EDIT SNIPPET
-            </a>
-          )}
-        </div>
+              ADD FAVORITE
+            </button>
+            <button
+              className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+              onClick={() =>
+                removeFavorite(
+                  userProfile.id,
+                  selection.snippetID as number,
+                  updateFavorites,
+                )
+              }
+            >
+              <img
+                src="heart-empty.svg"
+                className="h-5 dark:invert"
+              />
+              REMOVE FAVORITE
+            </button>
+            {userProfile && userProfile.id === authorID && (
+              <a
+                href={`/builder?snippetid=${selection.snippetID}`}
+                className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+              >
+                <img
+                  src="edit.svg"
+                  className="h-5 dark:invert"
+                />
+                EDIT SNIPPET
+              </a>
+            )}
+          </div>
+        )}
       </div>
     );
   } else {
