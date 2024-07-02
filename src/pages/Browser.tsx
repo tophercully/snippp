@@ -7,10 +7,30 @@ import { SelectionsList } from "../components/SelectionsList";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 
+type SortOrder = "asc" | "desc";
+
+function sortByProperty<T>(
+  array: T[],
+  property: keyof T,
+  order: SortOrder = "asc",
+): T[] {
+  return array.slice().sort((a, b) => {
+    if (a[property] < b[property]) {
+      return order === "asc" ? -1 : 1;
+    } else if (a[property] > b[property]) {
+      return order === "asc" ? 1 : -1;
+    } else {
+      return 0;
+    }
+  });
+}
+
 export const Browser = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [selection, setSelection] = useState<Snippet | null>(snippets[0]);
   const [query, setQuery] = useState<string>("");
+  const [sortMethod, setSortMethod] = useState<string>("relevance");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   useEffect(() => {
     const fetchSnippets = async () => {
       const snippetsArray = await loadAllSnippets();
@@ -22,6 +42,7 @@ export const Browser = () => {
   }, []);
 
   let filteredSnippets = snippets;
+  // Filter
   if (query) {
     filteredSnippets = [];
     snippets.map((a) => {
@@ -34,6 +55,16 @@ export const Browser = () => {
       }
     });
   }
+  // Sort
+  let sortKey = "snippetID";
+  if (sortMethod == "relevance") {
+    sortKey = "popularity";
+  }
+  const filteredAndSortedSnippets = sortByProperty(
+    filteredSnippets,
+    sortKey as keyof Snippet,
+    sortOrder,
+  );
 
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
@@ -44,10 +75,14 @@ export const Browser = () => {
             query={query}
             setQuery={setQuery}
             placeHolder={"search all"}
+            setSortMethod={setSortMethod}
+            sortMethod={sortMethod}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
           />
           <div className="h-full w-full overflow-hidden">
             <SelectionsList
-              snippets={filteredSnippets}
+              snippets={filteredAndSortedSnippets}
               selection={selection}
               setSelection={setSelection}
             />

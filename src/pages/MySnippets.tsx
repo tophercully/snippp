@@ -8,6 +8,23 @@ import { Display } from "../components/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loadFavorites";
 import { loadUserSnippets } from "../backend/loadUserSnippets";
+type SortOrder = "asc" | "desc";
+
+function sortByProperty<T>(
+  array: T[],
+  property: keyof T,
+  order: SortOrder = "asc",
+): T[] {
+  return array.slice().sort((a, b) => {
+    if (a[property] < b[property]) {
+      return order === "asc" ? -1 : 1;
+    } else if (a[property] > b[property]) {
+      return order === "asc" ? 1 : -1;
+    } else {
+      return 0;
+    }
+  });
+}
 
 export const MySnippets = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
@@ -15,6 +32,8 @@ export const MySnippets = () => {
   const [page, setPage] = useState<string>("mysnippets");
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
+  const [sortMethod, setSortMethod] = useState<string>("relevance");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
   useEffect(() => {
     const fetchSnippets = async () => {
@@ -70,6 +89,13 @@ export const MySnippets = () => {
     );
   }
 
+  // Sort
+  const filteredAndSortedSnippets = sortByProperty(
+    filteredSnippets,
+    sortMethod as keyof Snippet,
+    sortOrder,
+  );
+
   console.log(snippets.length);
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
@@ -97,10 +123,14 @@ export const MySnippets = () => {
               placeHolder={
                 page == "mysnippets" ? "search creations" : "search favorites"
               }
+              setSortMethod={setSortMethod}
+              sortMethod={sortMethod}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
             />
             <div className="h-full w-full overflow-hidden">
               <SelectionsList
-                snippets={filteredSnippets}
+                snippets={filteredAndSortedSnippets}
                 selection={selection}
                 setSelection={setSelection}
               />

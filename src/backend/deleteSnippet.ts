@@ -5,7 +5,10 @@ const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
 });
 
-export const deleteSnippet = async (snippetIDToDelete) => {
+interface Params {
+  snippetIDToDelete: number;
+}
+export const deleteSnippet = async ({ snippetIDToDelete }: Params) => {
   const deleteRow = async () => {
     await pool.sql`
             DELETE FROM Snippets

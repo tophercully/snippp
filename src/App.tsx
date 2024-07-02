@@ -7,7 +7,7 @@ const Home = () => {
       <Navbar />
       <div
         id="hero"
-        className="border-base-150 box-content flex flex-col items-center justify-center border-2 border-dashed p-10 duration-200 hover:border-8 hover:p-9 dark:border-base-800 dark:text-base-50"
+        className="border-base-150 m-0 box-content flex flex-col items-center justify-center border-2 border-dashed p-10 duration-200 hover:m-0 hover:border-8 dark:border-base-800 dark:text-base-50"
       >
         <h1 className="text-7xl md:text-9xl">SNIPPP</h1>
       </div>
