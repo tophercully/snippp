@@ -1,10 +1,11 @@
+import React from "react";
 import { Snippet } from "../typeInterfaces";
 
 interface DisplaySelectionsProps {
   selection: Snippet | null;
   setSelection: React.Dispatch<React.SetStateAction<Snippet | null>>;
-  snippets: Snippet[] | null;
-  favoriteMods: number[]; // New prop
+  snippets: Snippet[];
+  favoriteMods: number[];
 }
 
 export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
@@ -21,8 +22,12 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
 
   const Item = ({ item, index }: { item: Snippet; index: number }) => {
     const { snippetID, name, author, favoriteCount } = item;
+    const originalIndex =
+      favoriteMods.length > snippets.length ?
+        snippets.findIndex((s) => s.snippetID === snippetID)
+      : index;
     const modifiedFavoriteCount =
-      Number(favoriteCount) + (Number(favoriteMods[index]) || 0);
+      Number(favoriteCount) + (Number(favoriteMods[originalIndex]) || 0);
 
     const selectedClass =
       selection === item ?
@@ -42,7 +47,11 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
         <div className="flex w-1/5 flex-col items-end justify-center">
           <div className="flex items-center justify-end gap-1">
             <img
-              src="heart-empty.svg"
+              src={
+                favoriteMods[originalIndex] > 0 ?
+                  "heart-full.svg"
+                : "heart-empty.svg"
+              }
               className="ml-auto h-5"
               alt="Favorites"
             />

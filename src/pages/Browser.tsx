@@ -8,6 +8,7 @@ import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 
 type SortOrder = "asc" | "desc";
+type SortableSnippetKeys = keyof Snippet; // This allows all keys of Snippet to be sortable
 
 function sortByProperty<T>(
   array: T[],
@@ -30,7 +31,7 @@ export const Browser: React.FC = () => {
   const [favoriteMods, setFavoriteMods] = useState<number[]>([]);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
-  const [sortMethod, setSortMethod] = useState<keyof Snippet>("name");
+  const [sortMethod, setSortMethod] = useState<SortableSnippetKeys>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
@@ -39,26 +40,31 @@ export const Browser: React.FC = () => {
   const fetchSnippets = useCallback(async () => {
     const snippetsArray = await loadAllSnippets();
     setSnippets(snippetsArray);
-    setFavoriteMods(new Array(snippetsArray.length).fill(0)); // Initialize favoriteMods
-    setSelection(snippetsArray[0] || null); // Set the initial selection
+    setFavoriteMods(new Array(snippetsArray.length).fill(0));
+    setSelection(snippetsArray[0] || null);
   }, []);
 
   useEffect(() => {
     fetchSnippets();
   }, [fetchSnippets]);
 
-  const updateFavorites = (index: number, increment: boolean) => {
-    setFavoriteMods((prevMods) => {
-      const newMods = [...prevMods];
-      newMods[index] += increment ? 1 : -1;
-      return newMods;
-    });
-  };
+  const updateFavorites = useCallback(
+    (id: number, isFavorite: boolean) => {
+      setFavoriteMods((prevMods) => {
+        const newMods = [...prevMods];
+        const index = snippets.findIndex((s) => s.snippetID === id);
+        if (index !== -1) {
+          newMods[index] += isFavorite ? 1 : -1;
+        }
+        return newMods;
+      });
+    },
+    [snippets],
+  );
 
   const filterAndSortSnippets = useCallback(() => {
     let filteredSnippets = snippets;
 
-    // Filter
     if (query) {
       filteredSnippets = snippets.filter(
         (a) =>
@@ -68,7 +74,6 @@ export const Browser: React.FC = () => {
       );
     }
 
-    // Sort
     const sortedSnippets = sortByProperty(
       filteredSnippets,
       sortMethod,
@@ -82,6 +87,15 @@ export const Browser: React.FC = () => {
   useEffect(() => {
     filterAndSortSnippets();
   }, [snippets, query, sortMethod, sortOrder, filterAndSortSnippets]);
+
+  const getSortedFavoriteMods = useCallback(() => {
+    return filteredAndSortedSnippets.map(
+      (snippet) =>
+        favoriteMods[
+          snippets.findIndex((s) => s.snippetID === snippet.snippetID)
+        ],
+    );
+  }, [filteredAndSortedSnippets, favoriteMods, snippets]);
 
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
@@ -100,7 +114,7 @@ export const Browser: React.FC = () => {
           <div className="h-full w-full overflow-hidden">
             <SelectionsList
               snippets={filteredAndSortedSnippets}
-              favoriteMods={favoriteMods}
+              favoriteMods={getSortedFavoriteMods()}
               selection={selection}
               setSelection={setSelection}
             />
