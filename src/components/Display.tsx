@@ -34,7 +34,7 @@ export const Display = ({
 
   const copySnippet = () => {
     navigator.clipboard.writeText(code);
-    showPopup("COPIED TO CLIPBOARD", "success", 3000);
+    showPopup("COPIED TO CLIPBOARD", "info", 3000);
   };
 
   const addFavorite = async (

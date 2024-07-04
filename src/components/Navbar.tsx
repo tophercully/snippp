@@ -103,7 +103,7 @@ export const Navbar: React.FC = () => {
         </a>
         <a
           href="/browse"
-          className="ml-10 flex items-center p-4 text-base-950 hover:text-base-800 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
+          className="ml-10 flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
         >
           BROWSE
         </a>
@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
           <div className="relative">
             <button
               onClick={toggleCategoryDropdown}
-              className="ml-10 flex items-center p-4 text-base-950 hover:text-base-800 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
+              className="ml-10 flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
             >
               CATEGORIES
               <svg
