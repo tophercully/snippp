@@ -6,7 +6,7 @@ export interface Snippet {
   author: string;
   authorID: string;
   favoriteCount: number;
-  isFavorite: boolean;
+  isFavorite?: boolean;
 }
 
 export interface GoogleUser {

@@ -8,10 +8,10 @@ import { Footer } from "../components/Footer";
 import { useSearchParams } from "react-router-dom";
 import { loadSnippetById } from "../backend/loadSnippetByID";
 import { updateSnippet } from "../backend/editSnippet";
+import { usePopup } from "../components/Popup";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
-  const [isError, setIsError] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
 
   const snippetId = searchParams.get("snippetid");
@@ -26,6 +26,7 @@ export const Builder = () => {
     favoriteCount: 0,
     isFavorite: false,
   });
+  const { showPopup } = usePopup();
 
   let darkMode = false;
   if (
@@ -85,8 +86,7 @@ export const Builder = () => {
             code: snippet.code,
             tags: snippet.tags,
           });
-          setMessage("Snippet updated successfully");
-          setIsError(false);
+          showPopup("Snippet updated successfully", "success", 10000);
         } else {
           await newSnippet({
             params: {
@@ -95,12 +95,10 @@ export const Builder = () => {
               authorID: userProfile.id,
             },
           });
-          setMessage("Snippet created successfully");
-          setIsError(false);
+          showPopup("Snippet created successfully", "success", 10000);
         }
       } catch (error) {
-        setMessage("An error occurred while saving the snippet");
-        setIsError(true);
+        showPopup("An error occurred while saving the snippet", "error");
         console.error(error);
       }
     }
@@ -166,15 +164,6 @@ export const Builder = () => {
                 {isEditing ? "SAVE" : "CREATE"}
               </span>
             </button>
-            {message && (
-              <div
-                className={`mt-4 rounded-sm p-4 ${
-                  isError ? "bg-red-500 text-white" : "bg-green-500 text-white"
-                }`}
-              >
-                {message}
-              </div>
-            )}
           </form>
         </div>
       )}

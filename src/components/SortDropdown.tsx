@@ -56,7 +56,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         src="sort.svg"
         alt="Sort Options"
         onClick={toggleDropdown}
-        className="aspect-square h-full cursor-pointer p-3"
+        className="aspect-square h-full cursor-pointer p-3 dark:invert"
       />
       {isOpen && (
         <div className="absolute right-1/2 top-full z-50 flex w-44 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500">

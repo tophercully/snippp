@@ -1,36 +1,36 @@
+// In loadAllSnippets.ts
 import { createPool } from "@vercel/postgres";
-import { Snippet } from "../typeInterfaces";
 
 const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
 });
 
-export const loadAllSnippets = async () => {
+export const loadAllSnippets = async (userID?: string) => {
   const { rows } = await pool.sql`
     WITH FavoriteCounts AS (
         SELECT snippetid, COUNT(*) AS favoriteCount
         FROM favorites
         GROUP BY snippetid
+    ),
+    UserFavorites AS (
+        SELECT snippetid
+        FROM favorites
+        WHERE userid = ${userID || ""}
     )
     SELECT 
-        Snippets.snippetid, 
-        Snippets.name, 
-        Snippets.code, 
-        Snippets.tags, 
-        Snippets.author, 
-        Snippets.authorid,
-        COALESCE(FavoriteCounts.favoriteCount, 0) AS favoriteCount
-    FROM Snippets
-    LEFT JOIN FavoriteCounts
-    ON Snippets.snippetid = FavoriteCounts.snippetid;
-`;
+        s.snippetid, 
+        s.name, 
+        s.code, 
+        s.tags, 
+        s.author, 
+        s.authorid,
+        COALESCE(fc.favoriteCount, 0) AS favoriteCount,
+        CASE WHEN uf.snippetid IS NOT NULL THEN true ELSE false END AS isFavorite
+    FROM Snippets s
+    LEFT JOIN FavoriteCounts fc ON s.snippetid = fc.snippetid
+    LEFT JOIN UserFavorites uf ON s.snippetid = uf.snippetid;
+  `;
 
-  const existingFavorites =
-    localStorage.getItem("favorites") ?
-      JSON.parse(localStorage.getItem("favorites") as string)
-    : [];
-  console.log(existingFavorites + existingFavorites.typeof);
-  console.log(rows[0].authorID);
   const snippetsArray = rows.map((row) => ({
     snippetID: row.snippetid,
     name: row.name,
@@ -39,12 +39,7 @@ export const loadAllSnippets = async () => {
     author: row.author,
     authorID: row.authorid,
     favoriteCount: row.favoritecount,
-    isFavorite:
-      existingFavorites.typeof == "array" ?
-        existingFavorites.some(
-          ({ e }: { e: Snippet }) => e.snippetID === row.snippetID,
-        )
-      : false,
+    isFavorite: row.isfavorite,
   }));
 
   return snippetsArray;

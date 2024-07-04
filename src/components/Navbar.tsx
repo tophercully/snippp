@@ -10,11 +10,11 @@ export const Navbar = () => {
     "isUserCreated",
     false,
   );
-
   const [userToken, setUserToken] = useLocalStorage<string | null>(
-    "user",
+    "userGoogleToken",
     null,
   );
+
   const [userProfile, setUserProfile] = useLocalStorage<GoogleUser | null>(
     "userProfile",
     null,

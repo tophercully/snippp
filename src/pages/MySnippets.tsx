@@ -10,13 +10,14 @@ import { loadFavorites } from "../backend/loadFavorites";
 import { loadUserSnippets } from "../backend/loadUserSnippets";
 
 type SortOrder = "asc" | "desc";
+type FavoriteMod = { [snippetID: number]: number };
 
 function sortByProperty<T>(
   array: T[],
   property: keyof T,
   order: SortOrder = "asc",
 ): T[] {
-  if (property == "name") {
+  if (property === "name") {
     return array.slice().sort((a, b) => {
       if (a[property] < b[property]) {
         return order === "desc" ? -1 : 1;
@@ -42,7 +43,7 @@ function sortByProperty<T>(
 export const MySnippets: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  const [favoriteMods, setFavoriteMods] = useState<number[]>([]);
+  const [favoriteMods, setFavoriteMods] = useState<FavoriteMod>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
@@ -52,29 +53,45 @@ export const MySnippets: React.FC = () => {
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
-  const updateFavorites = (index: number, increment: boolean) => {
+  const updateFavorites = useCallback((id: number, isFavorite: boolean) => {
     setFavoriteMods((prevMods) => {
-      const newMods = [...prevMods];
-      newMods[index] += increment ? 1 : -1;
+      const newMods = { ...prevMods };
+
+      if (prevMods[id] === -1 && isFavorite) {
+        delete newMods[id];
+      } else if (prevMods[id] === 1 && !isFavorite) {
+        delete newMods[id];
+      } else {
+        newMods[id] = isFavorite ? 1 : -1;
+      }
+
       return newMods;
     });
-  };
+  }, []);
 
-  // Fetch snippets data
   const fetchSnippets = useCallback(async () => {
     if (userProfile && userProfile.id) {
-      const snippetsArray =
+      const result =
         page === "mysnippets" ?
           await loadUserSnippets({ userID: userProfile.id })
         : await loadFavorites({ userID: userProfile.id });
 
-      if (
-        snippetsArray.length !== snippets.length ||
-        !snippetsArray.every(
-          (val, index) => val.snippetID === snippets[index]?.snippetID,
-        )
-      ) {
-        setSnippets(snippetsArray as Snippet[]);
+      if (Array.isArray(result)) {
+        const snippetsArray = result as Snippet[];
+        if (
+          snippetsArray.length !== snippets.length ||
+          !snippetsArray.every(
+            (val, index) => val.snippetID === snippets[index]?.snippetID,
+          )
+        ) {
+          setSnippets(snippetsArray);
+          setFavoriteMods({}); // Reset favorite mods when snippets change
+        }
+      } else {
+        console.error(
+          "Unexpected result type from loadUserSnippets or loadFavorites",
+        );
+        setSnippets([]);
       }
     }
   }, [page, userProfile, snippets]);
@@ -87,7 +104,6 @@ export const MySnippets: React.FC = () => {
     const filterAndSortSnippets = () => {
       let filteredSnippets = snippets;
 
-      // Filter
       if (query) {
         filteredSnippets = snippets.filter(
           (a) =>
@@ -97,7 +113,6 @@ export const MySnippets: React.FC = () => {
         );
       }
 
-      // Sort
       const sortedSnippets = sortByProperty(
         filteredSnippets,
         sortMethod,
@@ -105,17 +120,42 @@ export const MySnippets: React.FC = () => {
       );
 
       setFilteredAndSortedSnippets(sortedSnippets);
-      setSelection(sortedSnippets[0] || null);
+
+      // Preserve selection if possible, otherwise select the first snippet
+      if (selection) {
+        const newSelectionIndex = sortedSnippets.findIndex(
+          (s) => s.snippetID === selection.snippetID,
+        );
+        if (newSelectionIndex !== -1) {
+          setSelection(sortedSnippets[newSelectionIndex]);
+        } else {
+          setSelection(sortedSnippets[0] || null);
+        }
+      } else {
+        setSelection(sortedSnippets[0] || null);
+      }
     };
 
     filterAndSortSnippets();
-  }, [snippets, query, sortMethod, sortOrder]);
+  }, [snippets, query, sortMethod, sortOrder, selection]);
+
+  // Effect to update selection when favoriteMods changes
+  useEffect(() => {
+    if (selection) {
+      const updatedSelection = snippets.find(
+        (s) => s.snippetID === selection.snippetID,
+      );
+      if (updatedSelection) {
+        setSelection(updatedSelection);
+      }
+    }
+  }, [favoriteMods, snippets, selection]);
 
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
       <Navbar />
       <div className="flex h-[96%] w-full shadow-lg">
-        {snippets.length > 0 && (
+        {snippets.length > 0 ?
           <div className="flex h-full w-1/3 flex-col">
             <div className="flex w-full">
               <button
@@ -151,9 +191,7 @@ export const MySnippets: React.FC = () => {
               />
             </div>
           </div>
-        )}
-        {snippets.length < 1 && (
-          <div className="flex h-full w-1/3 flex-col items-center gap-5">
+        : <div className="flex h-full w-1/3 flex-col items-center gap-5">
             <div className="flex w-full">
               <button
                 onClick={() => setPage("mysnippets")}
@@ -178,12 +216,13 @@ export const MySnippets: React.FC = () => {
               {page === "mysnippets" ? "CREATE SNIPPPET" : "DISCOVER SNIPPPETS"}
             </a>
           </div>
-        )}
+        }
         {selection && (
           <div className="h-full w-2/3 overflow-y-auto">
             <Display
               selection={selection}
               updateFavorites={updateFavorites}
+              favoriteMods={favoriteMods}
             />
           </div>
         )}

@@ -10,36 +10,86 @@ import { addSnippetToFavorites } from "../backend/addFavorite";
 SyntaxHighlighter.registerLanguage("javascript", javascript);
 SyntaxHighlighter.registerLanguage("python", python);
 
-const addFavorite = async (
-  userID: string,
-  snippetID: number,
-  updateFavorites: (id: number, isFavorite: boolean) => void,
-) => {
-  await addSnippetToFavorites({ userID: userID, snippetIDToAdd: snippetID });
-  updateFavorites(snippetID, true); // Update local state
-};
-
-const removeFavorite = async (
-  userID: string,
-  snippetID: number,
-  updateFavorites: (id: number, isFavorite: boolean) => void,
-) => {
-  await removeSnippetFromFavorites({
-    userID: userID,
-    snippetIDToRemove: snippetID,
-  });
-  updateFavorites(snippetID, false); // Update local state
-};
+import { usePopup } from "./Popup";
 
 export const Display = ({
   selection,
   updateFavorites,
+  favoriteMods,
 }: {
   selection: Snippet;
   updateFavorites: (id: number, isFavorite: boolean) => void;
+  favoriteMods: { [snippetID: number]: number };
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const { name, author, code, authorID } = selection;
+  const { snippetID, name, author, code, authorID, isFavorite } = selection;
+  const [isLoading, setIsLoading] = useState(false);
+  const favoriteStatus = (() => {
+    if (favoriteMods[snippetID as number] !== undefined) {
+      return favoriteMods[snippetID as number] > 0;
+    }
+    return isFavorite;
+  })();
+  const { showPopup } = usePopup();
+
+  const copySnippet = () => {
+    navigator.clipboard.writeText(code);
+    showPopup("COPIED TO CLIPBOARD", "success", 3000);
+  };
+
+  const addFavorite = async (
+    userID: string,
+    snippetID: number,
+    updateFavorites: (id: number, isFavorite: boolean) => void,
+  ) => {
+    try {
+      await addSnippetToFavorites({
+        userID: userID,
+        snippetIDToAdd: snippetID,
+      });
+      updateFavorites(snippetID, true); // Only update local state if the server request succeeds
+      showPopup("Added Favorite", "success", 2000);
+    } catch (error) {
+      console.error("Failed to add favorite:", error);
+    }
+  };
+
+  const removeFavorite = async (
+    userID: string,
+    snippetID: number,
+    updateFavorites: (id: number, isFavorite: boolean) => void,
+  ) => {
+    try {
+      await removeSnippetFromFavorites({
+        userID: userID,
+        snippetIDToRemove: snippetID,
+      });
+      showPopup("Deleted Favorite", "success", 2000);
+      updateFavorites(snippetID, false); // Only update local state if the server request succeeds
+    } catch (error) {
+      console.error("Failed to remove favorite:", error);
+    }
+  };
+  const handleAddFavorite = async () => {
+    if (userProfile) {
+      setIsLoading(true);
+      await addFavorite(userProfile.id, snippetID as number, updateFavorites);
+      setIsLoading(false);
+    }
+  };
+
+  const handleRemoveFavorite = async () => {
+    if (userProfile) {
+      setIsLoading(true);
+      await removeFavorite(
+        userProfile.id,
+        snippetID as number,
+        updateFavorites,
+      );
+      setIsLoading(false);
+    }
+  };
+
   let darkMode = false;
   if (
     window.matchMedia &&
@@ -63,7 +113,15 @@ export const Display = ({
           <h1 className="text-3xl font-bold">{name}</h1>
           <h1 className="text-xl font-thin">{author}</h1>
         </div>
-        <div className="rounded-xs h-full w-full border border-dashed border-base-200 p-4 text-sm dark:border-base-800">
+        <div
+          onClick={copySnippet}
+          className="rounded-xs group relative h-full w-full border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
+        >
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[1px] backdrop-filter transition-opacity duration-200 active:backdrop-blur-[2px] group-hover:opacity-100">
+            <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
+              CLICK TO COPY
+            </span>
+          </div>
           <SyntaxHighlighter
             language={javascript}
             style={selectedStyle}
@@ -80,38 +138,32 @@ export const Display = ({
             id="controls"
             className="flex items-center justify-start gap-5"
           >
-            <button
-              className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
-              onClick={() =>
-                addFavorite(
-                  userProfile.id,
-                  selection.snippetID as number,
-                  updateFavorites,
-                )
-              }
-            >
-              <img
-                src="heart-full.svg"
-                className="h-5 dark:invert"
-              />
-              ADD FAVORITE
-            </button>
-            <button
-              className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
-              onClick={() =>
-                removeFavorite(
-                  userProfile.id,
-                  selection.snippetID as number,
-                  updateFavorites,
-                )
-              }
-            >
-              <img
-                src="heart-empty.svg"
-                className="h-5 dark:invert"
-              />
-              REMOVE FAVORITE
-            </button>
+            {!favoriteStatus && (
+              <button
+                className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+                onClick={handleAddFavorite}
+                disabled={isLoading}
+              >
+                <img
+                  src="heart-empty.svg"
+                  className="h-5 dark:invert"
+                />
+                {isLoading ? "ADDING..." : "ADD FAVORITE"}
+              </button>
+            )}
+            {favoriteStatus && (
+              <button
+                className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+                onClick={handleRemoveFavorite}
+                disabled={isLoading}
+              >
+                <img
+                  src="heart-full.svg"
+                  className="h-5 dark:invert"
+                />
+                {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}
+              </button>
+            )}
             {userProfile && userProfile.id === authorID && (
               <a
                 href={`/builder?snippetid=${selection.snippetID}`}

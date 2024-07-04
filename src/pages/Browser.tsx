@@ -26,9 +26,11 @@ function sortByProperty<T>(
   });
 }
 
+type FavoriteMod = { [snippetID: number]: number };
+
 export const Browser: React.FC = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  const [favoriteMods, setFavoriteMods] = useState<number[]>([]);
+  const [favoriteMods, setFavoriteMods] = useState<FavoriteMod>({});
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<SortableSnippetKeys>("name");
@@ -38,29 +40,39 @@ export const Browser: React.FC = () => {
   >([]);
 
   const fetchSnippets = useCallback(async () => {
-    const snippetsArray = await loadAllSnippets();
+    const userProfile = JSON.parse(
+      localStorage.getItem("userProfile") || "null",
+    );
+    const userID = userProfile ? userProfile.id : undefined;
+    const snippetsArray = await loadAllSnippets(userID);
     setSnippets(snippetsArray);
-    setFavoriteMods(new Array(snippetsArray.length).fill(0));
+    setFavoriteMods({});
     setSelection(snippetsArray[0] || null);
   }, []);
-
   useEffect(() => {
     fetchSnippets();
   }, [fetchSnippets]);
 
-  const updateFavorites = useCallback(
-    (id: number, isFavorite: boolean) => {
-      setFavoriteMods((prevMods) => {
-        const newMods = [...prevMods];
-        const index = snippets.findIndex((s) => s.snippetID === id);
-        if (index !== -1) {
-          newMods[index] += isFavorite ? 1 : -1;
-        }
-        return newMods;
-      });
-    },
-    [snippets],
-  );
+  const updateFavorites = useCallback((id: number, isFavorite: boolean) => {
+    setFavoriteMods((prevMods) => {
+      const currentMod = prevMods[id] || 0;
+      const newMod = isFavorite ? 1 : -1;
+
+      // If we're returning to the original state, remove the mod
+      if (
+        (currentMod === -1 && isFavorite) ||
+        (currentMod === 1 && !isFavorite)
+      ) {
+        const { [id]: _, ...restMods } = prevMods;
+        return restMods;
+      }
+
+      return {
+        ...prevMods,
+        [id]: newMod,
+      };
+    });
+  }, []);
 
   const filterAndSortSnippets = useCallback(() => {
     let filteredSnippets = snippets;
@@ -88,15 +100,7 @@ export const Browser: React.FC = () => {
     filterAndSortSnippets();
   }, [snippets, query, sortMethod, sortOrder, filterAndSortSnippets]);
 
-  const getSortedFavoriteMods = useCallback(() => {
-    return filteredAndSortedSnippets.map(
-      (snippet) =>
-        favoriteMods[
-          snippets.findIndex((s) => s.snippetID === snippet.snippetID)
-        ],
-    );
-  }, [filteredAndSortedSnippets, favoriteMods, snippets]);
-
+  console.log(snippets);
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
       <Navbar />
@@ -114,7 +118,7 @@ export const Browser: React.FC = () => {
           <div className="h-full w-full overflow-hidden">
             <SelectionsList
               snippets={filteredAndSortedSnippets}
-              favoriteMods={getSortedFavoriteMods()}
+              favoriteMods={favoriteMods}
               selection={selection}
               setSelection={setSelection}
             />
@@ -125,6 +129,7 @@ export const Browser: React.FC = () => {
             <Display
               selection={selection}
               updateFavorites={updateFavorites}
+              favoriteMods={favoriteMods}
             />
           </div>
         )}

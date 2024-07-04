@@ -1,3 +1,4 @@
+// In SelectionsList.tsx
 import React from "react";
 import { Snippet } from "../typeInterfaces";
 
@@ -5,7 +6,7 @@ interface DisplaySelectionsProps {
   selection: Snippet | null;
   setSelection: React.Dispatch<React.SetStateAction<Snippet | null>>;
   snippets: Snippet[];
-  favoriteMods: number[];
+  favoriteMods: { [snippetID: number]: number };
 }
 
 export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
@@ -20,14 +21,32 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
     }
   };
 
-  const Item = ({ item, index }: { item: Snippet; index: number }) => {
-    const { snippetID, name, author, favoriteCount } = item;
-    const originalIndex =
-      favoriteMods.length > snippets.length ?
-        snippets.findIndex((s) => s.snippetID === snippetID)
-      : index;
-    const modifiedFavoriteCount =
-      Number(favoriteCount) + (Number(favoriteMods[originalIndex]) || 0);
+  const Item = ({ item }: { item: Snippet }) => {
+    const { snippetID, name, author, favoriteCount, isFavorite } = item;
+
+    const modifiedFavoriteCount = (() => {
+      const baseFavoriteCount = Number(favoriteCount);
+      const mod = favoriteMods[snippetID as number];
+
+      if (mod === undefined) {
+        return baseFavoriteCount;
+      }
+
+      if (mod === 1 && !isFavorite) {
+        return baseFavoriteCount + 1;
+      }
+
+      if (mod === -1 && isFavorite) {
+        return baseFavoriteCount - 1;
+      }
+
+      return baseFavoriteCount;
+    })();
+
+    const favorited =
+      favoriteMods[snippetID as number] !== undefined ?
+        favoriteMods[snippetID as number] > 0
+      : isFavorite;
 
     const selectedClass =
       selection === item ?
@@ -47,15 +66,11 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
         <div className="flex w-1/5 flex-col items-end justify-center">
           <div className="flex items-center justify-end gap-1">
             <img
-              src={
-                favoriteMods[originalIndex] > 0 ?
-                  "heart-full.svg"
-                : "heart-empty.svg"
-              }
+              src={favorited ? "heart-full.svg" : "heart-empty.svg"}
               className="ml-auto h-5"
               alt="Favorites"
             />
-            <p>{modifiedFavoriteCount}</p>
+            <p>{modifiedFavoriteCount.toString()}</p>
           </div>
         </div>
       </div>
@@ -65,10 +80,9 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
   return (
     <div className="h-full w-full overflow-y-auto">
       {snippets &&
-        snippets.map((a, index) => (
+        snippets.map((a) => (
           <Item
             item={a}
-            index={index}
             key={a.snippetID}
           />
         ))}
