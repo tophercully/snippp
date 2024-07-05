@@ -129,24 +129,22 @@ export const Builder = () => {
           </div>
           <form className="flex h-full w-1/3 flex-col gap-5 rounded-sm align-bottom">
             <div className="flex flex-col">
-              <p className="text-sm text-base-300 dark:text-base-700">
+              <p className="text-sm text-base-300 dark:text-base-50">
                 NAME YOUR SNIPPET
               </p>
               <input
-                className="w-full bg-base-50 p-4 shadow-md dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
-                placeholder="Name"
+                className="w-full bg-base-50 p-4 shadow-md focus:outline-none dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
                 name="name"
                 value={snippet.name}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <p className="text-sm text-base-300 dark:text-base-700">
+              <p className="text-sm text-base-300 dark:text-base-50">
                 TAGS, COMMA SEPARATED
               </p>
               <input
-                className="w-full rounded-sm bg-base-50 p-4 shadow-md dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
-                placeholder="Tags"
+                className="w-full rounded-sm bg-base-50 p-4 shadow-md focus:outline-none dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
                 name="tags"
                 value={snippet.tags}
                 onChange={handleChange}

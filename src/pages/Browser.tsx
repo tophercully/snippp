@@ -129,7 +129,7 @@ export const Browser: React.FC = () => {
     !isLoading && filteredAndSortedSnippets.length > 0 && selection;
 
   return (
-    <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
+    <div className="over flex h-screen w-screen flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
       <Navbar />
       <div className="flex h-[96%] w-full shadow-lg">
         <div className="flex h-full w-1/3 flex-col">

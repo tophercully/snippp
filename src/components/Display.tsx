@@ -1,7 +1,6 @@
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-// import { monokai, xcode } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import hljs from "highlight.js";
+import { monokai, xcode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
 import glsl from "react-syntax-highlighter/dist/esm/languages/hljs/glsl";
@@ -17,7 +16,7 @@ SyntaxHighlighter.registerLanguage("glsl", glsl);
 console.log(python);
 
 import { useNotif } from "../hooks/Notif";
-import CodeBlock from "./CodeBlock";
+// import CodeBlock from "./CodeBlock";
 
 export const Display = ({
   selection,
@@ -105,15 +104,13 @@ export const Display = ({
     darkMode = true;
   }
 
-  const lang = hljs.highlightAuto(code);
-  console.log(lang.language);
   const [selectedStyle, setSelectedStyle] = useState(
-    darkMode ? "monokai" : "xcode",
+    darkMode ? monokai : xcode,
   );
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (event) => {
-      setSelectedStyle(event.matches ? "monokai" : "xcode");
+      setSelectedStyle(event.matches ? monokai : xcode);
     });
 
   if (selection) {
@@ -132,7 +129,7 @@ export const Display = ({
               CLICK TO COPY
             </span>
           </div>
-          {/* <SyntaxHighlighter
+          <SyntaxHighlighter
             // language={javascript}
             style={selectedStyle}
             customStyle={{
@@ -141,11 +138,11 @@ export const Display = ({
             }}
           >
             {code}
-          </SyntaxHighlighter> */}
-          <CodeBlock
+          </SyntaxHighlighter>
+          {/* <CodeBlock
             code={code}
             theme={selectedStyle as "monokai" | "xcode"}
-          />
+          /> */}
         </div>
         {userProfile && selection && (
           <div

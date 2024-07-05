@@ -28,12 +28,15 @@ const Home = () => {
       <div className="relative">
         <div
           id="hero"
-          className="border-base-150 box-content flex flex-col items-center justify-center border-2 border-dashed p-10 text-blue-600 transition-all duration-300 dark:border-base-800 dark:text-blue-700"
+          className="border-base-150 box-content flex items-center justify-center border-2 border-dashed p-10 text-blue-600 transition-all duration-300 dark:border-base-800 dark:text-blue-700"
         >
           <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1>
         </div>
         <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
       </div>
+      <h3 className="mt-24 w-full text-center text-xl text-base-950 md:text-2xl dark:text-base-50">
+        UNINTERRUPTED CREATIVITY FOR CREATIVE CODERS – YOUR SNIPPET ORGANIZER
+      </h3>
       <a
         href="/browse"
         className={`${stats ? "opacity-100" : "opacity-0"} group relative mt-24 flex items-center overflow-hidden rounded-sm bg-base-950 px-4 text-base-50 shadow-md duration-200 dark:bg-base-50 dark:text-base-950 dark:shadow-sm dark:shadow-base-600`}

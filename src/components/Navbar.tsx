@@ -101,49 +101,51 @@ export const Navbar: React.FC = () => {
             SNIPPP
           </span>
         </a>
-        <a
-          href="/browse"
-          className="ml-10 flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
-        >
-          BROWSE
-        </a>
-        {Object.keys(categories).length > 0 && (
-          <div className="relative">
-            <button
-              onClick={toggleCategoryDropdown}
-              className="ml-10 flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
-            >
-              CATEGORIES
-              <svg
-                className={`ml-1 h-4 w-4 transition-transform duration-200 ${
-                  isCategoryDropdownOpen ? "rotate-180" : ""
-                }`}
-                viewBox="0 0 20 20"
-                fill="currentColor"
+        <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
+          <a
+            href="/browse"
+            className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+          >
+            BROWSE
+          </a>
+          {Object.keys(categories).length > 0 && (
+            <div className="relative">
+              <button
+                onClick={toggleCategoryDropdown}
+                className="flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-            {isCategoryDropdownOpen && (
-              <div className="absolute left-0 z-20 mt-2 w-48 rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
-                {Object.entries(categories).map(([key, info]) => (
-                  <a
-                    key={key}
-                    href={`/browse?category=${key}`}
-                    className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                    onClick={() => setIsCategoryDropdownOpen(false)}
-                  >
-                    {info.name.toUpperCase()}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                CATEGORIES
+                <svg
+                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                    isCategoryDropdownOpen ? "rotate-180" : ""
+                  }`}
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+              {isCategoryDropdownOpen && (
+                <div className="absolute left-0 z-20 mt-2 w-48 rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
+                  {Object.entries(categories).map(([key, info]) => (
+                    <a
+                      key={key}
+                      href={`/browse?category=${key}`}
+                      className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      onClick={() => setIsCategoryDropdownOpen(false)}
+                    >
+                      {info.name.toUpperCase()}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {!userProfile && (
           <div
