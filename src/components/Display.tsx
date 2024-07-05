@@ -98,11 +98,29 @@ export const Display = ({
       setIsLoading(false);
     }
   };
-  const handleShare = () => {
-    navigator.clipboard.writeText(
-      `${window.location.origin}/snippet?snippetid=${snippetID}`,
-    );
-    showNotif("SNIPPET LINK COPIED", "info", 3000);
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/snippet?snippetid=${snippetID}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${name} on Snippp.io`,
+          text: "Check out this code snippet :)",
+          url: shareUrl,
+        });
+        console.log("Shared successfully");
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      // Fallback for browsers that don't support navigator.share
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showNotif("SNIPPET LINK COPIED", "info", 3000);
+      } catch (err) {
+        console.log("Error copying to clipboard:", err);
+        alert("Unable to share. Please copy this link manually: " + shareUrl);
+      }
+    }
   };
 
   const handleDeleteSnippet = async () => {
