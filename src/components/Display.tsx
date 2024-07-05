@@ -136,9 +136,20 @@ export const Display = ({
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 dark:bg-base-950 dark:text-base-50">
-        <div className="h-fit w-fit rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
-          <h1 className="text-3xl font-bold">{name}</h1>
-          <h1 className="text-xl font-thin">{author}</h1>
+        <div className="flex h-fit w-fit gap-4">
+          <div className="h-fit w-fit rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
+            <h1 className="text-3xl font-bold">{name}</h1>
+            <h1 className="text-xl font-thin">{author}</h1>
+          </div>
+          <div className="mr-8 flex h-full w-fit flex-col justify-end pt-6">
+            <span className="flex h-fit">
+              <img
+                src="copy.svg"
+                className="invert"
+              />
+              <span>200</span>
+            </span>
+          </div>
         </div>
         <div
           onClick={copySnippet}

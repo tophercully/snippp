@@ -39,6 +39,13 @@ export const Builder = () => {
   const [selectedStyle, setSelectedStyle] = useState(
     darkMode ? "vs-dark" : "vs-light",
   );
+
+  const isCreator =
+    userProfile ?
+      userProfile.id == snippet.authorID ?
+        true
+      : false
+    : false;
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (event) => {
@@ -79,27 +86,31 @@ export const Builder = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (userProfile) {
-      try {
-        if (isEditing) {
-          await updateSnippet(Number(snippetId), {
-            name: snippet.name,
-            code: snippet.code,
-            tags: snippet.tags,
-          });
-          showNotif("Snippet updated successfully", "success", 10000);
-        } else {
-          await newSnippet({
-            params: {
-              ...snippet,
-              author: userProfile.name,
-              authorID: userProfile.id,
-            },
-          });
-          showNotif("Snippet created successfully", "success", 10000);
+      if (isCreator) {
+        try {
+          if (isEditing) {
+            await updateSnippet(Number(snippetId), {
+              name: snippet.name,
+              code: snippet.code,
+              tags: snippet.tags,
+            });
+            showNotif("Snippet updated successfully", "success", 10000);
+          } else {
+            await newSnippet({
+              params: {
+                ...snippet,
+                author: userProfile.name,
+                authorID: userProfile.id,
+              },
+            });
+            showNotif("Snippet created successfully", "success", 10000);
+          }
+        } catch (error) {
+          showNotif("An error occurred while saving the snippet", "error");
+          console.error(error);
         }
-      } catch (error) {
-        showNotif("An error occurred while saving the snippet", "error");
-        console.error(error);
+      } else {
+        showNotif(`YOU ARE NOT ${snippet.author.toUpperCase()}`, "error");
       }
     }
   };
@@ -152,14 +163,18 @@ export const Builder = () => {
             </div>
             <button
               onClick={handleSubmit}
-              className="group relative ml-auto mt-auto w-1/2 overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
+              className="group relative ml-auto mt-auto w-1/2 overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
             >
               <div
-                className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-full transform transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
                 aria-hidden="true"
               />
               <span className="relative z-10 text-xl font-bold">
-                {isEditing ? "SAVE" : "CREATE"}
+                {isEditing ?
+                  isCreator ?
+                    "SAVE"
+                  : "YOU ARE NOT THE AUTHOR"
+                : "CREATE"}
               </span>
             </button>
           </form>

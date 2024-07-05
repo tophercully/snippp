@@ -774,6 +774,10 @@ video {
   margin-left: 0px;
 }
 
+.mr-8 {
+  margin-right: 2rem;
+}
+
 .box-content {
   box-sizing: content-box;
 }
@@ -1535,6 +1539,14 @@ video {
 
 .pt-1 {
   padding-top: 0.25rem;
+}
+
+.pt-5 {
+  padding-top: 1.25rem;
+}
+
+.pt-6 {
+  padding-top: 1.5rem;
 }
 
 .text-left {
