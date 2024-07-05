@@ -13,8 +13,8 @@ interface HomepageInfo {
 export const fetchStats = async (): Promise<HomepageInfo> => {
   const { rows } = await pool.sql`
     SELECT
-      (SELECT COUNT(*) FROM Snippets) AS snippetCount,
-      (SELECT COUNT(*) FROM snippet_users) AS userCount
+      (SELECT COUNT(*) FROM snippets) AS snippetCount,
+      (SELECT COUNT(*) FROM users) AS userCount
   `;
 
   return {

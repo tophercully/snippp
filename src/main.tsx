@@ -10,6 +10,7 @@ import { MySnippets } from "./pages/MySnippets.tsx";
 import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./components/NotifContext.tsx";
 import { About } from "./pages/About.tsx";
+import { SnippetPage } from "./pages/SnippetPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/builder",
     element: <Builder />,
+  },
+  {
+    path: "/snippet",
+    element: <SnippetPage />,
   },
   {
     path: "/about",

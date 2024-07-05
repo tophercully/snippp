@@ -1,5 +1,5 @@
-// In loadAllSnippets.ts
 import { createPool } from "@vercel/postgres";
+import { Snippet } from "../typeInterfaces";
 
 const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
@@ -8,39 +8,51 @@ const pool = createPool({
 export const loadAllSnippets = async (userID?: string) => {
   const { rows } = await pool.sql`
     WITH FavoriteCounts AS (
-        SELECT snippetid, COUNT(*) AS favoriteCount
+        SELECT snippetID, COUNT(*) AS favoriteCount
         FROM favorites
-        GROUP BY snippetid
+        GROUP BY snippetID
     ),
     UserFavorites AS (
-        SELECT snippetid
+        SELECT snippetID
         FROM favorites
-        WHERE userid = ${userID || ""}
+        WHERE userID = ${userID || ""}
     )
     SELECT 
-        s.snippetid, 
+        s.snippetID, 
         s.name, 
         s.code, 
         s.tags, 
-        s.author, 
-        s.authorid,
+        u.name AS author, 
+        s.authorID,
+        s.public,
+        s.createdAt,
+        s.lastCopied,
+        s.lastEdit,
+        s.copyCount,
         COALESCE(fc.favoriteCount, 0) AS favoriteCount,
-        CASE WHEN uf.snippetid IS NOT NULL THEN true ELSE false END AS isFavorite
-    FROM Snippets s
-    LEFT JOIN FavoriteCounts fc ON s.snippetid = fc.snippetid
-    LEFT JOIN UserFavorites uf ON s.snippetid = uf.snippetid;
+        CASE WHEN uf.snippetID IS NOT NULL THEN true ELSE false END AS isFavorite
+    FROM snippets s
+    JOIN users u ON s.authorID = u.userID
+    LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
+    LEFT JOIN UserFavorites uf ON s.snippetID = uf.snippetID;
   `;
 
-  const snippetsArray = rows.map((row) => ({
-    snippetID: row.snippetid,
-    name: row.name,
-    code: row.code,
-    tags: row.tags,
-    author: row.author,
-    authorID: row.authorid,
-    favoriteCount: row.favoritecount,
-    isFavorite: row.isfavorite,
-  }));
-
-  return snippetsArray;
+  return rows.map(
+    (row) =>
+      ({
+        snippetID: row.snippetid,
+        name: row.name,
+        code: row.code,
+        tags: row.tags,
+        author: row.author,
+        authorID: row.authorid,
+        public: row.public,
+        createdAt: row.createdat,
+        lastCopied: row.lastcopied,
+        lastEdit: row.lastedit,
+        copyCount: row.copycount,
+        favoriteCount: row.favoritecount,
+        isFavorite: row.isfavorite,
+      }) as Snippet,
+  );
 };

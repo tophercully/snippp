@@ -14,6 +14,8 @@ SyntaxHighlighter.registerLanguage("python", python);
 SyntaxHighlighter.registerLanguage("glsl", glsl);
 
 import { useNotif } from "../hooks/Notif";
+import { addCopy } from "../backend/addCopy";
+import { simplifyNumber } from "../utils/simplifyNumber";
 
 export const Display = ({
   selection,
@@ -41,6 +43,7 @@ export const Display = ({
   const copySnippet = () => {
     navigator.clipboard.writeText(code);
     showNotif("COPIED TO CLIPBOARD", "info", 3000);
+    addCopy(selection.snippetID);
   };
 
   const addFavorite = async (
@@ -145,9 +148,13 @@ export const Display = ({
             <span className="flex h-fit">
               <img
                 src="copy.svg"
-                className="invert"
+                className="invert dark:invert-0"
               />
-              <span>200</span>
+              <span>
+                {selection.copyCount ?
+                  simplifyNumber(Number(selection.copyCount))
+                : 0}
+              </span>
             </span>
           </div>
         </div>

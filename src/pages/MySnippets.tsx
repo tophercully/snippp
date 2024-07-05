@@ -152,11 +152,11 @@ export const MySnippets: React.FC = () => {
   }, [favoriteMods, snippets, selection]);
 
   return (
-    <div className="over flex h-screen w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
+    <div className="over flex h-screen w-full flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
       <div className="flex h-[96%] w-full shadow-lg">
         {snippets.length > 0 ?
-          <div className="flex h-full w-1/3 flex-col">
+          <div className="flex h-full w-full flex-col lg:w-1/3">
             <div className="flex w-full">
               <button
                 onClick={() => setPage("mysnippets")}
@@ -191,7 +191,7 @@ export const MySnippets: React.FC = () => {
               />
             </div>
           </div>
-        : <div className="flex h-full w-1/3 flex-col items-center gap-5">
+        : <div className="flex h-full w-full flex-col items-center gap-5 lg:w-1/3">
             <div className="flex w-full">
               <button
                 onClick={() => setPage("mysnippets")}
@@ -211,14 +211,14 @@ export const MySnippets: React.FC = () => {
             </h1>
             <a
               href={page === "mysnippets" ? "/builder" : "/browse"}
-              className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 dark:bg-base-50 dark:text-base-950"
+              className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
             >
               {page === "mysnippets" ? "CREATE SNIPPPET" : "DISCOVER SNIPPPETS"}
             </a>
           </div>
         }
         {selection && (
-          <div className="h-full w-2/3 overflow-y-auto">
+          <div className="hidden h-full w-2/3 overflow-y-auto lg:flex">
             <Display
               selection={selection}
               updateFavorites={updateFavorites}

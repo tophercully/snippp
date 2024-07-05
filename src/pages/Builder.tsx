@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GoogleUser, Snippet } from "../typeInterfaces";
+import { GoogleUser, Snippet, SnippetInBuilder } from "../typeInterfaces";
 import { newSnippet } from "../backend/newSnippet";
 import Editor from "@monaco-editor/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -17,15 +17,15 @@ export const Builder = () => {
   const snippetId = searchParams.get("snippetid");
   const isEditing = Boolean(snippetId);
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const [snippet, setSnippet] = useState<Snippet>({
+
+  const [snippet, setSnippet] = useState<SnippetInBuilder | Snippet>({
+    authorID: "",
+    author: "",
     name: "",
     code: "",
     tags: "",
-    author: "",
-    authorID: "",
-    favoriteCount: 0,
-    isFavorite: false,
-  });
+    public: false,
+  } as SnippetInBuilder);
   const { showNotif } = useNotif();
 
   let darkMode = false;
@@ -41,11 +41,13 @@ export const Builder = () => {
   );
 
   const isCreator =
-    userProfile ?
-      userProfile.id == snippet.authorID ?
-        true
+    isEditing ?
+      userProfile ?
+        userProfile.id == snippet.authorID ?
+          true
+        : false
       : false
-    : false;
+    : true;
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (event) => {
@@ -56,7 +58,7 @@ export const Builder = () => {
     if (isEditing && snippetId) {
       const loadSnippet = async () => {
         const fetchedSnippet = await loadSnippetById(Number(snippetId));
-        setSnippet(fetchedSnippet);
+        setSnippet(fetchedSnippet as Snippet);
       };
       loadSnippet();
     }
@@ -83,6 +85,13 @@ export const Builder = () => {
     }));
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSnippet((prevSnippet) => ({
+      ...prevSnippet,
+      public: e.target.checked,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (userProfile) {
@@ -101,7 +110,7 @@ export const Builder = () => {
                 ...snippet,
                 author: userProfile.name,
                 authorID: userProfile.id,
-              },
+              } as Snippet,
             });
             showNotif("Snippet created successfully", "success", 10000);
           }
@@ -110,7 +119,7 @@ export const Builder = () => {
           console.error(error);
         }
       } else {
-        showNotif(`YOU ARE NOT ${snippet.author.toUpperCase()}`, "error");
+        showNotif(`YOU ARE NOT THE AUTHOR`, "error");
       }
     }
   };
@@ -134,7 +143,6 @@ export const Builder = () => {
               }}
               theme={selectedStyle}
               defaultLanguage="auto"
-              //   defaultValue={snippet.code}
               onChange={handleCodeChange}
             />
           </div>
@@ -160,6 +168,21 @@ export const Builder = () => {
                 value={snippet.tags}
                 onChange={handleChange}
               />
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="public"
+                checked={snippet.public}
+                onChange={handleCheckboxChange}
+                className="mr-2 h-4 w-4 hover:cursor-pointer"
+              />
+              <label
+                htmlFor="public"
+                className="text-sm text-base-300 dark:text-base-50"
+              >
+                Make this snippet public
+              </label>
             </div>
             <button
               onClick={handleSubmit}

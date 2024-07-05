@@ -1,6 +1,5 @@
 import { createPool } from "@vercel/postgres";
 import { Snippet } from "../typeInterfaces";
-import { loadFavorites } from "./loadFavorites";
 
 const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
@@ -10,46 +9,57 @@ interface Params {
   userID: string;
 }
 
-export const loadUserSnippets = async ({ userID }: Params) => {
+export const loadUserSnippets = async ({
+  userID,
+}: Params): Promise<Snippet[]> => {
   try {
     const { rows } = await pool.sql`
       WITH FavoriteCounts AS (
-          SELECT snippetid, COUNT(*) AS favoriteCount
+          SELECT snippetID, COUNT(*) AS favoriteCount
           FROM favorites
-          GROUP BY snippetid
+          GROUP BY snippetID
+      ),
+      UserFavorites AS (
+          SELECT snippetID
+          FROM favorites
+          WHERE userID = ${userID}
       )
       SELECT 
-          s.snippetid, 
+          s.snippetID, 
           s.name, 
           s.code, 
           s.tags, 
-          s.author, 
-          s.authorid,
-          COALESCE(fc.favoriteCount, 0) AS favoriteCount
-      FROM Snippets s
-      LEFT JOIN FavoriteCounts fc ON s.snippetid = fc.snippetid
+          u.name AS author, 
+          s.authorID,
+          s.public,
+          s.createdAt,
+          s.lastCopied,
+          s.lastEdit,
+          s.copyCount,
+          COALESCE(fc.favoriteCount, 0) AS favoriteCount,
+          CASE WHEN uf.snippetID IS NOT NULL THEN true ELSE false END AS isFavorite
+      FROM snippets s
+      JOIN users u ON s.authorID = u.userID
+      LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
+      LEFT JOIN UserFavorites uf ON s.snippetID = uf.snippetID
       WHERE s.authorID = ${userID};
     `;
 
-    let existingFavorites: Snippet[] = [];
-    if (userID) {
-      existingFavorites = await loadFavorites({ userID });
-    }
-
-    const snippetsArray = rows.map((row) => ({
+    return rows.map((row) => ({
       snippetID: row.snippetid,
       name: row.name,
       code: row.code,
       tags: row.tags,
       author: row.author,
       authorID: row.authorid,
+      public: row.public,
+      createdAt: row.createdat,
+      lastCopied: row.lastcopied,
+      lastEdit: row.lastedit,
+      copyCount: row.copycount,
       favoriteCount: row.favoritecount,
-      isFavorite: existingFavorites.some(
-        (favorite: Snippet) => favorite.snippetID === row.snippetid,
-      ),
+      isFavorite: row.isfavorite,
     }));
-
-    return snippetsArray;
   } catch (error) {
     console.error("Error fetching snippets by authorID:", error);
     throw error;

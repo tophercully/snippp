@@ -121,10 +121,6 @@ export const Browser: React.FC = () => {
     return sortByProperty(filteredSnippets, sortMethod, sortOrder);
   }, [snippets, query, sortMethod, sortOrder, category]);
 
-  //   useEffect(() => {
-  //     setSelection(filteredAndSortedSnippets[0] || null);
-  //   }, [filteredAndSortedSnippets]);
-
   const isReady =
     !isLoading && filteredAndSortedSnippets.length > 0 && selection;
 
@@ -188,7 +184,7 @@ export const Browser: React.FC = () => {
           </div>
         </div>
         <div
-          className={`h-[90svh] w-full overflow-y-auto transition-opacity duration-300 lg:h-full lg:w-2/3 ${
+          className={`hidden h-[90svh] w-full overflow-y-auto transition-opacity duration-300 lg:flex lg:h-full lg:w-2/3 ${
             isReady ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
