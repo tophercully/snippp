@@ -36,7 +36,8 @@ export const Display = ({
   snippetMods: SnippetMods;
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const { snippetID, name, author, code, authorID, isFavorite } = selection;
+  const { snippetID, name, author, code, authorID, isFavorite, copyCount } =
+    selection;
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
@@ -166,6 +167,8 @@ export const Display = ({
       setSelectedStyle(event.matches ? monokai : xcode);
     });
 
+  console.log(snippetMod.copyCount);
+  console.log(copyCount);
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
@@ -195,8 +198,8 @@ export const Display = ({
               <span>
                 {simplifyNumber(
                   snippetMod.copyCount ?
-                    selection.copyCount + snippetMod.copyCount
-                  : selection.copyCount,
+                    copyCount + snippetMod.copyCount
+                  : copyCount,
                 )}
               </span>
             </span>
