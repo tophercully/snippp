@@ -56,7 +56,7 @@ export const Display = ({
         userID: userID,
         snippetIDToAdd: snippetID,
       });
-      updateFavorites(snippetID, true); // Only update local state if the server request succeeds
+      updateFavorites(snippetID, true); // Only update local state if request succeeds
       showNotif("Added Favorite", "success", 2000);
     } catch (error) {
       console.error("Failed to add favorite:", error);
@@ -74,7 +74,7 @@ export const Display = ({
         snippetIDToRemove: snippetID,
       });
       showNotif("Deleted Favorite", "success", 2000);
-      updateFavorites(snippetID, false); // Only update local state if the server request succeeds
+      updateFavorites(snippetID, false);
     } catch (error) {
       console.error("Failed to remove favorite:", error);
     }
@@ -98,17 +98,21 @@ export const Display = ({
       setIsLoading(false);
     }
   };
+  const handleShare = () => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/snippet?snippetid=${snippetID}`,
+    );
+    showNotif("SNIPPET LINK COPIED", "info", 3000);
+  };
 
   const handleDeleteSnippet = async () => {
     if (userProfile && userProfile.id === authorID) {
       try {
         setIsLoading(true);
-        // Replace this with your actual delete API call
         await deleteSnippet({
           snippetIDToDelete: selection.snippetID as number,
         });
         showNotif("Snippet deleted successfully", "success", 2000);
-        // You might want to redirect the user or update the UI here
       } catch (error) {
         console.error("Failed to delete snippet:", error);
         showNotif("Failed to delete snippet", "error", 2000);
@@ -221,6 +225,24 @@ export const Display = ({
                   <span className="hidden sm:inline">
                     {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}
                   </span>
+                </span>
+              </button>
+            )}
+            {selection && (
+              <button
+                onClick={handleShare}
+                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+              >
+                <div
+                  className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  aria-hidden="true"
+                />
+                <span className="relative flex items-center gap-3">
+                  <img
+                    src="share.svg"
+                    className="h-5 invert group-hover:invert-0 dark:invert-0"
+                  />
+                  <span className="hidden 2xl:inline">SHARE</span>
                 </span>
               </button>
             )}
