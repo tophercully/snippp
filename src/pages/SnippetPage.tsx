@@ -47,7 +47,7 @@ export const SnippetPage: React.FC = () => {
             [snippet.snippetID]: {
               favoriteStatus: snippet.isFavorite,
               favoriteCount: snippet.favoriteCount,
-              copyCount: snippet.copyCount,
+              copyCount: 0,
             },
           });
         } catch (err) {
