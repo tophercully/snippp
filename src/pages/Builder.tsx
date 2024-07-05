@@ -8,7 +8,7 @@ import { Footer } from "../components/Footer";
 import { useSearchParams } from "react-router-dom";
 import { loadSnippetById } from "../backend/loadSnippetByID";
 import { updateSnippet } from "../backend/editSnippet";
-import { usePopup } from "../components/Popup";
+import { useNotif } from "../hooks/Notif";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export const Builder = () => {
     favoriteCount: 0,
     isFavorite: false,
   });
-  const { showPopup } = usePopup();
+  const { showNotif } = useNotif();
 
   let darkMode = false;
   if (
@@ -86,7 +86,7 @@ export const Builder = () => {
             code: snippet.code,
             tags: snippet.tags,
           });
-          showPopup("Snippet updated successfully", "success", 10000);
+          showNotif("Snippet updated successfully", "success", 10000);
         } else {
           await newSnippet({
             params: {
@@ -95,10 +95,10 @@ export const Builder = () => {
               authorID: userProfile.id,
             },
           });
-          showPopup("Snippet created successfully", "success", 10000);
+          showNotif("Snippet created successfully", "success", 10000);
         }
       } catch (error) {
-        showPopup("An error occurred while saving the snippet", "error");
+        showNotif("An error occurred while saving the snippet", "error");
         console.error(error);
       }
     }

@@ -26,6 +26,10 @@ const categories: { [key: string]: CategoryInfo } = {
     name: "p5.js",
     tags: ["p5", "p5js", "p5.js"],
   },
+  three: {
+    name: "ThreeJS",
+    tags: ["three", "3", "threejs", "three.js"],
+  },
   python: {
     name: "Python",
     tags: ["python", "py"],

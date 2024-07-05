@@ -47,7 +47,8 @@ export const Browser: React.FC = () => {
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [category, setCategory] = useState<string | null>(null);
-  const [sortMethod, setSortMethod] = useState<SortableSnippetKeys>("name");
+  const [sortMethod, setSortMethod] =
+    useState<SortableSnippetKeys>("favoriteCount");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);

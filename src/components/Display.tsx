@@ -1,16 +1,23 @@
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import { monokai, xcode } from "react-syntax-highlighter/dist/esm/styles/hljs";
+// import { monokai, xcode } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import hljs from "highlight.js";
 import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
+import glsl from "react-syntax-highlighter/dist/esm/languages/hljs/glsl";
+
 import { useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/deleteFavorite";
 import { addSnippetToFavorites } from "../backend/addFavorite";
 SyntaxHighlighter.registerLanguage("javascript", javascript);
 SyntaxHighlighter.registerLanguage("python", python);
+SyntaxHighlighter.registerLanguage("glsl", glsl);
 
-import { usePopup } from "./Popup";
+console.log(python);
+
+import { useNotif } from "../hooks/Notif";
+import CodeBlock from "./CodeBlock";
 
 export const Display = ({
   selection,
@@ -30,11 +37,11 @@ export const Display = ({
     }
     return isFavorite;
   })();
-  const { showPopup } = usePopup();
+  const { showNotif } = useNotif();
 
   const copySnippet = () => {
     navigator.clipboard.writeText(code);
-    showPopup("COPIED TO CLIPBOARD", "info", 3000);
+    showNotif("COPIED TO CLIPBOARD", "info", 3000);
   };
 
   const addFavorite = async (
@@ -48,7 +55,7 @@ export const Display = ({
         snippetIDToAdd: snippetID,
       });
       updateFavorites(snippetID, true); // Only update local state if the server request succeeds
-      showPopup("Added Favorite", "success", 2000);
+      showNotif("Added Favorite", "success", 2000);
     } catch (error) {
       console.error("Failed to add favorite:", error);
     }
@@ -64,7 +71,7 @@ export const Display = ({
         userID: userID,
         snippetIDToRemove: snippetID,
       });
-      showPopup("Deleted Favorite", "success", 2000);
+      showNotif("Deleted Favorite", "success", 2000);
       updateFavorites(snippetID, false); // Only update local state if the server request succeeds
     } catch (error) {
       console.error("Failed to remove favorite:", error);
@@ -97,13 +104,16 @@ export const Display = ({
   ) {
     darkMode = true;
   }
+
+  const lang = hljs.highlightAuto(code);
+  console.log(lang.language);
   const [selectedStyle, setSelectedStyle] = useState(
-    darkMode ? monokai : xcode,
+    darkMode ? "monokai" : "xcode",
   );
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (event) => {
-      setSelectedStyle(event.matches ? monokai : xcode);
+      setSelectedStyle(event.matches ? "monokai" : "xcode");
     });
 
   if (selection) {
@@ -122,8 +132,8 @@ export const Display = ({
               CLICK TO COPY
             </span>
           </div>
-          <SyntaxHighlighter
-            language={javascript}
+          {/* <SyntaxHighlighter
+            // language={javascript}
             style={selectedStyle}
             customStyle={{
               background: "transparent",
@@ -131,7 +141,11 @@ export const Display = ({
             }}
           >
             {code}
-          </SyntaxHighlighter>
+          </SyntaxHighlighter> */}
+          <CodeBlock
+            code={code}
+            theme={selectedStyle as "monokai" | "xcode"}
+          />
         </div>
         {userProfile && selection && (
           <div

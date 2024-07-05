@@ -6,64 +6,64 @@ import React, {
   useCallback,
 } from "react";
 
-export type PopupType = "success" | "error" | "info";
+export type NotifType = "success" | "error" | "info";
 
-export interface PopupContextType {
-  showPopup: (message: string, type: PopupType, timeout?: number) => void;
-  hidePopup: () => void;
+export interface NotifContextType {
+  showNotif: (message: string, type: NotifType, timeout?: number) => void;
+  hideNotif: () => void;
 }
 
-export const PopupContext = createContext<PopupContextType | undefined>(
+export const NotifContext = createContext<NotifContextType | undefined>(
   undefined,
 );
 
-export const PopupProvider: React.FC<React.PropsWithChildren> = ({
+export const NotifProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [popupMessage, setPopupMessage] = useState<string | null>(null);
-  const [popupType, setPopupType] = useState<PopupType>("info");
-  const [popupTimeout, setPopupTimeout] = useState<number | undefined>(
+  const [notifMessage, setNotifMessage] = useState<string | null>(null);
+  const [notifType, setNotifType] = useState<NotifType>("info");
+  const [notifTimeout, setNotifTimeout] = useState<number | undefined>(
     undefined,
   );
 
-  const showPopup = useCallback(
-    (message: string, type: PopupType, timeout?: number) => {
-      setPopupMessage(message);
-      setPopupType(type);
-      setPopupTimeout(timeout);
+  const showNotif = useCallback(
+    (message: string, type: NotifType, timeout?: number) => {
+      setNotifMessage(message);
+      setNotifType(type);
+      setNotifTimeout(timeout);
     },
     [],
   );
 
-  const hidePopup = useCallback(() => {
-    setPopupMessage(null);
-    setPopupType("info");
-    setPopupTimeout(undefined);
+  const hideNotif = useCallback(() => {
+    setNotifMessage(null);
+    setNotifType("info");
+    setNotifTimeout(undefined);
   }, []);
 
   return (
-    <PopupContext.Provider value={{ showPopup, hidePopup }}>
+    <NotifContext.Provider value={{ showNotif, hideNotif }}>
       {children}
-      {popupMessage && (
-        <Popup
-          message={popupMessage}
-          type={popupType}
-          onClose={hidePopup}
-          timeout={popupTimeout}
+      {notifMessage && (
+        <Notif
+          message={notifMessage}
+          type={notifType}
+          onClose={hideNotif}
+          timeout={notifTimeout}
         />
       )}
-    </PopupContext.Provider>
+    </NotifContext.Provider>
   );
 };
 
-interface PopupProps {
+interface NotifProps {
   message: string;
   type: "success" | "error" | "info";
   onClose: () => void;
   timeout?: number;
 }
 
-const Popup: React.FC<PopupProps> = ({ message, type, onClose, timeout }) => {
+const Notif: React.FC<NotifProps> = ({ message, type, onClose, timeout }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(100);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -104,7 +104,7 @@ const Popup: React.FC<PopupProps> = ({ message, type, onClose, timeout }) => {
   const backgroundColor =
     type === "success" ? "bg-green-600"
     : type === "error" ? "bg-red-500"
-    : "bg-blue-500";
+    : "bg-blue-900";
 
   return (
     <div

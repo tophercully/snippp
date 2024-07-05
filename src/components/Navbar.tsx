@@ -95,7 +95,7 @@ export const Navbar: React.FC = () => {
         >
           <img
             src="scissors.svg"
-            className="h-6 w-6"
+            className="h-6 w-6 brightness-0 invert dark:invert-0"
           />
           <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out group-hover:max-w-xs group-hover:px-3">
             SNIPPP
@@ -188,7 +188,7 @@ export const Navbar: React.FC = () => {
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={() => console.log("My Snippets clicked")}
                   >
-                    My Snippets
+                    DASHBOARD
                   </button>
                 </a>
                 <a href="/profile">
@@ -196,14 +196,14 @@ export const Navbar: React.FC = () => {
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={() => console.log("Profile clicked")}
                   >
-                    Profile
+                    PROFILE
                   </button>
                 </a>
                 <button
                   className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                   onClick={handleSignIn}
                 >
-                  Sign Out
+                  SIGN OUT
                 </button>
               </div>
             )}
