@@ -20,7 +20,8 @@ export const updateSnippet = async (
       SET 
         Name = ${newParams.name},
         Code = ${newParams.code},
-        Tags = ${newParams.tags}
+        Tags = ${newParams.tags},
+        lastEdit = CURRENT_TIMESTAMP
       WHERE SnippetID = ${snippetIDToUpdate};
     `;
 

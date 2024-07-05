@@ -22,7 +22,7 @@ export const newSnippet = async ({ params }: Params): Promise<Snippet> => {
     String.fromCharCode(13) + String.fromCharCode(10),
   );
 
-  // First, get the author's name from the users table
+  // get the author's name from the users table
   const { rows: userRows } = await pool.sql`
     SELECT name FROM users WHERE userID = ${params.authorID};
   `;
@@ -33,7 +33,7 @@ export const newSnippet = async ({ params }: Params): Promise<Snippet> => {
 
   const authorName = userRows[0].name;
 
-  // Now insert the new snippet
+  //insert the new snippet
   const { rows } = await pool.sql`
     INSERT INTO snippets(name, code, tags, author, authorID, public)
     VALUES (${params.name}, ${linePreservedCode}, ${params.tags}, ${params.author}, ${params.authorID}, ${params.public})
