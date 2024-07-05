@@ -169,6 +169,16 @@ export const Display = ({
 
   console.log(snippetMod.copyCount);
   console.log(copyCount);
+  console.log(
+    simplifyNumber(
+      snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
+    ),
+  );
+
+  const simplifiedAndModdedCount = simplifyNumber(
+    snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
+  );
+  console.log(simplifiedAndModdedCount);
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
@@ -195,13 +205,7 @@ export const Display = ({
                 src="copy.svg"
                 className="invert dark:invert-0"
               />
-              <span>
-                {simplifyNumber(
-                  snippetMod.copyCount ?
-                    copyCount + snippetMod.copyCount
-                  : copyCount,
-                )}
-              </span>
+              <span>{simplifiedAndModdedCount}</span>
             </span>
           </div>
         </div>
