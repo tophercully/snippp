@@ -142,7 +142,7 @@ export const Display = ({
 
   if (selection) {
     return (
-      <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 dark:bg-base-950 dark:text-base-50">
+      <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
         <div className="flex h-fit w-fit gap-4">
           <div className="h-fit w-fit rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
             <h1 className="text-3xl font-bold">{name}</h1>
@@ -181,12 +181,12 @@ export const Display = ({
             {code}
           </SyntaxHighlighter>
         </div>
-        {userProfile && selection && (
+        {selection && (
           <div
             id="controls"
-            className="mb-3 flex items-center justify-start gap-5 p-2 lg:p-0"
+            className="mb-3 flex items-center justify-start gap-5 p-2 lg:mb-0 lg:p-0"
           >
-            {!favoriteStatus && (
+            {userProfile && !favoriteStatus && (
               <button
                 className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 onClick={handleAddFavorite}
@@ -207,7 +207,7 @@ export const Display = ({
                 </span>
               </button>
             )}
-            {favoriteStatus && (
+            {userProfile && favoriteStatus && (
               <button
                 className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 onClick={handleRemoveFavorite}
@@ -228,24 +228,22 @@ export const Display = ({
                 </span>
               </button>
             )}
-            {selection && (
-              <button
-                onClick={handleShare}
-                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
-              >
-                <div
-                  className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                  aria-hidden="true"
+            <button
+              onClick={handleShare}
+              className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+            >
+              <div
+                className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                aria-hidden="true"
+              />
+              <span className="relative flex items-center gap-3">
+                <img
+                  src="share.svg"
+                  className="h-5 invert group-hover:invert-0 dark:invert-0"
                 />
-                <span className="relative flex items-center gap-3">
-                  <img
-                    src="share.svg"
-                    className="h-5 invert group-hover:invert-0 dark:invert-0"
-                  />
-                  <span className="hidden 2xl:inline">SHARE</span>
-                </span>
-              </button>
-            )}
+                <span className="hidden 2xl:inline">SHARE</span>
+              </span>
+            </button>
             {userProfile && userProfile.id === authorID && (
               <>
                 <a

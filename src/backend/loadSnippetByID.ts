@@ -1,10 +1,14 @@
 import { createPool } from "@vercel/postgres";
+import { Snippet } from "../typeInterfaces";
 
 const pool = createPool({
   connectionString: import.meta.env.VITE_SNIPPET_URL,
 });
 
-export const loadSnippetById = async (snippetID: number, userID?: string) => {
+export const loadSnippetById = async (
+  snippetID: number,
+  userID?: string,
+): Promise<Snippet> => {
   const { rows } = await pool.sql`
     WITH FavoriteCounts AS (
         SELECT snippetID, COUNT(*) AS favoriteCount
@@ -23,6 +27,11 @@ export const loadSnippetById = async (snippetID: number, userID?: string) => {
         s.tags, 
         u.name AS author, 
         s.authorID,
+        s.public,
+        s.createdAt,
+        s.lastCopied,
+        s.lastEdit,
+        s.copyCount,
         COALESCE(fc.favoriteCount, 0) AS favoriteCount,
         COALESCE(uf.is_favorite, 0) AS isFavorite
     FROM snippets s
@@ -44,7 +53,12 @@ export const loadSnippetById = async (snippetID: number, userID?: string) => {
     tags: snippet.tags,
     author: snippet.author,
     authorID: snippet.authorid,
-    favoriteCount: snippet.favoritecount,
+    public: snippet.public,
+    createdAt: snippet.createdat,
+    lastCopied: snippet.lastcopied,
+    lastEdit: snippet.lastedit,
+    copyCount: snippet.copycount,
+    favoriteCount: parseInt(snippet.favoritecount),
     isFavorite: Boolean(snippet.isfavorite),
   };
 };
