@@ -2,18 +2,26 @@
 import React from "react";
 import { Snippet } from "../typeInterfaces";
 import { useWindowSize } from "@uidotdev/usehooks";
+
 interface DisplaySelectionsProps {
   selection: Snippet | null;
   setSelection: React.Dispatch<React.SetStateAction<Snippet | null>>;
   snippets: Snippet[];
-  favoriteMods: { [snippetID: number]: number };
+  snippetMods: {
+    [snippetID: number]: {
+      favoriteStatus?: boolean;
+      favoriteCount?: number;
+      copyCount?: number;
+      isDeleted?: boolean;
+    };
+  };
 }
 
 export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
   selection,
   setSelection,
   snippets,
-  favoriteMods,
+  snippetMods,
 }) => {
   const handleClick = (input: Snippet) => {
     if (input !== selection) {
@@ -25,29 +33,10 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
     const { snippetID, name, author, favoriteCount, isFavorite } = item;
     const { width } = useWindowSize();
     const isMobile = width && width <= 1024;
-    const modifiedFavoriteCount = (() => {
-      const baseFavoriteCount = Number(favoriteCount);
-      const mod = favoriteMods[snippetID as number];
+    const mod = snippetMods[Number(snippetID)];
 
-      if (mod === undefined) {
-        return baseFavoriteCount;
-      }
-
-      if (mod === 1 && !isFavorite) {
-        return baseFavoriteCount + 1;
-      }
-
-      if (mod === -1 && isFavorite) {
-        return baseFavoriteCount - 1;
-      }
-
-      return baseFavoriteCount;
-    })();
-
-    const favorited =
-      favoriteMods[snippetID as number] !== undefined ?
-        favoriteMods[snippetID as number] > 0
-      : isFavorite;
+    const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount;
+    const favorited = mod?.favoriteStatus ?? isFavorite;
 
     const selectedClass =
       selection === item ?

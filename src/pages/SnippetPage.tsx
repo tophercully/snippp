@@ -6,30 +6,33 @@ import { loadSnippetById } from "../backend/loadSnippetByID";
 import { Snippet } from "../typeInterfaces";
 import { useSearchParams } from "react-router-dom";
 
-type FavoriteMod = { [snippetID: number]: number };
+type SnippetMod = {
+  favoriteStatus?: boolean;
+  favoriteCount?: number;
+  copyCount?: number;
+  isDeleted?: boolean;
+};
+
+type SnippetMods = { [snippetID: number]: SnippetMod };
 
 export const SnippetPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [selection, setSelection] = useState<Snippet | null>(null);
-  const [favoriteMods, setFavoriteMods] = useState<FavoriteMod>({});
+  const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const id = searchParams.get("snippetid");
 
-  const updateFavorites = useCallback((id: number, isFavorite: boolean) => {
-    setFavoriteMods((prevMods) => {
-      const newMods = { ...prevMods };
-      if (prevMods[id] === -1 && isFavorite) {
-        delete newMods[id];
-      } else if (prevMods[id] === 1 && !isFavorite) {
-        delete newMods[id];
-      } else {
-        newMods[id] = isFavorite ? 1 : -1;
-      }
-      return newMods;
-    });
-  }, []);
+  const updateSnippetMod = useCallback(
+    (id: number, mod: Partial<SnippetMod>) => {
+      setSnippetMods((prevMods) => ({
+        ...prevMods,
+        [id]: { ...prevMods[id], ...mod },
+      }));
+    },
+    [],
+  );
 
   useEffect(() => {
     const fetchSelection = async () => {
@@ -40,7 +43,13 @@ export const SnippetPage: React.FC = () => {
         try {
           const snippet = await loadSnippetById(Number(id));
           setSelection(snippet as Snippet);
-          setFavoriteMods({ [snippet.snippetID]: snippet.isFavorite ? 1 : 0 });
+          setSnippetMods({
+            [snippet.snippetID]: {
+              favoriteStatus: snippet.isFavorite,
+              favoriteCount: snippet.favoriteCount,
+              copyCount: snippet.copyCount,
+            },
+          });
         } catch (err) {
           setError("Snippet not found");
           setSelection(null);
@@ -82,8 +91,8 @@ export const SnippetPage: React.FC = () => {
         {selection && !isLoading && !isTransitioning && !error && (
           <Display
             selection={selection}
-            favoriteMods={favoriteMods}
-            updateFavorites={updateFavorites}
+            updateSnippetMod={updateSnippetMod}
+            snippetMods={snippetMods}
           />
         )}
       </div>

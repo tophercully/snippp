@@ -39,11 +39,18 @@ function sortByProperty<T>(
   }
 }
 
-type FavoriteMod = { [snippetID: number]: number };
+type SnippetMod = {
+  favoriteStatus?: boolean;
+  favoriteCount?: number;
+  copyCount?: number;
+  isDeleted?: boolean;
+};
+
+type SnippetMods = { [snippetID: number]: SnippetMod };
 
 export const Browser: React.FC = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  const [favoriteMods, setFavoriteMods] = useState<FavoriteMod>({});
+  const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [category, setCategory] = useState<string | null>(null);
@@ -62,7 +69,7 @@ export const Browser: React.FC = () => {
     const userID = userProfile ? userProfile.id : undefined;
     const snippetsArray = await loadAllSnippets(userID);
     setSnippets(snippetsArray);
-    setFavoriteMods({});
+    setSnippetMods({});
     setIsLoading(false);
     setTimeout(() => setIsTransitioning(false), 300);
   }, []);
@@ -71,21 +78,15 @@ export const Browser: React.FC = () => {
     fetchSnippets();
   }, [fetchSnippets]);
 
-  const updateFavorites = useCallback((id: number, isFavorite: boolean) => {
-    setFavoriteMods((prevMods) => {
-      const newMods = { ...prevMods };
-
-      if (prevMods[id] === -1 && isFavorite) {
-        delete newMods[id];
-      } else if (prevMods[id] === 1 && !isFavorite) {
-        delete newMods[id];
-      } else {
-        newMods[id] = isFavorite ? 1 : -1;
-      }
-
-      return newMods;
-    });
-  }, []);
+  const updateSnippetMod = useCallback(
+    (id: number, mod: Partial<SnippetMod>) => {
+      setSnippetMods((prevMods) => ({
+        ...prevMods,
+        [id]: { ...prevMods[id], ...mod },
+      }));
+    },
+    [],
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -94,7 +95,9 @@ export const Browser: React.FC = () => {
   }, []);
 
   const filteredAndSortedSnippets = useMemo(() => {
-    let filteredSnippets = snippets;
+    let filteredSnippets = snippets.filter(
+      (snippet) => !snippetMods[snippet.snippetID]?.isDeleted,
+    );
 
     if (category && categories[category]) {
       const categoryTags = categories[category].tags;
@@ -119,7 +122,7 @@ export const Browser: React.FC = () => {
     }
 
     return sortByProperty(filteredSnippets, sortMethod, sortOrder);
-  }, [snippets, query, sortMethod, sortOrder, category]);
+  }, [snippets, snippetMods, query, sortMethod, sortOrder, category]);
 
   const isReady =
     !isLoading && filteredAndSortedSnippets.length > 0 && selection;
@@ -164,7 +167,7 @@ export const Browser: React.FC = () => {
               {filteredAndSortedSnippets.length > 0 ?
                 <SelectionsList
                   snippets={filteredAndSortedSnippets}
-                  favoriteMods={favoriteMods}
+                  snippetMods={snippetMods}
                   selection={selection}
                   setSelection={setSelection}
                 />
@@ -191,8 +194,8 @@ export const Browser: React.FC = () => {
           {isReady && (
             <Display
               selection={selection}
-              updateFavorites={updateFavorites}
-              favoriteMods={favoriteMods}
+              updateSnippetMod={updateSnippetMod}
+              snippetMods={snippetMods}
             />
           )}
         </div>

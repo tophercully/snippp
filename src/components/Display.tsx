@@ -17,14 +17,23 @@ import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
 
+type SnippetMod = {
+  favoriteStatus?: boolean;
+  favoriteCount?: number;
+  copyCount?: number;
+  isDeleted?: boolean;
+};
+
+type SnippetMods = { [snippetID: number]: SnippetMod };
+
 export const Display = ({
   selection,
-  updateFavorites,
-  favoriteMods,
+  updateSnippetMod,
+  snippetMods,
 }: {
   selection: Snippet;
-  updateFavorites: (id: number, isFavorite: boolean) => void;
-  favoriteMods: { [snippetID: number]: number };
+  updateSnippetMod: (id: number, mod: Partial<SnippetMod>) => void;
+  snippetMods: SnippetMods;
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const { snippetID, name, author, code, authorID, isFavorite } = selection;
@@ -32,12 +41,8 @@ export const Display = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
-  const favoriteStatus = (() => {
-    if (favoriteMods[snippetID as number] !== undefined) {
-      return favoriteMods[snippetID as number] > 0;
-    }
-    return isFavorite;
-  })();
+  const snippetMod = snippetMods[snippetID] || {};
+  const favoriteStatus = snippetMod.favoriteStatus ?? isFavorite;
   const { showNotif } = useNotif();
 
   const snippetCategories = useMemo(() => {
@@ -56,60 +61,51 @@ export const Display = ({
     navigator.clipboard.writeText(code);
     showNotif("COPIED TO CLIPBOARD", "info", 3000);
     addCopy(selection.snippetID);
+    updateSnippetMod(snippetID, { copyCount: (snippetMod.copyCount || 0) + 1 });
   };
 
-  const addFavorite = async (
-    userID: string,
-    snippetID: number,
-    updateFavorites: (id: number, isFavorite: boolean) => void,
-  ) => {
-    try {
-      await addSnippetToFavorites({
-        userID: userID,
-        snippetIDToAdd: snippetID,
-      });
-      updateFavorites(snippetID, true); // Only update local state if request succeeds
-      showNotif("Added Favorite", "success", 2000);
-    } catch (error) {
-      console.error("Failed to add favorite:", error);
-    }
-  };
-
-  const removeFavorite = async (
-    userID: string,
-    snippetID: number,
-    updateFavorites: (id: number, isFavorite: boolean) => void,
-  ) => {
-    try {
-      await removeSnippetFromFavorites({
-        userID: userID,
-        snippetIDToRemove: snippetID,
-      });
-      showNotif("Deleted Favorite", "success", 2000);
-      updateFavorites(snippetID, false);
-    } catch (error) {
-      console.error("Failed to remove favorite:", error);
-    }
-  };
   const handleAddFavorite = async () => {
     if (userProfile) {
       setIsLoading(true);
-      await addFavorite(userProfile.id, snippetID as number, updateFavorites);
-      setIsLoading(false);
+      try {
+        await addSnippetToFavorites({
+          userID: userProfile.id,
+          snippetIDToAdd: snippetID,
+        });
+        updateSnippetMod(snippetID, {
+          favoriteStatus: true,
+          favoriteCount: (snippetMod.favoriteCount || 0) + 1,
+        });
+        showNotif("Added Favorite", "success", 2000);
+      } catch (error) {
+        console.error("Failed to add favorite:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const handleRemoveFavorite = async () => {
     if (userProfile) {
       setIsLoading(true);
-      await removeFavorite(
-        userProfile.id,
-        snippetID as number,
-        updateFavorites,
-      );
-      setIsLoading(false);
+      try {
+        await removeSnippetFromFavorites({
+          userID: userProfile.id,
+          snippetIDToRemove: snippetID,
+        });
+        updateSnippetMod(snippetID, {
+          favoriteStatus: false,
+          favoriteCount: Math.max((snippetMod.favoriteCount || 1) - 1, 0),
+        });
+        showNotif("Deleted Favorite", "success", 2000);
+      } catch (error) {
+        console.error("Failed to remove favorite:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
+
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/snippet?snippetid=${snippetID}`;
     if (navigator.share) {
@@ -124,7 +120,6 @@ export const Display = ({
         console.log("Error sharing:", err);
       }
     } else {
-      // Fallback for browsers that don't support navigator.share
       try {
         await navigator.clipboard.writeText(shareUrl);
         showNotif("SNIPPET LINK COPIED", "info", 3000);
@@ -140,8 +135,9 @@ export const Display = ({
       try {
         setIsLoading(true);
         await deleteSnippet({
-          snippetIDToDelete: selection.snippetID as number,
+          snippetIDToDelete: selection.snippetID,
         });
+        updateSnippetMod(snippetID, { isDeleted: true });
         showNotif("Snippet deleted successfully", "success", 2000);
       } catch (error) {
         console.error("Failed to delete snippet:", error);
@@ -197,9 +193,11 @@ export const Display = ({
                 className="invert dark:invert-0"
               />
               <span>
-                {selection.copyCount ?
-                  simplifyNumber(Number(selection.copyCount))
-                : 0}
+                {simplifyNumber(
+                  snippetMod.copyCount ?
+                    selection.copyCount + snippetMod.copyCount
+                  : selection.copyCount,
+                )}
               </span>
             </span>
           </div>

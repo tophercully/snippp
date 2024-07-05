@@ -10,7 +10,15 @@ import { loadFavorites } from "../backend/loadFavorites";
 import { loadUserSnippets } from "../backend/loadUserSnippets";
 
 type SortOrder = "asc" | "desc";
-type FavoriteMod = { [snippetID: number]: number };
+
+type SnippetMod = {
+  favoriteStatus?: boolean;
+  favoriteCount?: number;
+  copyCount?: number;
+  isDeleted?: boolean;
+};
+
+type SnippetMods = { [snippetID: number]: SnippetMod };
 
 function sortByProperty<T>(
   array: T[],
@@ -43,7 +51,7 @@ function sortByProperty<T>(
 export const MySnippets: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  const [favoriteMods, setFavoriteMods] = useState<FavoriteMod>({});
+  const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
@@ -53,21 +61,15 @@ export const MySnippets: React.FC = () => {
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
-  const updateFavorites = useCallback((id: number, isFavorite: boolean) => {
-    setFavoriteMods((prevMods) => {
-      const newMods = { ...prevMods };
-
-      if (prevMods[id] === -1 && isFavorite) {
-        delete newMods[id];
-      } else if (prevMods[id] === 1 && !isFavorite) {
-        delete newMods[id];
-      } else {
-        newMods[id] = isFavorite ? 1 : -1;
-      }
-
-      return newMods;
-    });
-  }, []);
+  const updateSnippetMod = useCallback(
+    (id: number, mod: Partial<SnippetMod>) => {
+      setSnippetMods((prevMods) => ({
+        ...prevMods,
+        [id]: { ...prevMods[id], ...mod },
+      }));
+    },
+    [],
+  );
 
   const fetchSnippets = useCallback(async () => {
     if (userProfile && userProfile.id) {
@@ -85,7 +87,7 @@ export const MySnippets: React.FC = () => {
           )
         ) {
           setSnippets(snippetsArray);
-          setFavoriteMods({}); // Reset favorite mods when snippets change
+          setSnippetMods({}); // Reset snippet mods when snippets change
         }
       } else {
         console.error(
@@ -102,10 +104,12 @@ export const MySnippets: React.FC = () => {
 
   useEffect(() => {
     const filterAndSortSnippets = () => {
-      let filteredSnippets = snippets;
+      let filteredSnippets = snippets.filter(
+        (snippet) => !snippetMods[snippet.snippetID]?.isDeleted,
+      );
 
       if (query) {
-        filteredSnippets = snippets.filter(
+        filteredSnippets = filteredSnippets.filter(
           (a) =>
             a.tags.includes(query) ||
             a.name.includes(query) ||
@@ -137,19 +141,7 @@ export const MySnippets: React.FC = () => {
     };
 
     filterAndSortSnippets();
-  }, [snippets, query, sortMethod, sortOrder, selection]);
-
-  // Effect to update selection when favoriteMods changes
-  useEffect(() => {
-    if (selection) {
-      const updatedSelection = snippets.find(
-        (s) => s.snippetID === selection.snippetID,
-      );
-      if (updatedSelection) {
-        setSelection(updatedSelection);
-      }
-    }
-  }, [favoriteMods, snippets, selection]);
+  }, [snippets, snippetMods, query, sortMethod, sortOrder, selection]);
 
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
@@ -185,7 +177,7 @@ export const MySnippets: React.FC = () => {
             <div className="h-full w-full overflow-hidden">
               <SelectionsList
                 snippets={filteredAndSortedSnippets}
-                favoriteMods={favoriteMods}
+                snippetMods={snippetMods}
                 selection={selection}
                 setSelection={setSelection}
               />
@@ -221,8 +213,8 @@ export const MySnippets: React.FC = () => {
           <div className="hidden h-full w-2/3 overflow-y-auto lg:flex">
             <Display
               selection={selection}
-              updateFavorites={updateFavorites}
-              favoriteMods={favoriteMods}
+              updateSnippetMod={updateSnippetMod}
+              snippetMods={snippetMods}
             />
           </div>
         )}
