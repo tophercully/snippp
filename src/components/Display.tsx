@@ -162,7 +162,7 @@ export const Display = ({
         {userProfile && selection && (
           <div
             id="controls"
-            className="mb-3 flex items-center justify-start gap-5"
+            className="mb-3 flex items-center justify-start gap-5 p-2 lg:p-0"
           >
             {!favoriteStatus && (
               <button

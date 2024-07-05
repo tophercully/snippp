@@ -122,7 +122,7 @@ export const Builder = () => {
                 },
               }}
               theme={selectedStyle}
-              defaultLanguage="javascript"
+              defaultLanguage="auto"
               //   defaultValue={snippet.code}
               onChange={handleCodeChange}
             />

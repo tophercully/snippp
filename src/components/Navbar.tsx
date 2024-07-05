@@ -145,6 +145,12 @@ export const Navbar: React.FC = () => {
               )}
             </div>
           )}
+          <a
+            href="/about"
+            className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+          >
+            ABOUT
+          </a>
         </div>
 
         {!userProfile && (
