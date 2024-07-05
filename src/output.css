@@ -454,9 +454,13 @@ video {
       url("./assets/fonts/Satoshi-Variable.woff") format("woff"),
       url("./assets/fonts/Satoshi-Variable.ttf") format("truetype");
 
-  font-weight: normal;
+  font-weight: 300 900;
+
+  /* Assuming it's a variable font with this weight range */
 
   font-style: normal;
+
+  font-display: swap;
 }
 
 *, ::before, ::after {
@@ -1213,7 +1217,7 @@ video {
 }
 
 .font-satoshi {
-  font-family: Satoshi;
+  font-family: Satoshi, Roboto, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
 .text-2xl {

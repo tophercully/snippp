@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
 import { fetchStats } from "./backend/fetchStats";
+import "./output.css";
 
 const Home = () => {
   const [stats, setStats] = useState<{
