@@ -28,6 +28,7 @@ export const Display = ({
   const { snippetID, name, author, code, authorID, isFavorite } = selection;
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
   const favoriteStatus = (() => {
     if (favoriteMods[snippetID as number] !== undefined) {
@@ -134,14 +135,14 @@ export const Display = ({
 
   if (selection) {
     return (
-      <div className="flex h-full w-full flex-col gap-3 bg-base-50 p-8 pt-0 dark:bg-base-950 dark:text-base-50">
+      <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 dark:bg-base-950 dark:text-base-50">
         <div className="h-fit w-fit rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
           <h1 className="text-3xl font-bold">{name}</h1>
           <h1 className="text-xl font-thin">{author}</h1>
         </div>
         <div
           onClick={copySnippet}
-          className="rounded-xs group relative h-full w-full border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
+          className="rounded-xs group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
         >
           <div className="absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[1px] backdrop-filter transition-opacity duration-200 active:backdrop-blur-[2px] group-hover:opacity-100">
             <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
@@ -149,11 +150,10 @@ export const Display = ({
             </span>
           </div>
           <SyntaxHighlighter
-            // language={javascript}
             style={selectedStyle}
             customStyle={{
               background: "transparent",
-              fontSize: "10",
+              fontSize: codeFontSize,
             }}
           >
             {code}
@@ -162,45 +162,67 @@ export const Display = ({
         {userProfile && selection && (
           <div
             id="controls"
-            className="flex items-center justify-start gap-5"
+            className="mb-3 flex items-center justify-start gap-5"
           >
             {!favoriteStatus && (
               <button
-                className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 onClick={handleAddFavorite}
                 disabled={isLoading}
               >
-                <img
-                  src="heart-empty.svg"
-                  className="h-5 dark:invert"
+                <div
+                  className="absolute inset-0 -translate-x-full transform bg-green-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  aria-hidden="true"
                 />
-                {isLoading ? "ADDING..." : "ADD FAVORITE"}
+                <span className="relative flex items-center gap-3">
+                  <img
+                    src="heart-empty.svg"
+                    className="h-5 group-hover:invert dark:invert dark:group-hover:invert-0"
+                  />
+                  <span className="hidden sm:inline">
+                    {isLoading ? "ADDING..." : "ADD FAVORITE"}
+                  </span>
+                </span>
               </button>
             )}
             {favoriteStatus && (
               <button
-                className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 onClick={handleRemoveFavorite}
                 disabled={isLoading}
               >
-                <img
-                  src="heart-full.svg"
-                  className="h-5 dark:invert"
+                <div
+                  className="absolute inset-0 -translate-x-full transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  aria-hidden="true"
                 />
-                {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}
+                <span className="relative flex items-center gap-3">
+                  <img
+                    src="heart-full.svg"
+                    className="h-5 group-hover:invert dark:invert dark:group-hover:invert-0"
+                  />
+                  <span className="hidden sm:inline">
+                    {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}
+                  </span>
+                </span>
               </button>
             )}
             {userProfile && userProfile.id === authorID && (
               <>
                 <a
                   href={`/builder?snippetid=${selection.snippetID}`}
-                  className="bg-base-150 flex items-center gap-3 rounded-sm border p-2 hover:bg-base-200 dark:border-base-800 dark:bg-base-900 dark:text-base-50 dark:hover:bg-base-800"
+                  className="group relative ml-auto flex items-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 >
-                  <img
-                    src="edit.svg"
-                    className="h-5 dark:invert"
+                  <div
+                    className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                    aria-hidden="true"
                   />
-                  EDIT SNIPPET
+                  <span className="relative flex items-center gap-3">
+                    <img
+                      src="edit.svg"
+                      className="h-5 group-hover:invert dark:invert dark:group-hover:invert-0"
+                    />
+                    <span className="hidden 2xl:inline">EDIT SNIPPET</span>
+                  </span>
                 </a>
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
@@ -210,12 +232,12 @@ export const Display = ({
                     className="absolute inset-0 -translate-x-full transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                     aria-hidden="true"
                   />
-                  <span className="relative z-10 flex items-center gap-3">
+                  <span className="relative flex items-center gap-3">
                     <img
-                      src="delete.svg"
-                      className="h-5 dark:invert"
+                      src="x.svg"
+                      className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
-                    <span className="">DELETE SNIPPET</span>
+                    <span className="hidden 2xl:inline">DELETE SNIPPET</span>
                   </span>
                 </button>
               </>

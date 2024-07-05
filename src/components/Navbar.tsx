@@ -87,7 +87,7 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
 
   return (
-    <div className="absolute left-0 right-0 top-0 w-full p-2 md:px-10">
+    <div className="absolute left-0 right-0 top-0 w-full p-2 lg:px-10">
       <div className="flex h-fit w-full items-center justify-start gap-5">
         <a
           href="/"

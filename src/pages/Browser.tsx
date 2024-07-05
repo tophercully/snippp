@@ -129,10 +129,10 @@ export const Browser: React.FC = () => {
     !isLoading && filteredAndSortedSnippets.length > 0 && selection;
 
   return (
-    <div className="over flex h-screen w-screen flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
+    <div className="over flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
-      <div className="flex h-[96%] w-full shadow-lg">
-        <div className="flex h-full w-1/3 flex-col">
+      <div className="flex h-fit w-full flex-col-reverse shadow-lg lg:h-[96%] lg:flex-row">
+        <div className="flex h-full w-full flex-col lg:w-1/3">
           <SearchBar
             query={query}
             setQuery={setQuery}
@@ -188,7 +188,7 @@ export const Browser: React.FC = () => {
           </div>
         </div>
         <div
-          className={`h-full w-2/3 overflow-y-auto transition-opacity duration-300 ${
+          className={`h-[90svh] w-full overflow-y-auto transition-opacity duration-300 lg:h-full lg:w-2/3 ${
             isReady ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
