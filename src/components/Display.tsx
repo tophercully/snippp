@@ -5,14 +5,14 @@ import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascr
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
 import glsl from "react-syntax-highlighter/dist/esm/languages/hljs/glsl";
 import { deleteSnippet } from "../backend/deleteSnippet";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/deleteFavorite";
 import { addSnippetToFavorites } from "../backend/addFavorite";
 SyntaxHighlighter.registerLanguage("javascript", javascript);
 SyntaxHighlighter.registerLanguage("python", python);
 SyntaxHighlighter.registerLanguage("glsl", glsl);
-
+import categories from "../utils/categories";
 import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
@@ -39,6 +39,18 @@ export const Display = ({
     return isFavorite;
   })();
   const { showNotif } = useNotif();
+
+  const snippetCategories = useMemo(() => {
+    const snippetTags = selection.tags
+      .toLowerCase()
+      .split(",")
+      .map((tag) => tag.trim());
+    return Object.entries(categories)
+      .filter(([, categoryInfo]) =>
+        categoryInfo.tags.some((catTag) => snippetTags.includes(catTag)),
+      )
+      .map(([, categoryInfo]) => categoryInfo.name);
+  }, [selection.tags]);
 
   const copySnippet = () => {
     navigator.clipboard.writeText(code);
@@ -166,8 +178,20 @@ export const Display = ({
             <h1 className="text-3xl font-bold">{name}</h1>
             <h1 className="text-xl font-thin">{author}</h1>
           </div>
-          <div className="mr-8 flex h-full w-fit flex-col justify-end pt-6">
-            <span className="flex h-fit">
+          <div className="mr-8 flex h-full w-fit flex-col justify-between">
+            {snippetCategories.length > 0 && (
+              <div className="flex flex-nowrap gap-1 self-end">
+                {snippetCategories.map((category, index) => (
+                  <span
+                    key={index}
+                    className="rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+            )}
+            <span className="flex h-fit items-center gap-2">
               <img
                 src="copy.svg"
                 className="invert dark:invert-0"
