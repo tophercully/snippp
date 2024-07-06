@@ -53,19 +53,19 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
           onClick={() => handleClick(item)}
         >
           <div className="flex w-4/5 flex-col gap-3">
-            <h1 className="text-2xl">{name}</h1>
-            <h1 className="text-sm">{author}</h1>
-          </div>
-          <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
-            {!item.public && (
-              <div className="pr-auto flex items-center justify-start">
+            <div className="flex items-center gap-2 text-2xl">
+              {name}
+              {!item.public && (
                 <img
                   src="lock.svg"
                   className="mr-auto h-5 invert"
                   alt="Private"
                 />
-              </div>
-            )}
+              )}
+            </div>
+            <h1 className="text-sm">{author}</h1>
+          </div>
+          <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
             <div className="flex items-center justify-end gap-1">
               <img
                 src={favorited ? "heart-full.svg" : "heart-empty.svg"}
@@ -86,19 +86,19 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
           href={`/snippet?snippetid=${snippetID}`}
         >
           <div className="flex w-4/5 flex-col gap-3">
-            <h1 className="text-2xl">{name}</h1>
-            <h1 className="text-sm">{author}</h1>
-          </div>
-          <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
-            {!item.public && (
-              <div className="pr-auto flex items-center justify-start">
+            <div className="flex items-center gap-2 text-2xl">
+              {name}
+              {!item.public && (
                 <img
                   src="lock.svg"
                   className="mr-auto h-5 invert"
                   alt="Private"
                 />
-              </div>
-            )}
+              )}
+            </div>
+            <h1 className="text-sm">{author}</h1>
+          </div>
+          <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
             <div className="flex items-center justify-end gap-1">
               <img
                 src={favorited ? "heart-full.svg" : "heart-empty.svg"}
