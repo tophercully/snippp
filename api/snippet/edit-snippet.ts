@@ -8,6 +8,7 @@ interface UpdateParams {
   name: string;
   code: string;
   tags: string;
+  public: boolean;
 }
 
 export default async function handler(req: any, res: any) {
@@ -31,6 +32,7 @@ export default async function handler(req: any, res: any) {
         Name = ${newParams.name},
         Code = ${newParams.code},
         Tags = ${newParams.tags},
+        Public = ${newParams.public},
         lastEdit = CURRENT_TIMESTAMP
       WHERE SnippetID = ${snippetIDToUpdate};
     `;

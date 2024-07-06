@@ -2,6 +2,7 @@
 import React from "react";
 import { Snippet } from "../typeInterfaces";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { simplifyNumber } from "../utils/simplifyNumber";
 
 interface DisplaySelectionsProps {
   selection: Snippet | null;
@@ -47,7 +48,7 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
       // Set selection like normal
       return (
         <div
-          className={`flex w-full flex-row border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none ${selectedClass}`}
+          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none ${selectedClass}`}
           key={snippetID}
           onClick={() => handleClick(item)}
         >
@@ -55,7 +56,16 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
             <h1 className="text-2xl">{name}</h1>
             <h1 className="text-sm">{author}</h1>
           </div>
-          <div className="flex w-1/5 flex-col items-end justify-center">
+          <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
+            {!item.public && (
+              <div className="pr-auto flex items-center justify-start">
+                <img
+                  src="lock.svg"
+                  className="mr-auto h-5 invert"
+                  alt="Private"
+                />
+              </div>
+            )}
             <div className="flex items-center justify-end gap-1">
               <img
                 src={favorited ? "heart-full.svg" : "heart-empty.svg"}
@@ -71,7 +81,7 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
       // Return a link to the snippet page on mobile
       return (
         <a
-          className={`flex w-full flex-row border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none ${selectedClass}`}
+          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none ${selectedClass}`}
           key={snippetID}
           href={`/snippet?snippetid=${snippetID}`}
         >
@@ -79,14 +89,23 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
             <h1 className="text-2xl">{name}</h1>
             <h1 className="text-sm">{author}</h1>
           </div>
-          <div className="flex w-1/5 flex-col items-end justify-center">
+          <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
+            {!item.public && (
+              <div className="pr-auto flex items-center justify-start">
+                <img
+                  src="lock.svg"
+                  className="mr-auto h-5 invert"
+                  alt="Private"
+                />
+              </div>
+            )}
             <div className="flex items-center justify-end gap-1">
               <img
                 src={favorited ? "heart-full.svg" : "heart-empty.svg"}
                 className="ml-auto h-5"
                 alt="Favorites"
               />
-              <p>{modifiedFavoriteCount.toString()}</p>
+              <p>{simplifyNumber(modifiedFavoriteCount).toString()}</p>
             </div>
           </div>
         </a>

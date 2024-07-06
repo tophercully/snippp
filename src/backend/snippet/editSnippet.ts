@@ -2,6 +2,7 @@ interface UpdateParams {
   name: string;
   code: string;
   tags: string;
+  public: boolean;
 }
 
 export const updateSnippet = async (
@@ -10,7 +11,7 @@ export const updateSnippet = async (
 ): Promise<void> => {
   try {
     const response = await fetch(
-      `/api/snippet/update-snippet?snippetID=${snippetIDToUpdate}`,
+      `/api/snippet/edit-snippet?snippetID=${snippetIDToUpdate}`,
       {
         method: "PUT",
         headers: {

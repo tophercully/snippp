@@ -102,6 +102,7 @@ export const Builder = () => {
               name: snippet.name,
               code: snippet.code,
               tags: snippet.tags,
+              public: snippet.public,
             });
             showNotif("Snippet updated successfully", "success", 10000);
           } else {

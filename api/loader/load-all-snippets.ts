@@ -40,7 +40,8 @@ export default async function handler(req: any, res: any) {
       FROM snippets s
       JOIN users u ON s.authorID = u.userID
       LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
-      LEFT JOIN UserFavorites uf ON s.snippetID = uf.snippetID;
+      LEFT JOIN UserFavorites uf ON s.snippetID = uf.snippetID
+      WHERE s.public = true OR s.authorID = ${userID};
     `;
 
     const snippets = rows.map((row) => ({

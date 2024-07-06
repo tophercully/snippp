@@ -3,8 +3,9 @@ import { Display } from "../components/Display";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { loadSnippetById } from "../backend/loader/loadSnippetByID";
-import { Snippet } from "../typeInterfaces";
+import { GoogleUser, Snippet } from "../typeInterfaces";
 import { useSearchParams } from "react-router-dom";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -16,6 +17,7 @@ type SnippetMod = {
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 export const SnippetPage: React.FC = () => {
+  const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [searchParams] = useSearchParams();
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
@@ -23,6 +25,19 @@ export const SnippetPage: React.FC = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const id = searchParams.get("snippetid");
+
+  const isAuthor = selection?.authorID == userProfile?.id;
+  let isVisible = true;
+  if (!selection?.public) {
+    if (userProfile) {
+      isVisible = isAuthor;
+    } else {
+      isVisible = false;
+    }
+  }
+
+  console.log(isVisible);
+  console.log(isAuthor);
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -66,6 +81,8 @@ export const SnippetPage: React.FC = () => {
     fetchSelection();
   }, [id]);
 
+  console.log(selection);
+
   return (
     <div className="flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
@@ -88,12 +105,26 @@ export const SnippetPage: React.FC = () => {
             </a>
           </div>
         )}
-        {selection && !isLoading && !isTransitioning && !error && (
+        {selection && isVisible && !isLoading && !isTransitioning && !error && (
           <Display
             selection={selection}
             updateSnippetMod={updateSnippetMod}
             snippetMods={snippetMods}
           />
+        )}
+        {!isVisible && (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+            <h1 className="flex gap-4 bg-red-600 p-4 text-base-50">
+              SNIPPET NOT AVAILABLE
+              <img src="lock.svg" />
+            </h1>
+            <a
+              href="/"
+              className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 dark:bg-base-50 dark:text-base-950"
+            >
+              Return to Home
+            </a>
+          </div>
         )}
       </div>
       <Footer />

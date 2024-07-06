@@ -170,7 +170,7 @@ export const Display = ({
   const simplifiedAndModdedCount = simplifyNumber(
     snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
   );
-  console.log(simplifiedAndModdedCount);
+  console.log(selection);
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
@@ -191,6 +191,15 @@ export const Display = ({
                   </span>
                 ))}
               </div>
+            )}
+
+            {!selection.public && (
+              <span className="flex h-fit items-center gap-2">
+                <img
+                  src="lock.svg"
+                  className="invert dark:invert-0"
+                />
+              </span>
             )}
             <span className="flex h-fit items-center gap-2">
               <img
@@ -296,7 +305,7 @@ export const Display = ({
                   <span className="relative flex items-center gap-3">
                     <img
                       src="edit.svg"
-                      className="h-5 group-hover:invert dark:invert dark:group-hover:invert-0"
+                      className="h-5 group-hover:invert dark:invert"
                     />
                     <span className="hidden 2xl:inline">EDIT SNIPPET</span>
                   </span>
