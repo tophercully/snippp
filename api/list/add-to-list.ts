@@ -4,7 +4,7 @@ const pool = createPool({
   connectionString: process.env.SNIPPET_URL,
 });
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -21,12 +21,10 @@ export default async function handler(req, res) {
       VALUES (${listID}, ${snippetID})
       ON CONFLICT (listID, snippetID) DO NOTHING;
     `;
-    res
-      .status(200)
-      .json({
-        message: `Snippet ${snippetID} added to list ${listID} successfully`,
-      });
-  } catch (error) {
+    res.status(200).json({
+      message: `Snippet ${snippetID} added to list ${listID} successfully`,
+    });
+  } catch (error: any) {
     console.error("Error adding snippet to list:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }

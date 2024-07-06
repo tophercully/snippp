@@ -10,7 +10,7 @@ interface UpdateParams {
   tags: string;
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "PUT") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
 
     console.log(`Snippet with SnippetID ${snippetIDToUpdate} updated`);
     res.status(200).json({ message: "Snippet updated successfully" });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating snippet:", error);
     res
       .status(500)

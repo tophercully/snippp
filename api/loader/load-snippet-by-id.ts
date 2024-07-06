@@ -4,7 +4,7 @@ const pool = createPool({
   connectionString: process.env.SNIPPET_URL,
 });
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
     };
 
     res.status(200).json(formattedSnippet);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching snippet by ID:", error);
     res
       .status(500)

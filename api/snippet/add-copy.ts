@@ -4,7 +4,7 @@ const pool = createPool({
   connectionString: process.env.SNIPPET_URL,
 });
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     res
       .status(200)
       .json({ message: `Copy count incremented for snippet ${snippetID}` });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error incrementing copy count:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }

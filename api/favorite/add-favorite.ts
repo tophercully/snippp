@@ -4,7 +4,7 @@ const pool = createPool({
   connectionString: process.env.SNIPPET_URL,
 });
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -32,19 +32,15 @@ export default async function handler(req, res) {
         INSERT INTO favorites (userID, snippetID)
         VALUES (${userID}, ${snippetIDToAdd});
       `;
-      res
-        .status(200)
-        .json({
-          message: `SnippetID ${snippetIDToAdd} added to favorites for userID ${userID}`,
-        });
+      res.status(200).json({
+        message: `SnippetID ${snippetIDToAdd} added to favorites for userID ${userID}`,
+      });
     } else {
-      res
-        .status(200)
-        .json({
-          message: `SnippetID ${snippetIDToAdd} already exists in favorites for userID ${userID}`,
-        });
+      res.status(200).json({
+        message: `SnippetID ${snippetIDToAdd} already exists in favorites for userID ${userID}`,
+      });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error adding snippet to favorites:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }

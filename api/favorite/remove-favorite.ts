@@ -4,7 +4,7 @@ const pool = createPool({
   connectionString: process.env.SNIPPET_URL,
 });
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   if (req.method !== "DELETE") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
@@ -34,19 +34,15 @@ export default async function handler(req, res) {
         WHERE userID = ${userID}
         AND snippetID = ${snippetIDToRemove};
       `;
-      res
-        .status(200)
-        .json({
-          message: `SnippetID ${snippetIDToRemove} removed from favorites for userID ${userID}`,
-        });
+      res.status(200).json({
+        message: `SnippetID ${snippetIDToRemove} removed from favorites for userID ${userID}`,
+      });
     } else {
-      res
-        .status(404)
-        .json({
-          message: `SnippetID ${snippetIDToRemove} does not exist in favorites for userID ${userID}`,
-        });
+      res.status(404).json({
+        message: `SnippetID ${snippetIDToRemove} does not exist in favorites for userID ${userID}`,
+      });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error removing snippet from favorites:", error);
     res
       .status(500)
