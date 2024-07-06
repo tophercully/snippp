@@ -4,17 +4,17 @@ import { monokai, xcode } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
 import glsl from "react-syntax-highlighter/dist/esm/languages/hljs/glsl";
-import { deleteSnippet } from "../backend/deleteSnippet";
+import { deleteSnippet } from "../backend/snippet/deleteSnippet";
 import { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { removeSnippetFromFavorites } from "../backend/deleteFavorite";
-import { addSnippetToFavorites } from "../backend/addFavorite";
+import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
+import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
 SyntaxHighlighter.registerLanguage("javascript", javascript);
 SyntaxHighlighter.registerLanguage("python", python);
 SyntaxHighlighter.registerLanguage("glsl", glsl);
 import categories from "../utils/categories";
 import { useNotif } from "../hooks/Notif";
-import { addCopy } from "../backend/addCopy";
+import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
 
 type SnippetMod = {
@@ -98,7 +98,7 @@ export const Display = ({
           favoriteStatus: false,
           favoriteCount: Math.max((snippetMod.favoriteCount || 1) - 1, 0),
         });
-        showNotif("Deleted Favorite", "success", 2000);
+        showNotif("Removed Favorite", "success", 2000);
       } catch (error) {
         console.error("Failed to remove favorite:", error);
       } finally {
@@ -139,7 +139,7 @@ export const Display = ({
           snippetIDToDelete: selection.snippetID,
         });
         updateSnippetMod(snippetID, { isDeleted: true });
-        showNotif("Snippet deleted successfully", "success", 2000);
+        showNotif("Snippet Deleted", "success", 2000);
       } catch (error) {
         console.error("Failed to delete snippet:", error);
         showNotif("Failed to delete snippet", "error", 2000);
@@ -166,14 +166,6 @@ export const Display = ({
     .addEventListener("change", (event) => {
       setSelectedStyle(event.matches ? monokai : xcode);
     });
-
-  console.log(snippetMod.copyCount);
-  console.log(copyCount);
-  console.log(
-    simplifyNumber(
-      snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
-    ),
-  );
 
   const simplifiedAndModdedCount = simplifyNumber(
     snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
@@ -246,7 +238,7 @@ export const Display = ({
                 <span className="relative flex items-center gap-3">
                   <img
                     src="heart-empty.svg"
-                    className="h-5 group-hover:invert dark:invert dark:group-hover:invert-0"
+                    className="h-5 group-hover:invert dark:invert"
                   />
                   <span className="hidden sm:inline">
                     {isLoading ? "ADDING..." : "ADD FAVORITE"}
@@ -267,7 +259,7 @@ export const Display = ({
                 <span className="relative flex items-center gap-3">
                   <img
                     src="heart-full.svg"
-                    className="h-5 group-hover:invert dark:invert dark:group-hover:invert-0"
+                    className="h-5 group-hover:invert dark:invert"
                   />
                   <span className="hidden sm:inline">
                     {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}

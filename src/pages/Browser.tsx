@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { loadAllSnippets } from "../backend/loadAllSnippets";
+import { loadAllSnippets } from "../backend/loader/loadAllSnippets";
 import { SearchBar } from "../components/SearchBar";
 import { Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";

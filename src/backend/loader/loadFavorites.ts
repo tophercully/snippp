@@ -1,17 +1,18 @@
-interface HomepageInfo {
-  snippetCount: number;
-  userCount: number;
+import { Snippet } from "../../typeInterfaces";
+
+interface Params {
+  userID: string;
 }
 
-export const fetchStats = async (): Promise<HomepageInfo> => {
+export const loadFavorites = async ({ userID }: Params): Promise<Snippet[]> => {
   try {
-    const response = await fetch("/api/fetch-stats");
+    const response = await fetch(`/api/loader/load-favorites?userID=${userID}`);
 
     if (!response.ok) {
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") !== -1) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch stats");
+        throw new Error(errorData.error || "Failed to load favorite snippets");
       } else {
         const textError = await response.text();
         console.error("Server returned non-JSON response:", textError);
@@ -21,10 +22,10 @@ export const fetchStats = async (): Promise<HomepageInfo> => {
       }
     }
 
-    const stats: HomepageInfo = await response.json();
-    return stats;
+    const favorites: Snippet[] = await response.json();
+    return favorites;
   } catch (error) {
-    console.error("Error fetching stats:", error);
+    console.error("Error retrieving favorite snippets:", error);
     throw error;
   }
 };

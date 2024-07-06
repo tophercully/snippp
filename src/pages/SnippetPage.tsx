@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Display } from "../components/Display";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { loadSnippetById } from "../backend/loadSnippetByID";
+import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { Snippet } from "../typeInterfaces";
 import { useSearchParams } from "react-router-dom";
 

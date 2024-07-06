@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { GoogleUser, Snippet, SnippetInBuilder } from "../typeInterfaces";
-import { newSnippet } from "../backend/newSnippet";
+import { newSnippet } from "../backend/snippet/newSnippet";
 import Editor from "@monaco-editor/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { useSearchParams } from "react-router-dom";
-import { loadSnippetById } from "../backend/loadSnippetByID";
-import { updateSnippet } from "../backend/editSnippet";
+import { loadSnippetById } from "../backend/loader/loadSnippetByID";
+import { updateSnippet } from "../backend/snippet/editSnippet";
 import { useNotif } from "../hooks/Notif";
 
 export const Builder = () => {
@@ -105,12 +105,15 @@ export const Builder = () => {
             });
             showNotif("Snippet updated successfully", "success", 10000);
           } else {
+            console.log({
+              ...snippet,
+              author: userProfile.name,
+              authorID: userProfile.id,
+            });
             await newSnippet({
-              params: {
-                ...snippet,
-                author: userProfile.name,
-                authorID: userProfile.id,
-              } as Snippet,
+              ...snippet,
+              author: userProfile.name,
+              authorID: userProfile.id,
             });
             showNotif("Snippet created successfully", "success", 10000);
           }

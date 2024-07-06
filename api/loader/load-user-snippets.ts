@@ -1,17 +1,20 @@
 import { createPool } from "@vercel/postgres";
-import { Snippet } from "../typeInterfaces";
 
 const pool = createPool({
-  connectionString: import.meta.env.VITE_SNIPPET_URL,
+  connectionString: process.env.SNIPPET_URL,
 });
 
-interface Params {
-  userID: string;
-}
+export default async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
 
-export const loadUserSnippets = async ({
-  userID,
-}: Params): Promise<Snippet[]> => {
+  const userID = req.query.userID;
+
+  if (!userID) {
+    return res.status(400).json({ error: "userID is required" });
+  }
+
   try {
     const { rows } = await pool.sql`
       WITH FavoriteCounts AS (
@@ -45,7 +48,7 @@ export const loadUserSnippets = async ({
       WHERE s.authorID = ${userID};
     `;
 
-    return rows.map((row) => ({
+    const snippets = rows.map((row) => ({
       snippetID: row.snippetid,
       name: row.name,
       code: row.code,
@@ -60,8 +63,12 @@ export const loadUserSnippets = async ({
       favoriteCount: row.favoritecount,
       isFavorite: row.isfavorite,
     }));
+
+    res.status(200).json(snippets);
   } catch (error) {
     console.error("Error fetching snippets by authorID:", error);
-    throw error;
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
-};
+}

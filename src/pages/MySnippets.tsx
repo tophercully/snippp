@@ -6,8 +6,8 @@ import { SelectionsList } from "../components/SelectionsList";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { loadFavorites } from "../backend/loadFavorites";
-import { loadUserSnippets } from "../backend/loadUserSnippets";
+import { loadFavorites } from "../backend/loader/loadFavorites";
+import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
 
 type SortOrder = "asc" | "desc";
 
@@ -75,7 +75,7 @@ export const MySnippets: React.FC = () => {
     if (userProfile && userProfile.id) {
       const result =
         page === "mysnippets" ?
-          await loadUserSnippets({ userID: userProfile.id })
+          await loadUserSnippets(userProfile.id)
         : await loadFavorites({ userID: userProfile.id });
 
       if (Array.isArray(result)) {

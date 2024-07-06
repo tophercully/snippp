@@ -1,17 +1,23 @@
-interface HomepageInfo {
-  snippetCount: number;
-  userCount: number;
+interface Params {
+  snippetIDToDelete: number;
 }
 
-export const fetchStats = async (): Promise<HomepageInfo> => {
+export const deleteSnippet = async ({
+  snippetIDToDelete,
+}: Params): Promise<void> => {
   try {
-    const response = await fetch("/api/fetch-stats");
+    const response = await fetch(
+      `/api//snippet/delete-snippet?snippetID=${snippetIDToDelete}`,
+      {
+        method: "DELETE",
+      },
+    );
 
     if (!response.ok) {
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") !== -1) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to fetch stats");
+        throw new Error(errorData.error || "Failed to delete snippet");
       } else {
         const textError = await response.text();
         console.error("Server returned non-JSON response:", textError);
@@ -21,10 +27,10 @@ export const fetchStats = async (): Promise<HomepageInfo> => {
       }
     }
 
-    const stats: HomepageInfo = await response.json();
-    return stats;
+    const result = await response.json();
+    console.log(result.message);
   } catch (error) {
-    console.error("Error fetching stats:", error);
+    console.error("Error deleting snippet:", error);
     throw error;
   }
 };

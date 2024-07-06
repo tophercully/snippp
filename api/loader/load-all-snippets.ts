@@ -1,21 +1,27 @@
 import { createPool } from "@vercel/postgres";
-import { Snippet } from "../typeInterfaces";
 
 const pool = createPool({
-  connectionString: import.meta.env.VITE_SNIPPET_URL,
+  connectionString: process.env.SNIPPET_URL,
 });
 
-interface Params {
-  userID: string;
-}
+export default async function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
 
-export const loadFavorites = async ({ userID }: Params): Promise<Snippet[]> => {
+  const userID = req.query.userID || "";
+
   try {
     const { rows } = await pool.sql`
       WITH FavoriteCounts AS (
           SELECT snippetID, COUNT(*) AS favoriteCount
           FROM favorites
           GROUP BY snippetID
+      ),
+      UserFavorites AS (
+          SELECT snippetID
+          FROM favorites
+          WHERE userID = ${userID}
       )
       SELECT 
           s.snippetID, 
@@ -29,18 +35,15 @@ export const loadFavorites = async ({ userID }: Params): Promise<Snippet[]> => {
           s.lastCopied,
           s.lastEdit,
           s.copyCount,
-          COALESCE(fc.favoriteCount, 0) AS favoriteCount
+          COALESCE(fc.favoriteCount, 0) AS favoriteCount,
+          CASE WHEN uf.snippetID IS NOT NULL THEN true ELSE false END AS isFavorite
       FROM snippets s
       JOIN users u ON s.authorID = u.userID
       LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
-      WHERE s.snippetID IN (
-          SELECT snippetID
-          FROM favorites
-          WHERE userID = ${userID}
-      );
+      LEFT JOIN UserFavorites uf ON s.snippetID = uf.snippetID;
     `;
 
-    return rows.map((row) => ({
+    const snippets = rows.map((row) => ({
       snippetID: row.snippetid,
       name: row.name,
       code: row.code,
@@ -53,10 +56,14 @@ export const loadFavorites = async ({ userID }: Params): Promise<Snippet[]> => {
       lastEdit: row.lastedit,
       copyCount: row.copycount,
       favoriteCount: row.favoritecount,
-      isFavorite: true, // These are favorites, so isFavorite is always true
+      isFavorite: row.isfavorite,
     }));
+
+    res.status(200).json(snippets);
   } catch (error) {
-    console.error("Error retrieving favorite snippets:", error);
-    throw error;
+    console.error("Error loading snippets:", error);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
-};
+}
