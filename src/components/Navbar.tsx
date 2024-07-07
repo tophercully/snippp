@@ -131,16 +131,36 @@ export const Navbar: React.FC = () => {
               </button>
               {isCategoryDropdownOpen && (
                 <div className="absolute left-0 z-20 mt-2 w-48 rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
-                  {Object.entries(categories).map(([key, info]) => (
-                    <a
-                      key={key}
-                      href={`/browse?category=${key}`}
-                      className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                      onClick={() => setIsCategoryDropdownOpen(false)}
-                    >
-                      {info.name.toUpperCase()}
-                    </a>
-                  ))}
+                  <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
+                    Languages
+                  </div>
+                  {Object.entries(categories)
+                    .filter(([, info]) => info.kind === "language")
+                    .map(([key, info]) => (
+                      <a
+                        key={key}
+                        href={`/browse?category=${key}`}
+                        className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                        onClick={() => setIsCategoryDropdownOpen(false)}
+                      >
+                        {info.name.toUpperCase()}
+                      </a>
+                    ))}
+                  <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
+                    Frameworks/Libraries
+                  </div>
+                  {Object.entries(categories)
+                    .filter(([, info]) => info.kind === "framework/library")
+                    .map(([key, info]) => (
+                      <a
+                        key={key}
+                        href={`/browse?category=${key}`}
+                        className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                        onClick={() => setIsCategoryDropdownOpen(false)}
+                      >
+                        {info.name.toUpperCase()}
+                      </a>
+                    ))}
                 </div>
               )}
             </div>

@@ -1,21 +1,26 @@
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import { monokai, xcode } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
-import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
-import glsl from "react-syntax-highlighter/dist/esm/languages/hljs/glsl";
+import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
 import { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
-SyntaxHighlighter.registerLanguage("javascript", javascript);
-SyntaxHighlighter.registerLanguage("python", python);
-SyntaxHighlighter.registerLanguage("glsl", glsl);
+const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
+
+languages.forEach((lang) => {
+  const language = hljs.getLanguage(lang);
+  if (language) {
+    hljs.registerLanguage(lang, () => language);
+  } else {
+    console.warn(`Language '${lang}' not found in highlight.js`);
+  }
+});
 import categories from "../utils/categories";
 import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
+import hljs from "highlight.js";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -45,6 +50,9 @@ export const Display = ({
   const snippetMod = snippetMods[snippetID] || {};
   const favoriteStatus = snippetMod.favoriteStatus ?? isFavorite;
   const { showNotif } = useNotif();
+
+  const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
+  console.log(detectedLanguage);
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
@@ -158,13 +166,11 @@ export const Display = ({
     darkMode = true;
   }
 
-  const [selectedStyle, setSelectedStyle] = useState(
-    darkMode ? monokai : xcode,
-  );
+  const [selectedStyle, setSelectedStyle] = useState(darkMode ? monokai : vs);
   window
     .matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", (event) => {
-      setSelectedStyle(event.matches ? monokai : xcode);
+      setSelectedStyle(event.matches ? monokai : vs);
     });
 
   const simplifiedAndModdedCount = simplifyNumber(
@@ -221,6 +227,7 @@ export const Display = ({
           </div>
           <SyntaxHighlighter
             style={selectedStyle}
+            language={detectedLanguage}
             customStyle={{
               background: "transparent",
               fontSize: codeFontSize,
