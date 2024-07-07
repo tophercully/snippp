@@ -18,7 +18,7 @@ interface DisplaySelectionsProps {
   };
 }
 
-export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
+export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   selection,
   setSelection,
   snippets,

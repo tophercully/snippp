@@ -1,15 +1,26 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { SearchBar } from "../components/SearchBar";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
-import { SelectionsList } from "../components/SelectionsList";
+import { ListSnippets } from "../components/listSnippets";
+import { ListLists } from "../components/ListLists";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loader/loadFavorites";
 import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
+import { getListSnippets, getUserLists } from "../backend/list/listFunctions";
 
 type SortOrder = "asc" | "desc";
+
+interface ListData {
+  listid: string;
+  userid: string;
+  listname: string;
+  description: string;
+  createdat: string;
+  lastupdated: string;
+}
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -48,18 +59,55 @@ function sortByProperty<T>(
   }
 }
 
-export const MySnippets: React.FC = () => {
+export const Dashboard: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
-  const [page, setPage] = useState<string>("mysnippets");
+  const defaultLists = useMemo(
+    () => [
+      {
+        listid: "mysnippets",
+        userid: userProfile?.id || "",
+        listname: "My Snippets",
+        description: "All my snippets",
+        createdat: "",
+        lastupdated: "",
+      },
+      {
+        listid: "favorites",
+        userid: userProfile?.id || "",
+        listname: "Favorites",
+        description: "My favorite snippets",
+        createdat: "",
+        lastupdated: "",
+      },
+    ],
+    [userProfile],
+  );
+  const [lists, setLists] = useState<ListData[]>(() => defaultLists);
+  const [list, setList] = useState<ListData | null>(null);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [listsLoading, setListsLoading] = useState<boolean>(false);
+  const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchAndSetLists = async () => {
+      if (userProfile) {
+        setListsLoading(true);
+        const result = await getUserLists(userProfile.id);
+        setLists((prevLists) => [...prevLists, ...result]);
+        setListsLoading(false);
+      }
+    };
+    console.log("running fetchlists");
+    fetchAndSetLists();
+  }, []);
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -73,11 +121,17 @@ export const MySnippets: React.FC = () => {
 
   const fetchSnippets = useCallback(async () => {
     if (userProfile && userProfile.id) {
-      const result =
-        page === "mysnippets" ?
-          await loadUserSnippets(userProfile.id)
-        : await loadFavorites({ userID: userProfile.id });
-
+      setSnippetsLoading(true);
+      let result: Snippet[] = [];
+      if (list) {
+        if (list.listid === "mysnippets") {
+          result = await loadUserSnippets(userProfile.id);
+        } else if (list.listid === "favorites") {
+          result = await loadFavorites({ userID: userProfile.id });
+        } else {
+          result = await getListSnippets(list.listid);
+        }
+      }
       if (Array.isArray(result)) {
         const snippetsArray = result as Snippet[];
         if (
@@ -95,12 +149,17 @@ export const MySnippets: React.FC = () => {
         );
         setSnippets([]);
       }
+      setSnippetsLoading(false);
     }
-  }, [page, userProfile, snippets]);
+  }, [list]);
 
   useEffect(() => {
     fetchSnippets();
   }, [fetchSnippets]);
+
+  const handleSelectList = (listToSet: ListData) => {
+    setList(listToSet);
+  };
 
   useEffect(() => {
     const filterAndSortSnippets = () => {
@@ -143,31 +202,18 @@ export const MySnippets: React.FC = () => {
     filterAndSortSnippets();
   }, [snippets, snippetMods, query, sortMethod, sortOrder, selection]);
 
-  return (
-    <div className="over flex h-screen w-full flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
-      <Navbar />
-      <div className="flex h-[96%] w-full shadow-lg">
-        {snippets.length > 0 ?
-          <div className="flex h-full w-full flex-col lg:w-1/3">
-            <div className="flex w-full">
-              <button
-                onClick={() => setPage("mysnippets")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "mysnippets" ? "flex-[1.5] invert" : "flex-1"}`}
-              >
-                MY SNIPPPETS
-              </button>
-              <button
-                onClick={() => setPage("myfavorites")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "myfavorites" ? "flex-[1.5] invert" : "flex-1"}`}
-              >
-                FAVORITES
-              </button>
-            </div>
+  const SnippetExplorer: React.FC = () => {
+    if (!snippetsLoading) {
+      if (snippets.length > 0) {
+        return (
+          <>
             <SearchBar
               query={query}
               setQuery={setQuery}
               placeHolder={
-                page === "mysnippets" ? "search creations" : "search favorites"
+                list?.listid === "mysnippets" ?
+                  "search creations"
+                : "search favorites"
               }
               setSortMethod={setSortMethod}
               sortMethod={sortMethod}
@@ -175,40 +221,76 @@ export const MySnippets: React.FC = () => {
               setSortOrder={setSortOrder}
             />
             <div className="h-full w-full overflow-hidden">
-              <SelectionsList
-                snippets={filteredAndSortedSnippets}
-                snippetMods={snippetMods}
-                selection={selection}
-                setSelection={setSelection}
-              />
+              {list && (
+                <ListSnippets
+                  snippets={filteredAndSortedSnippets}
+                  snippetMods={snippetMods}
+                  selection={selection}
+                  setSelection={setSelection}
+                />
+              )}
             </div>
-          </div>
-        : <div className="flex h-full w-full flex-col items-center gap-5 lg:w-1/3">
-            <div className="flex w-full">
-              <button
-                onClick={() => setPage("mysnippets")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "mysnippets" ? "flex-[1.5] invert" : "flex-1"}`}
-              >
-                MY SNIPPPETS
-              </button>
-              <button
-                onClick={() => setPage("myfavorites")}
-                className={`bg-base-50 text-lg text-base-950 duration-300 dark:bg-base-950 dark:text-base-50 ${page === "myfavorites" ? "flex-[1.5] invert" : "flex-1"}`}
-              >
-                FAVORITES
-              </button>
-            </div>
-            <h1 className="mt-4 p-2 text-base-950 dark:text-base-50">
+          </>
+        );
+      } else {
+        return (
+          <div className="flex w-full flex-col items-center justify-center">
+            <h1 className="mt-4 w-fit p-2 text-base-950 dark:text-base-50">
               NO SNIPPPETS TO DISPLAY
             </h1>
             <a
-              href={page === "mysnippets" ? "/builder" : "/browse"}
-              className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
+              href={list?.listid === "mysnippets" ? "/builder" : "/browse"}
+              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
             >
-              {page === "mysnippets" ? "CREATE SNIPPPET" : "DISCOVER SNIPPPETS"}
+              {list?.listid === "mysnippets" ?
+                "CREATE SNIPPPET"
+              : "DISCOVER SNIPPPETS"}
             </a>
           </div>
-        }
+        );
+      }
+    } else {
+      return <div className="w-full p-6 text-center">Loading...</div>;
+    }
+  };
+
+  return (
+    <div className="over flex h-screen w-full flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
+      <Navbar />
+      <div className="flex h-[96%] w-full shadow-lg">
+        {!list && (
+          <div className="h-full w-1/3 overflow-hidden">
+            <ListLists
+              lists={lists}
+              onSelectList={handleSelectList}
+            />
+
+            {listsLoading && <div>Loading Lists...</div>}
+          </div>
+        )}
+        {list && (
+          <div className="flex h-full w-full flex-col lg:w-1/3">
+            <div className="flex w-full flex-col justify-start">
+              <button
+                className="h-10 max-h-10 max-w-10 p-4"
+                onClick={() => {
+                  setList(null);
+                }}
+              >
+                <img
+                  src="arrow-left.svg"
+                  className="aspect-square h-3 bg-red-300 invert"
+                />
+              </button>
+              <div className="p-4">
+                <h1 className="font-bold">{list?.listname}</h1>
+                <h1 className="font-thin">{list?.description}</h1>
+              </div>
+            </div>
+            <SnippetExplorer />
+          </div>
+        )}
+
         {selection && (
           <div className="hidden h-full w-2/3 overflow-y-auto lg:flex">
             <Display

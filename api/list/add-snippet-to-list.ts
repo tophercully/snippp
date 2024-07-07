@@ -9,21 +9,27 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const { listID, snippetID } = req.body;
+  const { listId, snippetId } = req.body;
 
-  if (!listID || !snippetID) {
+  if (!listId || !snippetId) {
     return res.status(400).json({ error: "Missing required parameters" });
   }
 
   try {
     await pool.sql`
-      INSERT INTO list_snippets (listID, snippetID)
-      VALUES (${listID}, ${snippetID})
-      ON CONFLICT (listID, snippetID) DO NOTHING;
+      INSERT INTO list_snippets (listid, snippetid, addedat)
+      VALUES (${listId}, ${snippetId}, NOW())
+      ON CONFLICT (listid, snippetid) DO NOTHING;
     `;
-    res.status(200).json({
-      message: `Snippet ${snippetID} added to list ${listID} successfully`,
-    });
+
+    // Update the lastupdated field of the snippet_lists table
+    await pool.sql`
+      UPDATE snippet_lists
+      SET lastupdated = NOW()
+      WHERE listid = ${listId};
+    `;
+
+    res.status(200).json({ message: "Snippet added to list successfully" });
   } catch (error: any) {
     console.error("Error adding snippet to list:", error);
     res.status(500).json({ error: "Internal Server Error" });

@@ -6,7 +6,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Browser } from "./pages/Browser.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Builder } from "./pages/Builder.tsx";
-import { MySnippets } from "./pages/MySnippets.tsx";
+import { Dashboard } from "./pages/Dashboard.tsx";
 import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./components/NotifContext.tsx";
 import { About } from "./pages/About.tsx";
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
     element: <Browser />,
   },
   {
-    path: "/mysnippets",
-    element: <MySnippets />,
+    path: "/dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/builder",

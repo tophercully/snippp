@@ -3,7 +3,7 @@ import { loadAllSnippets } from "../backend/loader/loadAllSnippets";
 import { SearchBar } from "../components/SearchBar";
 import { Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
-import { SelectionsList } from "../components/SelectionsList";
+import { ListSnippets } from "../components/listSnippets";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import categories from "../utils/categories";
@@ -165,7 +165,7 @@ export const Browser: React.FC = () => {
               }`}
             >
               {filteredAndSortedSnippets.length > 0 ?
-                <SelectionsList
+                <ListSnippets
                   snippets={filteredAndSortedSnippets}
                   snippetMods={snippetMods}
                   selection={selection}
