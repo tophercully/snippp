@@ -1,6 +1,6 @@
 // src/utils/listFunctions.ts
 
-import { Snippet, SnippetList } from "../../typeInterfaces";
+import { Snippet } from "../../typeInterfaces";
 
 interface ListData {
   listid: string;
@@ -26,7 +26,7 @@ export async function getUserLists(userId: string): Promise<ListData[]> {
   return response.json();
 }
 
-export async function getListSnippets(listId: string): Promise<Snippet[]> {
+export async function getListSnippets(listId: number): Promise<Snippet[]> {
   const response = await fetch("/api/list/get-list-snippets", {
     method: "POST",
     headers: {
@@ -86,7 +86,7 @@ export const createList = async ({
   userID,
   listName,
   description,
-}: CreateListParams): Promise<SnippetList> => {
+}: CreateListParams): Promise<{ listid: string | number }> => {
   try {
     const response = await fetch("/api/list/create-list", {
       method: "POST",
@@ -110,8 +110,8 @@ export const createList = async ({
       }
     }
 
-    const newList: SnippetList = await response.json();
-    return newList;
+    const newList = await response.json();
+    return newList; // This will contain the listid
   } catch (error) {
     console.error("Error creating list:", error);
     throw error;

@@ -3,7 +3,7 @@ import { loadAllSnippets } from "../backend/loader/loadAllSnippets";
 import { SearchBar } from "../components/SearchBar";
 import { Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
-import { ListSnippets } from "../components/listSnippets";
+import { ListSnippets } from "../components/ListSnippets";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import categories from "../utils/categories";

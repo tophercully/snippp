@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { SearchBar } from "../components/SearchBar";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
-import { ListSnippets } from "../components/listSnippets";
-import { ListLists } from "../components/ListLists";
+import { ListSnippets } from "../components/ListSnippets";
+import { ListLists, ListData } from "../components/ListLists";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
@@ -12,15 +12,6 @@ import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
 import { getListSnippets, getUserLists } from "../backend/list/listFunctions";
 
 type SortOrder = "asc" | "desc";
-
-interface ListData {
-  listid: string;
-  userid: string;
-  listname: string;
-  description: string;
-  createdat: string;
-  lastupdated: string;
-}
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -72,7 +63,7 @@ export const Dashboard: React.FC = () => {
         listid: "mysnippets",
         userid: userProfile?.id || "",
         listname: "My Snippets",
-        description: "All my snippets",
+        description: "",
         createdat: "",
         lastupdated: "",
       },
@@ -80,7 +71,7 @@ export const Dashboard: React.FC = () => {
         listid: "favorites",
         userid: userProfile?.id || "",
         listname: "Favorites",
-        description: "My favorite snippets",
+        description: "",
         createdat: "",
         lastupdated: "",
       },
@@ -101,8 +92,9 @@ export const Dashboard: React.FC = () => {
       if (userProfile) {
         setListsLoading(true);
         const result = await getUserLists(userProfile.id);
-        setLists((prevLists) => [...prevLists, ...result]);
+        setLists([...defaultLists, ...result]);
         setListsLoading(false);
+        console.log(result);
       }
     };
     console.log("running fetchlists");
@@ -129,7 +121,7 @@ export const Dashboard: React.FC = () => {
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userProfile.id });
         } else {
-          result = await getListSnippets(list.listid);
+          result = await getListSnippets(list.listid as number);
         }
       }
       if (Array.isArray(result)) {
@@ -272,19 +264,23 @@ export const Dashboard: React.FC = () => {
           <div className="flex h-full w-full flex-col lg:w-1/3">
             <div className="flex w-full flex-col justify-start">
               <button
-                className="h-10 max-h-10 max-w-10 p-4"
+                className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-150 hover:py-1 dark:invert"
                 onClick={() => {
                   setList(null);
                 }}
               >
                 <img
                   src="arrow-left.svg"
-                  className="aspect-square h-3 bg-red-300 invert"
+                  className="h-full invert"
                 />
+                <p className="hidden group-hover:flex">BACK TO LISTS</p>
               </button>
               <div className="p-4">
                 <h1 className="font-bold">{list?.listname}</h1>
-                <h1 className="font-thin">{list?.description}</h1>
+
+                {list.description && (
+                  <h1 className="font-thin">{list?.description}</h1>
+                )}
               </div>
             </div>
             <SnippetExplorer />

@@ -45,6 +45,8 @@ export const Display = ({
     selection;
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [lastCopyTime, setLastCopyTime] = useState(0);
+
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
   const snippetMod = snippetMods[snippetID] || {};
@@ -67,10 +69,18 @@ export const Display = ({
   }, [selection.tags]);
 
   const copySnippet = () => {
-    navigator.clipboard.writeText(code);
-    showNotif("COPIED TO CLIPBOARD", "info", 3000);
-    addCopy(selection.snippetID);
-    updateSnippetMod(snippetID, { copyCount: (snippetMod.copyCount || 0) + 1 });
+    const now = Date.now();
+    if (now - lastCopyTime >= 2000) {
+      navigator.clipboard.writeText(code);
+      showNotif("COPIED TO CLIPBOARD", "info", 3000);
+      addCopy(selection.snippetID);
+      updateSnippetMod(snippetID, {
+        copyCount: (snippetMod.copyCount || 0) + 1,
+      });
+      setLastCopyTime(now);
+    } else {
+      showNotif("Please wait before copying again", "error", 2000);
+    }
   };
 
   const handleAddFavorite = async () => {
