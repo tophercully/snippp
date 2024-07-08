@@ -98,37 +98,41 @@ export const Builder = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (userProfile) {
-      if (isCreator) {
-        try {
-          if (isEditing) {
-            await updateSnippet(Number(snippetId), {
-              name: snippet.name,
-              code: snippet.code,
-              description: snippet.description,
-              tags: snippet.tags,
-              public: snippet.public,
-            });
-            showNotif("Snippet updated successfully", "success", 10000);
-          } else {
-            console.log({
-              ...snippet,
-              author: userProfile.name,
-              authorID: userProfile.id,
-            });
-            await newSnippet({
-              ...snippet,
-              author: userProfile.name,
-              authorID: userProfile.id,
-            });
-            showNotif("Snippet created successfully", "success", 10000);
+    if (snippet.code && snippet.name) {
+      if (userProfile) {
+        if (isCreator) {
+          try {
+            if (isEditing) {
+              await updateSnippet(Number(snippetId), {
+                name: snippet.name,
+                code: snippet.code,
+                description: snippet.description,
+                tags: snippet.tags,
+                public: snippet.public,
+              });
+              showNotif("Snippet updated successfully", "success", 10000);
+            } else {
+              console.log({
+                ...snippet,
+                author: userProfile.name,
+                authorID: userProfile.id,
+              });
+              await newSnippet({
+                ...snippet,
+                author: userProfile.name,
+                authorID: userProfile.id,
+              });
+              showNotif("Snippet created successfully", "success", 10000);
+            }
+          } catch (error) {
+            showNotif("An error occurred while saving the snippet", "error");
+            console.error(error);
           }
-        } catch (error) {
-          showNotif("An error occurred while saving the snippet", "error");
-          console.error(error);
+        } else {
+          showNotif(`YOU ARE NOT THE AUTHOR`, "error");
         }
       } else {
-        showNotif(`YOU ARE NOT THE AUTHOR`, "error");
+        showNotif("Snippet missing Name or Content", "error");
       }
     }
   };
@@ -215,7 +219,8 @@ export const Builder = () => {
               </div>
               <button
                 onClick={handleSubmit}
-                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
+                disabled={!snippet.name || !snippet.code}
+                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 disabled:invert-[50%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
               >
                 <div
                   className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-[110%] transform transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
