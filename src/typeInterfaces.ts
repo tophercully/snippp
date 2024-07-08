@@ -15,6 +15,7 @@ export interface Snippet {
   snippetID: number;
   name: string;
   code: string;
+  description: string;
   tags: string;
   author: string;
   authorID: string;
@@ -31,6 +32,7 @@ export interface SnippetInBuilder {
   author: string;
   name: string;
   code: string;
+  description: string;
   tags: string;
   public: boolean;
 }

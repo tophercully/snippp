@@ -34,6 +34,7 @@ export default async function handler(req: any, res: any) {
           s.lastCopied,
           s.lastEdit,
           s.copyCount,
+          s.description,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount
       FROM snippets s
       JOIN users u ON s.authorID = u.userID

@@ -35,6 +35,7 @@ export default async function handler(req: any, res: any) {
           s.lastCopied,
           s.lastEdit,
           s.copyCount,
+          s.description,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount,
           CASE WHEN uf.snippetID IS NOT NULL THEN true ELSE false END AS isFavorite
       FROM snippets s

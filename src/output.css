@@ -885,6 +885,10 @@ video {
   height: 0.5rem;
 }
 
+.h-\[30svh\] {
+  height: 30svh;
+}
+
 .max-h-12 {
   max-height: 3rem;
 }
@@ -1048,6 +1052,10 @@ video {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+
+.resize-none {
+  resize: none;
 }
 
 .appearance-none {

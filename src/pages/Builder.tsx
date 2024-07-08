@@ -23,6 +23,7 @@ export const Builder = () => {
     author: "",
     name: "",
     code: "",
+    description: "",
     tags: "",
     public: false,
   } as SnippetInBuilder);
@@ -58,13 +59,16 @@ export const Builder = () => {
     if (isEditing && snippetId) {
       const loadSnippet = async () => {
         const fetchedSnippet = await loadSnippetById(Number(snippetId));
+        console.log(fetchedSnippet);
         setSnippet(fetchedSnippet as Snippet);
       };
       loadSnippet();
     }
   }, [isEditing, snippetId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     if (message) {
       setMessage(null);
@@ -101,6 +105,7 @@ export const Builder = () => {
             await updateSnippet(Number(snippetId), {
               name: snippet.name,
               code: snippet.code,
+              description: snippet.description,
               tags: snippet.tags,
               public: snippet.public,
             });
@@ -142,6 +147,17 @@ export const Builder = () => {
                 className="w-full bg-base-50 p-4 shadow-md focus:outline-none dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
                 name="name"
                 value={snippet.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <p className="text-sm text-base-300 dark:text-base-50">
+                DESCRIPTION
+              </p>
+              <textarea
+                className="h-[30svh] w-full resize-none rounded-sm bg-base-50 p-4 shadow-md focus:outline-none dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
+                name="description"
+                value={snippet.description}
                 onChange={handleChange}
               />
             </div>
