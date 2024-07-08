@@ -8,6 +8,7 @@ import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import categories from "../utils/categories";
 import { useParams } from "react-router-dom";
+import { setPageTitle } from "../utils/setPageTitle";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -55,6 +56,11 @@ export const Browser: React.FC = () => {
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const { category } = useParams();
+  if(category) {
+    setPageTitle(`${categories[category].name} Snippets`)
+  } else {
+    setPageTitle('All Snippets')
+  }
   const [sortMethod, setSortMethod] =
     useState<SortableSnippetKeys>("favoriteCount");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");

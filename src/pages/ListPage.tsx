@@ -16,6 +16,7 @@ import {
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
 import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
+import { setPageTitle } from "../utils/setPageTitle";
 
 type SortOrder = "asc" | "desc";
 
@@ -61,16 +62,12 @@ export const ListPage: React.FC = () => {
 
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
-  console.log(snippets);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
-  console.log(snippetMods);
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-
   const [listData, setListData] = useState<any>(null);
-  console.log(listData);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
@@ -84,6 +81,7 @@ export const ListPage: React.FC = () => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const { showNotif } = useNotif();
+
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -105,6 +103,7 @@ export const ListPage: React.FC = () => {
           getListSnippets(userProfile.id, Number(listId)),
         ]);
         setListData(listResult);
+        setPageTitle(listResult.listname)
         setSnippets(snippetsResult);
         setSnippetMods({});
       } catch (error) {
@@ -118,6 +117,7 @@ export const ListPage: React.FC = () => {
 
   useEffect(() => {
     fetchListAndSnippets();
+    
   }, [fetchListAndSnippets]);
 
   useEffect(() => {
