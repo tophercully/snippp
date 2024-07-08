@@ -139,7 +139,7 @@ export const Navbar: React.FC = () => {
                     .map(([key, info]) => (
                       <a
                         key={key}
-                        href={`/browse?category=${key}`}
+                        href={`/browse/${key}`}
                         className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                         onClick={() => setIsCategoryDropdownOpen(false)}
                       >

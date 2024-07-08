@@ -130,8 +130,8 @@ export const ListLists: React.FC<UserListsProps> = ({
               {list.listname}
               {list.listid == "mysnippets" && (
                 <img
-                  src="/tools.svg"
-                  className="invert dark:invert-0"
+                  src="/scissors.svg"
+                  className="brightness-0 dark:invert"
                 />
               )}
               {list.listid == "favorites" && (
