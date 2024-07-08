@@ -15,6 +15,11 @@ export const Builder = () => {
   const [searchParams] = useSearchParams();
 
   const snippetId = searchParams.get("snippetid");
+  if(snippetId) {
+    document.title = `Editor - Snippp`;
+  } else {
+    document.title = `Builder - Snippp`;
+  }
   const isEditing = Boolean(snippetId);
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
 

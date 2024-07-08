@@ -28,6 +28,10 @@ export default {
           900: "#101010",
           950: "#030303",
         },
+        error: '#dc2626',
+        success: '#16a34a',
+        info: '#1d4ed8',
+        special: '#7e22ce',
       },
       fontFamily: {
         satoshi: [

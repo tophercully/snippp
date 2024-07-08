@@ -2,6 +2,7 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 
 export const About = () => {
+  document.title = `Snippp - About`;
   return (
     <div className="flex h-fit min-h-[100vh] w-full flex-col gap-5 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
       <Navbar />

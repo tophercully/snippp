@@ -6,6 +6,7 @@ import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { useParams } from "react-router-dom";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { setPageTitle } from "../utils/setPageTitle";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -54,6 +55,7 @@ export const SnippetPage: React.FC = () => {
         try {
           const snippet = await loadSnippetById(Number(id));
           setSelection(snippet as Snippet);
+          setPageTitle(snippet.name)
           setSnippetMods({
             [snippet.snippetID]: {
               favoriteStatus: snippet.isFavorite,

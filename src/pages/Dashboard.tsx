@@ -18,6 +18,7 @@ import {
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
 import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
+import { setPageTitle } from "../utils/setPageTitle";
 
 type SortOrder = "asc" | "desc";
 
@@ -59,6 +60,7 @@ function sortByProperty<T>(
 }
 
 export const Dashboard: React.FC = () => {
+  
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
@@ -108,6 +110,7 @@ export const Dashboard: React.FC = () => {
   const fetchAndSetLists = async () => {
     try {
       setListsLoading(true);
+      document.title = `Dashboard - Snippp`;
 
       if (userProfile) {
         const result = await getUserLists(userProfile.id);
@@ -243,6 +246,7 @@ export const Dashboard: React.FC = () => {
 
   const handleSelectList = (listToSet: ListData) => {
     setList(listToSet);
+    setPageTitle(`${listToSet.listname} - Dashboard`)
   };
 
   useEffect(() => {

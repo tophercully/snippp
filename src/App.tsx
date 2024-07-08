@@ -5,6 +5,7 @@ import { fetchStats } from "./backend/fetchStats";
 import "./output.css";
 
 const Home = () => {
+  document.title = `Snippp - Snippet Organizer`;
   const [stats, setStats] = useState<{
     snippetCount: number;
     userCount: number;
