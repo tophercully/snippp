@@ -7,6 +7,7 @@ import { ListSnippets } from "../components/ListSnippets";
 import { Footer } from "../components/Footer";
 import { Display } from "../components/Display";
 import categories from "../utils/categories";
+import { useParams } from "react-router-dom";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -53,7 +54,7 @@ export const Browser: React.FC = () => {
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
-  const [category, setCategory] = useState<string | null>(null);
+  const { category } = useParams();
   const [sortMethod, setSortMethod] =
     useState<SortableSnippetKeys>("favoriteCount");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
@@ -87,12 +88,6 @@ export const Browser: React.FC = () => {
     },
     [],
   );
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const categoryParam = params.get("category");
-    setCategory(categoryParam);
-  }, []);
 
   const filteredAndSortedSnippets = useMemo(() => {
     let filteredSnippets = snippets.filter(

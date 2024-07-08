@@ -50,10 +50,10 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   return (
     <div
       ref={dropdownRef}
-      className="hover:bg-base-150 relative flex aspect-square h-full items-center justify-center bg-base-50 dark:bg-base-950 dark:hover:bg-base-700"
+      className="relative flex aspect-square h-full items-center justify-center bg-base-50 hover:bg-base-150 dark:bg-base-950 dark:hover:bg-base-700"
     >
       <img
-        src="sort.svg"
+        src="/sort.svg"
         alt="Sort Options"
         onClick={toggleDropdown}
         className="aspect-square h-full cursor-pointer p-3 dark:invert"
@@ -68,7 +68,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 onClick={() => setSortMethod("name")}
               >
                 <img
-                  src="az.svg"
+                  src="/az.svg"
                   className={`invert`}
                 />
               </button>
@@ -77,7 +77,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 onClick={() => setSortMethod("snippetID")}
               >
                 <img
-                  src="clock.svg"
+                  src="/clock.svg"
                   className={`invert`}
                 />
               </button>
@@ -85,7 +85,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("favoriteCount")}
               >
-                <img src="heart-full.svg" />
+                <img src="/heart-full.svg" />
               </button>
             </div>
           </div>
@@ -97,7 +97,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
               disabled={sortOrder === "asc"}
             >
               <img
-                src="up.svg"
+                src="/up.svg"
                 className={`h80 -0 p-3 invert`}
               />
             </button>
@@ -107,7 +107,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
               disabled={sortOrder === "desc"}
             >
               <img
-                src="down.svg"
+                src="/down.svg"
                 className={`h80 -0 p-3 invert`}
               />
             </button>

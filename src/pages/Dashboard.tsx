@@ -105,7 +105,6 @@ export const Dashboard: React.FC = () => {
   const fetchAndSetLists = async () => {
     try {
       setListsLoading(true);
-      console.log("Lists loading started:", true);
 
       if (userProfile) {
         const result = await getUserLists(userProfile.id);
@@ -116,11 +115,9 @@ export const Dashboard: React.FC = () => {
       showNotif("Error fetching lists:" + error, "error");
     } finally {
       setListsLoading(false);
-      console.log("Lists loading finished:", false);
     }
   };
   useEffect(() => {
-    console.log("running fetchlists");
     fetchAndSetLists();
   }, []);
 
@@ -189,7 +186,7 @@ export const Dashboard: React.FC = () => {
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userProfile.id });
         } else {
-          result = await getListSnippets(list.listid as number);
+          result = await getListSnippets(userProfile.id, list.listid as number);
         }
       }
       if (Array.isArray(result)) {
@@ -310,7 +307,11 @@ export const Dashboard: React.FC = () => {
         );
       }
     } else {
-      return <div className="w-full p-6 text-center">LOADING SNIPPPETS...</div>;
+      return (
+        <div className="w-full p-6 text-center dark:text-base-50">
+          LOADING SNIPPPETS...
+        </div>
+      );
     }
   };
 
@@ -328,7 +329,7 @@ export const Dashboard: React.FC = () => {
             />
 
             {listsLoading && (
-              <div className="w-full p-4 text-center text-base-600 dark:text-base-400">
+              <div className="w-full p-4 text-center text-base-600 dark:text-base-50">
                 LOADING LISTS...
               </div>
             )}
@@ -346,7 +347,7 @@ export const Dashboard: React.FC = () => {
                 }}
               >
                 <img
-                  src="arrow-left.svg"
+                  src="/arrow-left.svg"
                   className="h-full invert"
                 />
                 <p className="hidden group-hover:flex">BACK TO LISTS</p>
@@ -366,7 +367,7 @@ export const Dashboard: React.FC = () => {
                           colorType="neutral"
                         >
                           <img
-                            src="edit.svg"
+                            src="/edit.svg"
                             className="group-hover:invert dark:invert"
                           />
                         </SnipppButton>
@@ -377,7 +378,7 @@ export const Dashboard: React.FC = () => {
                           colorType="delete"
                         >
                           <img
-                            src="x.svg"
+                            src="/x.svg"
                             className="invert group-hover:invert-0 dark:invert-0"
                           />
                         </SnipppButton>

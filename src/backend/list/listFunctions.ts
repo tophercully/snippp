@@ -23,18 +23,61 @@ export async function getUserLists(userId: string): Promise<ListData[]> {
   return response.json();
 }
 
-export async function getListSnippets(listId: number): Promise<Snippet[]> {
-  const response = await fetch("/api/list/get-list-snippets", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ listId }),
-  });
+export interface ListWithSnippetStatus {
+  listid: number;
+  listname: string;
+  has_snippet: boolean;
+}
+
+export async function getListsWithSnippetStatus(
+  userId: string,
+  snippetId: number,
+): Promise<ListWithSnippetStatus[]> {
+  const response = await fetch(
+    `/api/list/get-lists-with-snippet-status?userId=${userId}&snippetId=${snippetId}`,
+  );
+
   if (!response.ok) {
-    throw new Error("Failed to fetch list snippets");
+    const errorText = await response.text();
+    console.error("Error response:", errorText);
+    throw new Error(
+      `Failed to fetch lists with snippet status: ${response.status} ${response.statusText}`,
+    );
   }
-  return response.json();
+
+  return await response.json();
+}
+
+export async function getList(
+  userId: string,
+  listId: string,
+): Promise<ListData> {
+  const response = await fetch(
+    `/api/list/get-list-by-id?userId=${userId}&listId=${listId}`,
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Failed to fetch list");
+  }
+
+  return await response.json();
+}
+
+export async function getListSnippets(
+  userId: string,
+  listId: number,
+): Promise<Snippet[]> {
+  const response = await fetch(
+    `/api/list/get-list-snippets?userId=${userId}&listId=${listId}`,
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Failed to fetch list snippets");
+  }
+
+  return await response.json();
 }
 
 export async function addSnippetToList(
@@ -86,21 +129,26 @@ export async function addSnippetToList(
 }
 
 export async function removeSnippetFromList(
-  listId: number,
-  snippetId: number,
+  listID: number,
+  snippetID: number,
 ): Promise<void> {
-  const response = await fetch("/api/list/remove-snippet-from-list", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `/api/list/remove-snippet-from-list?listID=${listID}&snippetID=${snippetID}`,
+    {
+      method: "DELETE",
     },
-    body: JSON.stringify({ listId, snippetId }),
-  });
+  );
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to remove snippet from list");
+    throw new Error(
+      errorData.error ||
+        `Failed to remove snippet ${snippetID} from list ${listID}`,
+    );
   }
+
+  const data = await response.json();
+  console.log(data.message); // Log the success message
 }
 
 interface CreateListParams {

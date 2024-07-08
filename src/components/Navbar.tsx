@@ -94,7 +94,7 @@ export const Navbar: React.FC = () => {
           className="group flex items-center gap-1 rounded-sm bg-base-950 p-3 text-base-50 dark:bg-base-50 dark:text-base-950"
         >
           <img
-            src="scissors.svg"
+            src="/scissors.svg"
             className="h-6 w-6 brightness-0 invert dark:invert-0"
           />
           <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out group-hover:max-w-xs group-hover:px-3">
@@ -154,7 +154,7 @@ export const Navbar: React.FC = () => {
                     .map(([key, info]) => (
                       <a
                         key={key}
-                        href={`/browse?category=${key}`}
+                        href={`/browse/${key}`}
                         className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                         onClick={() => setIsCategoryDropdownOpen(false)}
                       >
@@ -182,7 +182,7 @@ export const Navbar: React.FC = () => {
               Sign in with Google
             </span>
             <img
-              src="person.svg"
+              src="/person.svg"
               className="rounded-sm p-3"
             />
           </div>
@@ -196,7 +196,7 @@ export const Navbar: React.FC = () => {
               CREATE SNIPPET
             </span>
             <img
-              src="add.svg"
+              src="/add.svg"
               className="rounded-sm p-2"
             />
           </a>

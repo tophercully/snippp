@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./components/NotifContext.tsx";
 import { About } from "./pages/About.tsx";
 import { SnippetPage } from "./pages/SnippetPage.tsx";
+import { ListPage } from "./pages/ListPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/browse",
+    path: "/browse/:category?",
     element: <Browser />,
   },
   {
@@ -30,12 +31,16 @@ const router = createBrowserRouter([
     element: <Builder />,
   },
   {
-    path: "/snippet",
+    path: "/snippet/:id",
     element: <SnippetPage />,
   },
   {
     path: "/about",
     element: <About />,
+  },
+  {
+    path: "/list/:listId",
+    element: <ListPage />,
   },
 ]);
 

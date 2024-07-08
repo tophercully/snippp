@@ -73,7 +73,7 @@ export const ListLists: React.FC<UserListsProps> = ({
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-      <h1 className="bg-base-150 p-4 font-bold">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
+      <h1 className="dark:bg-base-850 bg-base-150 p-4 font-bold dark:text-base-50">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
       <div className="relative h-full w-full overflow-y-auto">
         {isAdding && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
@@ -122,7 +122,7 @@ export const ListLists: React.FC<UserListsProps> = ({
         {lists.map((list) => (
           <div
             key={list.listid}
-            className="flex w-full cursor-pointer flex-col border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-800 dark:hover:bg-base-700"
+            className="flex w-full cursor-pointer flex-col border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-900 dark:hover:bg-base-700"
             onClick={() => onSelectList(list)}
           >
             <h2 className="text-xl text-base-900 dark:text-base-50">

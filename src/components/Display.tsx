@@ -21,8 +21,12 @@ import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
 import hljs from "highlight.js";
-import { addSnippetToList, getUserLists } from "../backend/list/listFunctions";
-import { ListData } from "./ListLists";
+import {
+  ListWithSnippetStatus,
+  addSnippetToList,
+  getListsWithSnippetStatus,
+  removeSnippetFromList,
+} from "../backend/list/listFunctions";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -49,7 +53,7 @@ export const Display = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
-  const [userLists, setUserLists] = useState<ListData[]>([]);
+  const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
 
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
@@ -59,7 +63,6 @@ export const Display = ({
   const { showNotif } = useNotif();
 
   const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
-  console.log(detectedLanguage);
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
@@ -134,7 +137,10 @@ export const Display = ({
     if (userProfile) {
       setIsLoadingLists(true);
       try {
-        const lists = await getUserLists(userProfile.id);
+        const lists: ListWithSnippetStatus[] = (await getListsWithSnippetStatus(
+          userProfile.id,
+          snippetID,
+        )) as ListWithSnippetStatus[];
         setUserLists(lists);
       } catch (error) {
         console.error("Failed to fetch user lists:", error);
@@ -145,14 +151,32 @@ export const Display = ({
     }
   };
 
-  const handleAddToList = async (listId: number, listName: string) => {
+  const handleAddOrRemoveFromList = async (list: ListWithSnippetStatus) => {
     try {
-      await addSnippetToList(listId, snippetID);
-      showNotif(`Added ${selection.name} to ${listName}`, "success", 2000);
-      setShowListPopup(false);
+      if (list.has_snippet) {
+        await removeSnippetFromList(list.listid, snippetID);
+        showNotif(
+          `Removed ${selection.name} from ${list.listname}`,
+          "success",
+          2000,
+        );
+      } else {
+        await addSnippetToList(list.listid, snippetID);
+        showNotif(
+          `Added ${selection.name} to ${list.listname}`,
+          "success",
+          2000,
+        );
+      }
+      // Update the list status locally
+      setUserLists((prevLists) =>
+        prevLists.map((l) =>
+          l.listid === list.listid ? { ...l, has_snippet: !l.has_snippet } : l,
+        ),
+      );
     } catch (error) {
-      console.error("Failed to add snippet to list:", error);
-      showNotif("Failed to add to list", "error", 2000);
+      console.error("Failed to update snippet in list:", error);
+      showNotif("Failed to update list" + error, "error", 2000);
     }
   };
 
@@ -217,7 +241,7 @@ export const Display = ({
   const simplifiedAndModdedCount = simplifyNumber(
     snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
   );
-  console.log(selection);
+
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
@@ -243,14 +267,14 @@ export const Display = ({
             {!selection.public && (
               <span className="flex h-fit items-center gap-2">
                 <img
-                  src="lock.svg"
+                  src="/lock.svg"
                   className="invert dark:invert-0"
                 />
               </span>
             )}
             <span className="flex h-fit items-center gap-2">
               <img
-                src="copy.svg"
+                src="/copy.svg"
                 className="invert dark:invert-0"
               />
               <span>{simplifiedAndModdedCount}</span>
@@ -294,7 +318,7 @@ export const Display = ({
                 />
                 <span className="relative flex items-center gap-3">
                   <img
-                    src="heart-empty.svg"
+                    src="/heart-empty.svg"
                     className="h-5 group-hover:invert dark:invert"
                   />
                   <span className="hidden sm:inline">
@@ -315,7 +339,7 @@ export const Display = ({
                 />
                 <span className="relative flex items-center gap-3">
                   <img
-                    src="heart-full.svg"
+                    src="/heart-full.svg"
                     className="h-5 group-hover:invert dark:invert"
                   />
                   <span className="hidden sm:inline">
@@ -338,7 +362,7 @@ export const Display = ({
                 />
                 <span className="relative flex items-center gap-3">
                   <img
-                    src="add-to-list.svg"
+                    src="/add-to-list.svg"
                     className="h-5 invert group-hover:invert-0 dark:invert-0"
                   />
                   <span className="hidden 2xl:inline">ADD TO LIST</span>
@@ -355,7 +379,7 @@ export const Display = ({
               />
               <span className="relative flex items-center gap-3">
                 <img
-                  src="share.svg"
+                  src="/share.svg"
                   className="h-5 invert group-hover:invert-0 dark:invert-0"
                 />
                 <span className="hidden 2xl:inline">SHARE</span>
@@ -373,7 +397,7 @@ export const Display = ({
                   />
                   <span className="relative flex items-center gap-3">
                     <img
-                      src="edit.svg"
+                      src="/edit.svg"
                       className="h-5 group-hover:invert dark:invert"
                     />
                     <span className="hidden 2xl:inline">EDIT SNIPPET</span>
@@ -389,7 +413,7 @@ export const Display = ({
                   />
                   <span className="relative flex items-center gap-3">
                     <img
-                      src="x.svg"
+                      src="/x.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
                     <span className="hidden 2xl:inline">DELETE SNIPPET</span>
@@ -425,36 +449,51 @@ export const Display = ({
         )}
         {showListPopup && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="rounded-sm bg-white p-6 dark:bg-base-800">
-              <h2 className="mb-4 text-xl font-bold dark:text-white">
-                Add to List
-              </h2>
+            <div className="dark:bg-base-850 w-full max-w-md rounded-sm bg-white p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xl font-bold dark:text-white">
+                  ADD TO LIST
+                </h2>
+                <button
+                  onClick={() => setShowListPopup(false)}
+                  className="bg-base-150 hover:invert"
+                >
+                  <img
+                    src="/x.svg"
+                    className="h-6 w-6 invert"
+                  />
+                </button>
+              </div>
               {isLoadingLists ?
                 <p className="mb-4 dark:text-base-200">Loading lists...</p>
-              : <div className="mb-4 max-h-60 overflow-y-auto">
+              : <div className="mb-4 max-h-[40svh] overflow-y-auto">
                   {userLists.length > 0 ?
                     userLists.map((list) => (
                       <button
                         key={list.listid}
-                        onClick={() =>
-                          handleAddToList(list.listid as number, list.listname)
-                        }
-                        className="mb-2 w-full rounded-sm bg-base-100 p-2 text-left text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                        onClick={() => handleAddOrRemoveFromList(list)}
+                        className={`mb-2 flex w-full items-center justify-between rounded-sm p-2 text-left ${
+                          list.has_snippet ?
+                            "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
+                          : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                        }`}
                       >
-                        {list.listname}
+                        <span>{list.listname}</span>
+                        {list.has_snippet ?
+                          <img
+                            src="/x.svg"
+                            className="h-5 w-5 invert dark:invert-0"
+                          />
+                        : <img
+                            src="/add.svg"
+                            className="h-5 w-5 invert dark:invert-0"
+                          />
+                        }
                       </button>
                     ))
                   : <p className="dark:text-base-200">No lists available.</p>}
                 </div>
               }
-              <div className="flex justify-end gap-4">
-                <button
-                  onClick={() => setShowListPopup(false)}
-                  className="rounded-sm bg-gray-300 px-4 py-2 text-base-950 hover:bg-gray-400 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
-                >
-                  Cancel
-                </button>
-              </div>
             </div>
           </div>
         )}

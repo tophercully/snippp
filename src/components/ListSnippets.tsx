@@ -56,7 +56,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
               {name}
               {!item.public && (
                 <img
-                  src="lock.svg"
+                  src="/lock.svg"
                   className="mr-auto h-5 invert"
                   alt="Private"
                 />
@@ -67,7 +67,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
           <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
             <div className="flex items-center justify-end gap-1">
               <img
-                src={favorited ? "heart-full.svg" : "heart-empty.svg"}
+                src={favorited ? "/heart-full.svg" : "/heart-empty.svg"}
                 className="ml-auto h-5"
                 alt="Favorites"
               />
@@ -89,7 +89,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
               {name}
               {!item.public && (
                 <img
-                  src="lock.svg"
+                  src="/lock.svg"
                   className="mr-auto h-5 invert"
                   alt="Private"
                 />
@@ -100,7 +100,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
           <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
             <div className="flex items-center justify-end gap-1">
               <img
-                src={favorited ? "heart-full.svg" : "heart-empty.svg"}
+                src={favorited ? "/heart-full.svg" : "/heart-empty.svg"}
                 className="ml-auto h-5"
                 alt="Favorites"
               />

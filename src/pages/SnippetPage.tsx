@@ -4,7 +4,7 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { GoogleUser, Snippet } from "../typeInterfaces";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 type SnippetMod = {
@@ -18,13 +18,12 @@ type SnippetMods = { [snippetID: number]: SnippetMod };
 
 export const SnippetPage: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const [searchParams] = useSearchParams();
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const id = searchParams.get("snippetid");
+  const { id } = useParams();
 
   const isAuthor = selection?.authorID == userProfile?.id;
   let isVisible = true;
@@ -35,9 +34,6 @@ export const SnippetPage: React.FC = () => {
       isVisible = false;
     }
   }
-
-  console.log(isVisible);
-  console.log(isAuthor);
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -81,8 +77,6 @@ export const SnippetPage: React.FC = () => {
     fetchSelection();
   }, [id]);
 
-  console.log(selection);
-
   return (
     <div className="flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
@@ -116,7 +110,7 @@ export const SnippetPage: React.FC = () => {
           <div className="flex h-full w-full flex-col items-center justify-center gap-4">
             <h1 className="flex gap-4 bg-red-600 p-4 text-base-50">
               SNIPPET NOT AVAILABLE
-              <img src="lock.svg" />
+              <img src="/lock.svg" />
             </h1>
             <a
               href="/"
