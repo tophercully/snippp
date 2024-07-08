@@ -1,5 +1,5 @@
 import { GoogleUser, Snippet } from "../typeInterfaces";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import  SyntaxHighlighter  from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
 import React, { useMemo, useState } from "react";
@@ -84,7 +84,6 @@ export const Display = ({
   const { showNotif } = useNotif();
 
   const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
-  console.log(detectedLanguage)
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
