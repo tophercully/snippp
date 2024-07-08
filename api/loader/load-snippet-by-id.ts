@@ -70,6 +70,7 @@ export default async function handler(req: any, res: any) {
       copyCount: snippet.copycount,
       favoriteCount: parseInt(snippet.favoritecount),
       isFavorite: Boolean(snippet.isfavorite),
+      description: snippet.description,
     };
 
     res.status(200).json(formattedSnippet);

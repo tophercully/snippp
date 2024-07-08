@@ -129,28 +129,11 @@ export const Builder = () => {
   };
 
   return (
-    <div className="flex h-svh w-full flex-col bg-base-100 p-10 pt-24 dark:bg-base-900">
+    <div className="flex h-fit min-h-svh w-full flex-col bg-base-100 p-10 pt-24 xl:h-svh dark:bg-base-900">
       <Navbar />
       {userProfile && (
-        <div className="mb-8 flex h-full w-full gap-3">
-          <div className="flex h-full w-full shadow-md">
-            <Editor
-              height="100%"
-              value={snippet.code}
-              width="100%"
-              options={{
-                scrollBeyondLastLine: true,
-                fontSize: 15,
-                padding: {
-                  top: 30,
-                },
-              }}
-              theme={selectedStyle}
-              defaultLanguage="auto"
-              onChange={handleCodeChange}
-            />
-          </div>
-          <form className="flex h-full w-1/3 flex-col gap-5 rounded-sm align-bottom">
+        <div className="mb-8 flex h-full w-full flex-col-reverse gap-3 xl:flex-row">
+          <form className="flex h-full flex-col gap-5 rounded-sm xl:w-1/3">
             <div className="flex flex-col">
               <p className="text-sm text-base-300 dark:text-base-50">
                 NAME YOUR SNIPPET
@@ -173,38 +156,82 @@ export const Builder = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="public"
-                checked={snippet.public}
-                onChange={handleCheckboxChange}
-                className="mr-2 h-4 w-4 hover:cursor-pointer"
-              />
-              <label
-                htmlFor="public"
-                className="text-sm text-base-300 dark:text-base-50"
+            <div className="mt-auto flex w-full items-center justify-end gap-4">
+              <div className="flex h-full w-fit items-center self-center">
+                <div className="group relative flex h-full items-center shadow-md">
+                  <input
+                    type="checkbox"
+                    id="public"
+                    checked={snippet.public}
+                    onChange={handleCheckboxChange}
+                    className="peer sr-only"
+                  />
+                  <label
+                    htmlFor="public"
+                    className="dark:bg-base-850 relative block aspect-square h-full cursor-pointer overflow-hidden rounded-sm bg-base-150 before:absolute before:inset-0 before:-translate-x-[110%] before:bg-blue-700 before:transition-transform before:duration-300 before:content-[''] peer-checked:before:translate-x-0 dark:border-base-600"
+                  >
+                    <img
+                      src={snippet.public ? "/lock-open.svg" : "/lock.svg"}
+                      alt="Lock"
+                      className={`absolute inset-0 h-full w-full p-4 ${snippet.public ? "invert-0" : "invert"} object-cover dark:invert-0`}
+                    />
+                  </label>
+                  <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <div className="relative w-fit text-nowrap rounded-sm bg-gray-800 px-2 py-1 text-xs text-white">
+                      {snippet.public ?
+                        "Snippet is Public"
+                      : "Snippet is Private"}
+                      <svg
+                        className="absolute left-0 top-full h-2 w-full text-gray-800"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 255 255"
+                        xmlSpace="preserve"
+                      >
+                        <polygon
+                          className="fill-current"
+                          points="0,0 127.5,127.5 255,0"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={handleSubmit}
+                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
               >
-                Make this snippet public
-              </label>
+                <div
+                  className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-[110%] transform transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
+                  aria-hidden="true"
+                />
+                <span className="relative z-10 text-xl font-bold">
+                  {isEditing ?
+                    isCreator ?
+                      "SAVE"
+                    : "YOU ARE NOT THE AUTHOR"
+                  : "CREATE"}
+                </span>
+              </button>
             </div>
-            <button
-              onClick={handleSubmit}
-              className="group relative ml-auto mt-auto w-1/2 overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
-            >
-              <div
-                className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-full transform transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
-                aria-hidden="true"
-              />
-              <span className="relative z-10 text-xl font-bold">
-                {isEditing ?
-                  isCreator ?
-                    "SAVE"
-                  : "YOU ARE NOT THE AUTHOR"
-                : "CREATE"}
-              </span>
-            </button>
           </form>
+          <div className="flex h-[70svh] w-full shadow-md xl:h-full xl:w-2/3">
+            <Editor
+              height="100%"
+              value={snippet.code}
+              width="100%"
+              options={{
+                scrollBeyondLastLine: true,
+                fontSize: 15,
+                padding: {
+                  top: 30,
+                },
+              }}
+              theme={selectedStyle}
+              defaultLanguage="auto"
+              onChange={handleCodeChange}
+            />
+          </div>
         </div>
       )}
       {!userProfile && (

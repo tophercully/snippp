@@ -44,6 +44,7 @@ export default async function handler(request: any, response: any) {
       copyCount: row.copycount,
       favoriteCount: parseInt(row.favoritecount), // Now calculated from favorites table
       isFavorite: row.isfavorite,
+      description: row.description,
     }));
 
     response.status(200).json(snippets);

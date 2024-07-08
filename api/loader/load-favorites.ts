@@ -58,6 +58,8 @@ export default async function handler(req: any, res: any) {
       lastEdit: row.lastedit,
       copyCount: row.copycount,
       favoriteCount: row.favoritecount,
+      description: row.description,
+
       isFavorite: true, // These are favorites, so isFavorite is always true
     }));
 
