@@ -3,6 +3,7 @@ import { Snippet } from "../../typeInterfaces";
 interface Params {
   name: string;
   code: string;
+  description: string;
   tags: string;
   author: string;
   authorID: string;
