@@ -21,6 +21,8 @@ import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
 import hljs from "highlight.js";
+import { addSnippetToList, getUserLists } from "../backend/list/listFunctions";
+import { ListData } from "./ListLists";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -46,6 +48,9 @@ export const Display = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
+  const [showListPopup, setShowListPopup] = useState(false);
+  const [userLists, setUserLists] = useState<ListData[]>([]);
+  const [isLoadingLists, setIsLoadingLists] = useState(false);
 
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
@@ -122,6 +127,32 @@ export const Display = ({
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const fetchUserLists = async () => {
+    if (userProfile) {
+      setIsLoadingLists(true);
+      try {
+        const lists = await getUserLists(userProfile.id);
+        setUserLists(lists);
+      } catch (error) {
+        console.error("Failed to fetch user lists:", error);
+        showNotif("Failed to load lists", "error", 2000);
+      } finally {
+        setIsLoadingLists(false);
+      }
+    }
+  };
+
+  const handleAddToList = async (listId: number, listName: string) => {
+    try {
+      await addSnippetToList(listId, snippetID);
+      showNotif(`Added ${selection.name} to ${listName}`, "success", 2000);
+      setShowListPopup(false);
+    } catch (error) {
+      console.error("Failed to add snippet to list:", error);
+      showNotif("Failed to add to list", "error", 2000);
     }
   };
 
@@ -293,6 +324,27 @@ export const Display = ({
                 </span>
               </button>
             )}
+            {userProfile && (
+              <button
+                onClick={() => {
+                  setShowListPopup(true);
+                  fetchUserLists();
+                }}
+                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+              >
+                <div
+                  className="absolute inset-0 -translate-x-full transform bg-purple-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  aria-hidden="true"
+                />
+                <span className="relative flex items-center gap-3">
+                  <img
+                    src="add-to-list.svg"
+                    className="h-5 invert group-hover:invert-0 dark:invert-0"
+                  />
+                  <span className="hidden 2xl:inline">ADD TO LIST</span>
+                </span>
+              </button>
+            )}
             <button
               onClick={handleShare}
               className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
@@ -366,6 +418,41 @@ export const Display = ({
                   disabled={isLoading}
                 >
                   {isLoading ? "Deleting..." : "Delete"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showListPopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="rounded-sm bg-white p-6 dark:bg-base-800">
+              <h2 className="mb-4 text-xl font-bold dark:text-white">
+                Add to List
+              </h2>
+              {isLoadingLists ?
+                <p className="mb-4 dark:text-base-200">Loading lists...</p>
+              : <div className="mb-4 max-h-60 overflow-y-auto">
+                  {userLists.length > 0 ?
+                    userLists.map((list) => (
+                      <button
+                        key={list.listid}
+                        onClick={() =>
+                          handleAddToList(list.listid as number, list.listname)
+                        }
+                        className="mb-2 w-full rounded-sm bg-base-100 p-2 text-left text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                      >
+                        {list.listname}
+                      </button>
+                    ))
+                  : <p className="dark:text-base-200">No lists available.</p>}
+                </div>
+              }
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setShowListPopup(false)}
+                  className="rounded-sm bg-gray-300 px-4 py-2 text-base-950 hover:bg-gray-400 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                >
+                  Cancel
                 </button>
               </div>
             </div>

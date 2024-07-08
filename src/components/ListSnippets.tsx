@@ -36,9 +36,8 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
     const isMobile = width && width <= 1024;
     const mod = snippetMods[Number(snippetID)];
 
-    const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount;
-    const favorited = mod?.favoriteStatus ?? isFavorite;
-
+    const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount ?? 0;
+    const favorited = mod?.favoriteStatus ?? isFavorite ?? false;
     const selectedClass =
       selection === item ?
         "invert dark:invert-0"
@@ -105,7 +104,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
                 className="ml-auto h-5"
                 alt="Favorites"
               />
-              <p>{simplifyNumber(modifiedFavoriteCount).toString()}</p>
+              <p>{simplifyNumber(modifiedFavoriteCount)}</p>
             </div>
           </div>
         </a>

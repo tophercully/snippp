@@ -38,28 +38,58 @@ export async function getListSnippets(listId: number): Promise<Snippet[]> {
 }
 
 export async function addSnippetToList(
-  listId: string,
-  snippetId: string,
+  listId: number,
+  snippetId: number,
 ): Promise<void> {
-  const response = await fetch("/api/addSnippetToList", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ listId, snippetId }),
-  });
+  try {
+    const response = await fetch("/api/list/add-snippet-to-list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ listId, snippetId }),
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to add snippet to list");
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
+
+    const rawResponse = await response.text();
+    console.log("Raw response:", rawResponse);
+
+    if (!response.ok) {
+      if (rawResponse) {
+        try {
+          const errorData = JSON.parse(rawResponse);
+          throw new Error(errorData.error || "Failed to add snippet to list");
+        } catch (parseError) {
+          console.error("Error parsing error response:", parseError);
+          throw new Error(
+            `Server error: ${response.status} ${response.statusText}`,
+          );
+        }
+      } else {
+        throw new Error(
+          `Server error: ${response.status} ${response.statusText}`,
+        );
+      }
+    }
+
+    // If the response is successful but empty, we don't need to parse it
+    if (rawResponse) {
+      const data = JSON.parse(rawResponse);
+      console.log("Parsed response data:", data);
+    }
+  } catch (error) {
+    console.error("Error in addSnippetToList:", error);
+    throw error;
   }
 }
 
 export async function removeSnippetFromList(
-  listId: string,
-  snippetId: string,
+  listId: number,
+  snippetId: number,
 ): Promise<void> {
-  const response = await fetch("/api/removeSnippetFromList", {
+  const response = await fetch("/api/list/remove-snippet-from-list", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

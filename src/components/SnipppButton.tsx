@@ -52,7 +52,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
       className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600 ${className}`}
     >
       <div
-        className={`absolute inset-0 -translate-x-full transform ${getColorClass()} transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
+        className={`absolute inset-0 -translate-x-[101%] transform ${getColorClass()} transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
         aria-hidden="true"
       />
       <span className="relative z-10 text-xl font-bold">{children}</span>

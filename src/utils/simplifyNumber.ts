@@ -1,7 +1,9 @@
-export function simplifyNumber(num: number): string {
+export function simplifyNumber(num: number | undefined | null): string {
+  if (num === undefined || num === null) {
+    return "0";
+  }
   if (num >= 1000) {
     const formattedNum = (num / 1000).toFixed(1);
-    // Remove trailing zero if the decimal part is .0
     return formattedNum.endsWith(".0") ?
         `${parseInt(formattedNum)}k`
       : `${formattedNum}k`;
