@@ -387,9 +387,9 @@ export const Dashboard: React.FC = () => {
               </button>
               <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
                 <div className="flex items-center justify-between">
-                  <h1 className="mr-auto text-2xl font-bold">
+                  <a href={`${window.location.origin}/list/${list?.listid}`} className="mr-auto text-2xl font-bold">
                     {list?.listname}
-                  </h1>
+                  </a>
                   {list.listid != "mysnippets" &&
                     list.listid != "favorites" && (
                       <div className="flex gap-4">
