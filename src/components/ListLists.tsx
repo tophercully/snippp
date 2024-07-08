@@ -72,9 +72,9 @@ export const ListLists: React.FC<UserListsProps> = ({
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      <h1 className="bg-base-150 p-4 font-bold">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
       <div className="relative h-full w-full overflow-y-auto">
-        Chris's Lists
         {isAdding && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
             <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
@@ -122,7 +122,7 @@ export const ListLists: React.FC<UserListsProps> = ({
         {lists.map((list) => (
           <div
             key={list.listid}
-            className="flex w-full cursor-pointer flex-col border-b border-dashed border-base-300 bg-base-50 p-5 last:mb-20 hover:bg-base-200 dark:bg-base-800 dark:hover:bg-base-700"
+            className="flex w-full cursor-pointer flex-col border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-800 dark:hover:bg-base-700"
             onClick={() => onSelectList(list)}
           >
             <h2 className="text-xl text-base-900 dark:text-base-50">
@@ -141,7 +141,7 @@ export const ListLists: React.FC<UserListsProps> = ({
         ))}
       </div>
       <button
-        className="absolute bottom-0 flex h-16 w-full items-center justify-center bg-base-950 p-2 hover:bg-base-700 dark:invert"
+        className="flex h-16 w-full items-center justify-center bg-base-950 p-2 hover:bg-base-700 dark:invert"
         onClick={handleAddList}
       >
         <img

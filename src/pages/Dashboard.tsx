@@ -10,6 +10,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loader/loadFavorites";
 import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
 import { getListSnippets, getUserLists } from "../backend/list/listFunctions";
+import { useNotif } from "../hooks/Notif";
 
 type SortOrder = "asc" | "desc";
 
@@ -86,17 +87,26 @@ export const Dashboard: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
-
+  const { showNotif } = useNotif();
   useEffect(() => {
     const fetchAndSetLists = async () => {
-      if (userProfile) {
+      try {
         setListsLoading(true);
-        const result = await getUserLists(userProfile.id);
-        setLists([...defaultLists, ...result]);
+        console.log("Lists loading started:", true);
+
+        if (userProfile) {
+          const result = await getUserLists(userProfile.id);
+          setLists([...defaultLists, ...result]);
+        }
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        showNotif("Error fetching lists:" + error, "error");
+      } finally {
         setListsLoading(false);
-        console.log(result);
+        console.log("Lists loading finished:", false);
       }
     };
+
     console.log("running fetchlists");
     fetchAndSetLists();
   }, []);
@@ -242,7 +252,7 @@ export const Dashboard: React.FC = () => {
         );
       }
     } else {
-      return <div className="w-full p-6 text-center">Loading...</div>;
+      return <div className="w-full p-6 text-center">LOADING SNIPPPETS...</div>;
     }
   };
 
@@ -251,13 +261,19 @@ export const Dashboard: React.FC = () => {
       <Navbar />
       <div className="flex h-[96%] w-full shadow-lg">
         {!list && (
-          <div className="h-full w-1/3 overflow-hidden">
+          <div
+            className={`flex ${listsLoading ? "h-fit" : "h-full"} w-1/3 flex-col overflow-hidden`}
+          >
             <ListLists
               lists={lists}
               onSelectList={handleSelectList}
             />
 
-            {listsLoading && <div>Loading Lists...</div>}
+            {listsLoading && (
+              <div className="w-full p-4 text-center text-base-600 dark:text-base-400">
+                LOADING LISTS...
+              </div>
+            )}
           </div>
         )}
         {list && (
