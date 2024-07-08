@@ -12,7 +12,6 @@ const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
 languages.forEach((lang) => {
   const language = hljs.getLanguage(lang);
   if (language) {
-    console.log(language)
     hljs.registerLanguage(lang, () => language);
   } else {
     console.warn(`Language '${lang}' not found in highlight.js`);
@@ -69,7 +68,6 @@ export const Display = ({
     description,
   } = selection;
   const [isLoading, setIsLoading] = useState(false);
-  console.log(selection);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
@@ -86,6 +84,7 @@ export const Display = ({
   const { showNotif } = useNotif();
 
   const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
+  console.log(detectedLanguage)
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
