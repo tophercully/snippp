@@ -174,6 +174,30 @@ export const Dashboard: React.FC = () => {
     }
   };
 
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/list/${list?.listid}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${list?.listname} on Snippp.io`,
+          text: "Check out this list on Snippp.io :)",
+          url: shareUrl,
+        });
+        console.log("Shared successfully");
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showNotif("LINK TO LIST COPIED", "info", 3000);
+      } catch (err) {
+        console.log("Error copying to clipboard:", err);
+        alert("Unable to share. Please copy this link manually: " + shareUrl);
+      }
+    }
+  };
+
   const handleCancel = () => {
     setIsEditing(false);
     setNewListName("");
@@ -365,6 +389,17 @@ export const Dashboard: React.FC = () => {
                   {list.listid != "mysnippets" &&
                     list.listid != "favorites" && (
                       <div className="flex gap-4">
+                        <SnipppButton
+                          onClick={handleShare}
+                          fit={true}
+                          size={"sm"}
+                          colorType="neutral"
+                        >
+                          <img
+                            src="/share.svg"
+                            className="invert group-hover:invert-0 dark:invert-0"
+                          />
+                        </SnipppButton>
                         <SnipppButton
                           onClick={handleEditList}
                           fit={true}

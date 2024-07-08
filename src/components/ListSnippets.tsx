@@ -82,7 +82,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
         <a
           className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none ${selectedClass}`}
           key={snippetID}
-          href={`/snippet?snippetid=${snippetID}`}
+          href={`/snippet/${snippetID}`}
         >
           <div className="flex w-4/5 flex-col gap-3">
             <div className="flex items-center gap-2 text-2xl">

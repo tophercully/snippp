@@ -195,6 +195,30 @@ export const ListPage: React.FC = () => {
     }
   };
 
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/list/${listData?.listid}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${listData?.listname} on Snippp.io`,
+          text: "Check out this list on Snippp.io :)",
+          url: shareUrl,
+        });
+        console.log("Shared successfully");
+      } catch (err) {
+        console.log("Error sharing:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showNotif("LINK TO LIST COPIED", "info", 3000);
+      } catch (err) {
+        console.log("Error copying to clipboard:", err);
+        alert("Unable to share. Please copy this link manually: " + shareUrl);
+      }
+    }
+  };
+
   return (
     <div className="over flex h-screen w-full flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
@@ -210,27 +234,42 @@ export const ListPage: React.FC = () => {
                   listData.listid != "favorites" && (
                     <div className="flex gap-4">
                       <SnipppButton
-                        onClick={handleEditList}
+                        onClick={handleShare}
                         fit={true}
                         size={"sm"}
                         colorType="neutral"
                       >
                         <img
-                          src="/edit.svg"
-                          className="group-hover:invert dark:invert"
-                        />
-                      </SnipppButton>
-                      <SnipppButton
-                        onClick={handleDeleteList}
-                        fit={true}
-                        size={"sm"}
-                        colorType="delete"
-                      >
-                        <img
-                          src="/x.svg"
+                          src="/share.svg"
                           className="invert group-hover:invert-0 dark:invert-0"
                         />
                       </SnipppButton>
+                      {userProfile && userProfile.id == listData.userid && (
+                        <>
+                          <SnipppButton
+                            onClick={handleEditList}
+                            fit={true}
+                            size={"sm"}
+                            colorType="neutral"
+                          >
+                            <img
+                              src="/edit.svg"
+                              className="group-hover:invert dark:invert"
+                            />
+                          </SnipppButton>
+                          <SnipppButton
+                            onClick={handleDeleteList}
+                            fit={true}
+                            size={"sm"}
+                            colorType="delete"
+                          >
+                            <img
+                              src="/x.svg"
+                              className="invert group-hover:invert-0 dark:invert-0"
+                            />
+                          </SnipppButton>
+                        </>
+                      )}
                     </div>
                   )}
               </div>

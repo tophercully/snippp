@@ -202,7 +202,7 @@ export const Display = ({
   };
 
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/snippet?snippetid=${snippetID}`;
+    const shareUrl = `${window.location.origin}/snippet/${snippetID}`;
     if (navigator.share) {
       try {
         await navigator.share({
