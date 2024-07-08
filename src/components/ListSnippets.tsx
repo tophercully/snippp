@@ -18,7 +18,7 @@ interface DisplaySelectionsProps {
   };
 }
 
-export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
+export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   selection,
   setSelection,
   snippets,
@@ -36,9 +36,8 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
     const isMobile = width && width <= 1024;
     const mod = snippetMods[Number(snippetID)];
 
-    const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount;
-    const favorited = mod?.favoriteStatus ?? isFavorite;
-
+    const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount ?? 0;
+    const favorited = mod?.favoriteStatus ?? isFavorite ?? false;
     const selectedClass =
       selection === item ?
         "invert dark:invert-0"
@@ -57,7 +56,7 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
               {name}
               {!item.public && (
                 <img
-                  src="lock.svg"
+                  src="/lock.svg"
                   className="mr-auto h-5 invert"
                   alt="Private"
                 />
@@ -68,7 +67,7 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
           <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
             <div className="flex items-center justify-end gap-1">
               <img
-                src={favorited ? "heart-full.svg" : "heart-empty.svg"}
+                src={favorited ? "/heart-full.svg" : "/heart-empty.svg"}
                 className="ml-auto h-5"
                 alt="Favorites"
               />
@@ -83,14 +82,14 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
         <a
           className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none ${selectedClass}`}
           key={snippetID}
-          href={`/snippet?snippetid=${snippetID}`}
+          href={`/snippet/${snippetID}`}
         >
           <div className="flex w-4/5 flex-col gap-3">
             <div className="flex items-center gap-2 text-2xl">
               {name}
               {!item.public && (
                 <img
-                  src="lock.svg"
+                  src="/lock.svg"
                   className="mr-auto h-5 invert"
                   alt="Private"
                 />
@@ -101,11 +100,11 @@ export const SelectionsList: React.FC<DisplaySelectionsProps> = ({
           <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
             <div className="flex items-center justify-end gap-1">
               <img
-                src={favorited ? "heart-full.svg" : "heart-empty.svg"}
+                src={favorited ? "/heart-full.svg" : "/heart-empty.svg"}
                 className="ml-auto h-5"
                 alt="Favorites"
               />
-              <p>{simplifyNumber(modifiedFavoriteCount).toString()}</p>
+              <p>{simplifyNumber(modifiedFavoriteCount)}</p>
             </div>
           </div>
         </a>

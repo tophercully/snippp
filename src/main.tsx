@@ -6,11 +6,12 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Browser } from "./pages/Browser.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Builder } from "./pages/Builder.tsx";
-import { MySnippets } from "./pages/MySnippets.tsx";
+import { Dashboard } from "./pages/Dashboard.tsx";
 import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./components/NotifContext.tsx";
 import { About } from "./pages/About.tsx";
 import { SnippetPage } from "./pages/SnippetPage.tsx";
+import { ListPage } from "./pages/ListPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,24 +19,28 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/browse",
+    path: "/browse/:category?",
     element: <Browser />,
   },
   {
-    path: "/mysnippets",
-    element: <MySnippets />,
+    path: "/dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/builder",
     element: <Builder />,
   },
   {
-    path: "/snippet",
+    path: "/snippet/:id",
     element: <SnippetPage />,
   },
   {
     path: "/about",
     element: <About />,
+  },
+  {
+    path: "/list/:listId",
+    element: <ListPage />,
   },
 ]);
 

@@ -2,7 +2,7 @@ import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
@@ -21,6 +21,12 @@ import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
 import hljs from "highlight.js";
+import {
+  ListWithSnippetStatus,
+  addSnippetToList,
+  getListsWithSnippetStatus,
+  removeSnippetFromList,
+} from "../backend/list/listFunctions";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -30,6 +36,15 @@ type SnippetMod = {
 };
 
 type SnippetMods = { [snippetID: number]: SnippetMod };
+
+const formatDescription = (text) => {
+  return text.split("\n").map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ));
+};
 
 export const Display = ({
   selection,
@@ -41,10 +56,27 @@ export const Display = ({
   snippetMods: SnippetMods;
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const { snippetID, name, author, code, authorID, isFavorite, copyCount } =
-    selection;
+  const {
+    snippetID,
+    name,
+    author,
+    code,
+    authorID,
+    isFavorite,
+    copyCount,
+    description,
+  } = selection;
   const [isLoading, setIsLoading] = useState(false);
+  console.log(selection);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
+    useState(false);
+  const [lastCopyTime, setLastCopyTime] = useState(0);
+  const [showListPopup, setShowListPopup] = useState(false);
+  const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
+  const [isLoadingLists, setIsLoadingLists] = useState(false);
+
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
   const snippetMod = snippetMods[snippetID] || {};
@@ -52,7 +84,6 @@ export const Display = ({
   const { showNotif } = useNotif();
 
   const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
-  console.log(detectedLanguage);
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
@@ -67,10 +98,18 @@ export const Display = ({
   }, [selection.tags]);
 
   const copySnippet = () => {
-    navigator.clipboard.writeText(code);
-    showNotif("COPIED TO CLIPBOARD", "info", 3000);
-    addCopy(selection.snippetID);
-    updateSnippetMod(snippetID, { copyCount: (snippetMod.copyCount || 0) + 1 });
+    const now = Date.now();
+    if (now - lastCopyTime >= 2000) {
+      navigator.clipboard.writeText(code);
+      showNotif("COPIED TO CLIPBOARD", "info", 3000);
+      addCopy(selection.snippetID);
+      updateSnippetMod(snippetID, {
+        copyCount: (snippetMod.copyCount || 0) + 1,
+      });
+      setLastCopyTime(now);
+    } else {
+      showNotif("Please wait before copying again", "error", 2000);
+    }
   };
 
   const handleAddFavorite = async () => {
@@ -115,8 +154,55 @@ export const Display = ({
     }
   };
 
+  const fetchUserLists = async () => {
+    if (userProfile) {
+      setIsLoadingLists(true);
+      try {
+        const lists: ListWithSnippetStatus[] = (await getListsWithSnippetStatus(
+          userProfile.id,
+          snippetID,
+        )) as ListWithSnippetStatus[];
+        setUserLists(lists);
+      } catch (error) {
+        console.error("Failed to fetch user lists:", error);
+        showNotif("Failed to load lists", "error", 2000);
+      } finally {
+        setIsLoadingLists(false);
+      }
+    }
+  };
+
+  const handleAddOrRemoveFromList = async (list: ListWithSnippetStatus) => {
+    try {
+      if (list.has_snippet) {
+        await removeSnippetFromList(list.listid, snippetID);
+        showNotif(
+          `Removed ${selection.name} from ${list.listname}`,
+          "success",
+          2000,
+        );
+      } else {
+        await addSnippetToList(list.listid, snippetID);
+        showNotif(
+          `Added ${selection.name} to ${list.listname}`,
+          "success",
+          2000,
+        );
+      }
+      // Update the list status locally
+      setUserLists((prevLists) =>
+        prevLists.map((l) =>
+          l.listid === list.listid ? { ...l, has_snippet: !l.has_snippet } : l,
+        ),
+      );
+    } catch (error) {
+      console.error("Failed to update snippet in list:", error);
+      showNotif("Failed to update list" + error, "error", 2000);
+    }
+  };
+
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/snippet?snippetid=${snippetID}`;
+    const shareUrl = `${window.location.origin}/snippet/${snippetID}`;
     if (navigator.share) {
       try {
         await navigator.share({
@@ -176,7 +262,7 @@ export const Display = ({
   const simplifiedAndModdedCount = simplifyNumber(
     snippetMod.copyCount ? copyCount + snippetMod.copyCount : copyCount,
   );
-  console.log(selection);
+
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
@@ -202,20 +288,54 @@ export const Display = ({
             {!selection.public && (
               <span className="flex h-fit items-center gap-2">
                 <img
-                  src="lock.svg"
+                  src="/lock.svg"
                   className="invert dark:invert-0"
                 />
               </span>
             )}
             <span className="flex h-fit items-center gap-2">
               <img
-                src="copy.svg"
+                src="/copy.svg"
                 className="invert dark:invert-0"
               />
               <span>{simplifiedAndModdedCount}</span>
             </span>
           </div>
         </div>
+        {description && (
+          <div className="relative mt-4">
+            <p
+              ref={(el) => {
+                if (el) {
+                  setIsDescriptionOverflowing(
+                    el.scrollHeight > el.clientHeight,
+                  );
+                }
+              }}
+              className={`overflow-hidden font-thin transition-all duration-300 ${
+                isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
+              }`}
+            >
+              {formatDescription(description)}
+            </p>
+            {(isDescriptionOverflowing || isDescriptionExpanded) && (
+              <button
+                className="mt-2 text-sm text-base-500 hover:underline dark:text-base-500"
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              >
+                {isDescriptionExpanded ? "Show less" : "Show more"}
+              </button>
+            )}
+          </div>
+        )}
+        {/* {description && (
+          <div
+            id="snippet-description"
+            className="dark:bg-base-850"
+          >
+            <p className="font-thin">{description}</p>
+          </div>
+        )} */}
         <div
           onClick={copySnippet}
           className="rounded-xs group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
@@ -253,7 +373,7 @@ export const Display = ({
                 />
                 <span className="relative flex items-center gap-3">
                   <img
-                    src="heart-empty.svg"
+                    src="/heart-empty.svg"
                     className="h-5 group-hover:invert dark:invert"
                   />
                   <span className="hidden sm:inline">
@@ -274,12 +394,32 @@ export const Display = ({
                 />
                 <span className="relative flex items-center gap-3">
                   <img
-                    src="heart-full.svg"
+                    src="/heart-full.svg"
                     className="h-5 group-hover:invert dark:invert"
                   />
                   <span className="hidden sm:inline">
                     {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}
                   </span>
+                </span>
+              </button>
+            )}
+            {userProfile && (
+              <button
+                onClick={() => {
+                  setShowListPopup(true);
+                  fetchUserLists();
+                }}
+                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+              >
+                <div
+                  className="absolute inset-0 -translate-x-full transform bg-purple-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  aria-hidden="true"
+                />
+                <span className="relative flex items-center gap-3">
+                  <img
+                    src="/add-to-list.svg"
+                    className="h-5 invert group-hover:invert-0 dark:invert-0"
+                  />
                 </span>
               </button>
             )}
@@ -293,10 +433,9 @@ export const Display = ({
               />
               <span className="relative flex items-center gap-3">
                 <img
-                  src="share.svg"
+                  src="/share.svg"
                   className="h-5 invert group-hover:invert-0 dark:invert-0"
                 />
-                <span className="hidden 2xl:inline">SHARE</span>
               </span>
             </button>
             {userProfile && userProfile.id === authorID && (
@@ -311,10 +450,10 @@ export const Display = ({
                   />
                   <span className="relative flex items-center gap-3">
                     <img
-                      src="edit.svg"
+                      src="/edit.svg"
                       className="h-5 group-hover:invert dark:invert"
                     />
-                    <span className="hidden 2xl:inline">EDIT SNIPPET</span>
+                    <span className="hidden 2xl:inline">EDIT</span>
                   </span>
                 </a>
                 <button
@@ -327,10 +466,10 @@ export const Display = ({
                   />
                   <span className="relative flex items-center gap-3">
                     <img
-                      src="x.svg"
+                      src="/x.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
-                    <span className="hidden 2xl:inline">DELETE SNIPPET</span>
+                    <span className="hidden 2xl:inline">DELETE</span>
                   </span>
                 </button>
               </>
@@ -358,6 +497,56 @@ export const Display = ({
                   {isLoading ? "Deleting..." : "Delete"}
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+        {showListPopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="dark:bg-base-850 w-full max-w-md rounded-sm bg-white p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xl font-bold dark:text-white">
+                  ADD TO LIST
+                </h2>
+                <button
+                  onClick={() => setShowListPopup(false)}
+                  className="bg-base-150 hover:invert"
+                >
+                  <img
+                    src="/x.svg"
+                    className="h-6 w-6 invert"
+                  />
+                </button>
+              </div>
+              {isLoadingLists ?
+                <p className="mb-4 dark:text-base-200">Loading lists...</p>
+              : <div className="mb-4 max-h-[40svh] overflow-y-auto">
+                  {userLists.length > 0 ?
+                    userLists.map((list) => (
+                      <button
+                        key={list.listid}
+                        onClick={() => handleAddOrRemoveFromList(list)}
+                        className={`mb-2 flex w-full items-center justify-between rounded-sm p-2 text-left ${
+                          list.has_snippet ?
+                            "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
+                          : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                        }`}
+                      >
+                        <span>{list.listname}</span>
+                        {list.has_snippet ?
+                          <img
+                            src="/x.svg"
+                            className="h-5 w-5 invert dark:invert-0"
+                          />
+                        : <img
+                            src="/add.svg"
+                            className="h-5 w-5 invert dark:invert-0"
+                          />
+                        }
+                      </button>
+                    ))
+                  : <p className="dark:text-base-200">No lists available.</p>}
+                </div>
+              }
             </div>
           </div>
         )}

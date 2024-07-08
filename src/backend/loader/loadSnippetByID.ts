@@ -25,8 +25,8 @@ export const loadSnippetById = async (
         );
       }
     }
-
     const snippet: Snippet = await response.json();
+    console.log(snippet);
     return snippet;
   } catch (error) {
     console.error("Error loading snippet:", error);

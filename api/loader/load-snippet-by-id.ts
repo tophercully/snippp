@@ -40,6 +40,7 @@ export default async function handler(req: any, res: any) {
           s.lastCopied,
           s.lastEdit,
           s.copyCount,
+          s.description,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount,
           COALESCE(uf.is_favorite, 0) AS isFavorite
       FROM snippets s
@@ -70,6 +71,7 @@ export default async function handler(req: any, res: any) {
       copyCount: snippet.copycount,
       favoriteCount: parseInt(snippet.favoritecount),
       isFavorite: Boolean(snippet.isfavorite),
+      description: snippet.description,
     };
 
     res.status(200).json(formattedSnippet);

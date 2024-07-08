@@ -1,6 +1,7 @@
 interface UpdateParams {
   name: string;
   code: string;
+  description: string;
   tags: string;
   public: boolean;
 }

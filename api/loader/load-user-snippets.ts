@@ -62,6 +62,7 @@ export default async function handler(req: any, res: any) {
       copyCount: row.copycount,
       favoriteCount: row.favoritecount,
       isFavorite: row.isfavorite,
+      description: row.description,
     }));
 
     res.status(200).json(snippets);

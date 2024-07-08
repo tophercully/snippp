@@ -7,6 +7,7 @@ const pool = createPool({
 interface UpdateParams {
   name: string;
   code: string;
+  description: string;
   tags: string;
   public: boolean;
 }
@@ -31,6 +32,7 @@ export default async function handler(req: any, res: any) {
       SET 
         Name = ${newParams.name},
         Code = ${newParams.code},
+        Description = ${newParams.description},
         Tags = ${newParams.tags},
         Public = ${newParams.public},
         lastEdit = CURRENT_TIMESTAMP

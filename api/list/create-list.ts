@@ -22,11 +22,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { rows } = await pool.sql`
+    const { rows } = await pool.query(
+      `
       INSERT INTO snippet_lists (userID, listName, description)
-      VALUES (${userID}, ${listName}, ${description})
-      RETURNING *;
-    `;
+      VALUES ($1, $2, $3)
+      RETURNING listid;
+    `,
+      [userID, listName, description],
+    );
 
     const newList = rows[0];
     res.status(201).json(newList);
