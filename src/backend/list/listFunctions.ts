@@ -1,5 +1,3 @@
-// src/utils/listFunctions.ts
-
 import { Snippet } from "../../typeInterfaces";
 
 interface ListData {
@@ -22,7 +20,6 @@ export async function getUserLists(userId: string): Promise<ListData[]> {
   if (!response.ok) {
     throw new Error("Failed to fetch user lists");
   }
-  //   console.log(response);
   return response.json();
 }
 
@@ -142,6 +139,42 @@ export const deleteList = async (listID: number): Promise<void> => {
     console.log(result.message);
   } catch (error) {
     console.error("Error deleting list:", error);
+    throw error;
+  }
+};
+
+export const updateList = async (
+  listID: number,
+  listName: string,
+  description: string,
+): Promise<void> => {
+  try {
+    const response = await fetch(`/api/list/update-list`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ listID, listName, description }),
+    });
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update list");
+      } else {
+        const textError = await response.text();
+        console.error("Server returned non-JSON response:", textError);
+        throw new Error(
+          `Server error: ${response.status} ${response.statusText}`,
+        );
+      }
+    }
+
+    const result = await response.json();
+    console.log(result.message);
+  } catch (error) {
+    console.error("Error updating list:", error);
     throw error;
   }
 };

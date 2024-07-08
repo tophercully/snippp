@@ -9,8 +9,14 @@ import { Display } from "../components/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loader/loadFavorites";
 import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
-import { getListSnippets, getUserLists } from "../backend/list/listFunctions";
+import {
+  deleteList,
+  getListSnippets,
+  getUserLists,
+  updateList,
+} from "../backend/list/listFunctions";
 import { useNotif } from "../hooks/Notif";
+import SnipppButton from "../components/SnipppButton";
 
 type SortOrder = "asc" | "desc";
 
@@ -87,26 +93,31 @@ export const Dashboard: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [newListName, setNewListName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+
   const { showNotif } = useNotif();
-  useEffect(() => {
-    const fetchAndSetLists = async () => {
-      try {
-        setListsLoading(true);
-        console.log("Lists loading started:", true);
+  const fetchAndSetLists = async () => {
+    try {
+      setListsLoading(true);
+      console.log("Lists loading started:", true);
 
-        if (userProfile) {
-          const result = await getUserLists(userProfile.id);
-          setLists([...defaultLists, ...result]);
-        }
-      } catch (error) {
-        console.error("Error fetching lists:", error);
-        showNotif("Error fetching lists:" + error, "error");
-      } finally {
-        setListsLoading(false);
-        console.log("Lists loading finished:", false);
+      if (userProfile) {
+        const result = await getUserLists(userProfile.id);
+        setLists([...defaultLists, ...result]);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching lists:", error);
+      showNotif("Error fetching lists:" + error, "error");
+    } finally {
+      setListsLoading(false);
+      console.log("Lists loading finished:", false);
+    }
+  };
+  useEffect(() => {
     console.log("running fetchlists");
     fetchAndSetLists();
   }, []);
@@ -121,6 +132,47 @@ export const Dashboard: React.FC = () => {
     [],
   );
 
+  const handleDeleteList = async () => {
+    try {
+      await deleteList(list?.listid as number);
+      setList(null);
+      showNotif("Deleted List", "success", 5000);
+      await fetchAndSetLists();
+    } catch (error) {
+      showNotif("Error Deleting List:" + error, "error");
+    }
+  };
+  const handleEditList = () => {
+    if (list) {
+      setNewListName(list?.listname);
+      setNewDescription(list?.description);
+      setIsEditing(true);
+    }
+  };
+
+  const handleSaveList = async () => {
+    if (userProfile) {
+      setIsSaving(true);
+
+      // Reset form and hide it
+      setNewListName("");
+      setNewDescription("");
+      setIsEditing(false);
+
+      try {
+        await updateList(list?.listid as number, newListName, newDescription);
+        showNotif("List Updated", "success", 5000);
+      } catch (error) {
+        showNotif("Error Updating List", "error", 5000);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setNewListName("");
+    setNewDescription("");
+  };
   const fetchSnippets = useCallback(async () => {
     if (userProfile && userProfile.id) {
       setSnippetsLoading(true);
@@ -280,9 +332,11 @@ export const Dashboard: React.FC = () => {
           <div className="flex h-full w-full flex-col lg:w-1/3">
             <div className="flex w-full flex-col justify-start">
               <button
-                className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-150 hover:py-1 dark:invert"
-                onClick={() => {
+                className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
+                onClick={async () => {
                   setList(null);
+                  setLists(defaultLists);
+                  fetchAndSetLists();
                 }}
               >
                 <img
@@ -291,8 +345,39 @@ export const Dashboard: React.FC = () => {
                 />
                 <p className="hidden group-hover:flex">BACK TO LISTS</p>
               </button>
-              <div className="p-4">
-                <h1 className="font-bold">{list?.listname}</h1>
+              <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
+                <div className="mb-4 flex items-center justify-between">
+                  <h1 className="mr-auto text-3xl font-bold">
+                    {list?.listname}
+                  </h1>
+                  {list.listid != "mysnippets" &&
+                    list.listid != "favorites" && (
+                      <div className="flex gap-4">
+                        <SnipppButton
+                          onClick={handleEditList}
+                          fit={true}
+                          size={"sm"}
+                          colorType="neutral"
+                        >
+                          <img
+                            src="edit.svg"
+                            className="group-hover:invert dark:invert"
+                          />
+                        </SnipppButton>
+                        <SnipppButton
+                          onClick={handleDeleteList}
+                          fit={true}
+                          size={"sm"}
+                          colorType="delete"
+                        >
+                          <img
+                            src="x.svg"
+                            className="invert group-hover:invert-0 dark:invert-0"
+                          />
+                        </SnipppButton>
+                      </div>
+                    )}
+                </div>
 
                 {list.description && (
                   <h1 className="font-thin">{list?.description}</h1>
@@ -314,6 +399,50 @@ export const Dashboard: React.FC = () => {
         )}
       </div>
       <Footer />
+      {isEditing && (
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
+          <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
+            <h2 className="mb-4 text-center text-2xl dark:text-white">
+              Add New List
+            </h2>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-base-700 dark:text-base-200">
+                List Name
+              </label>
+              <input
+                type="text"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-base-700 dark:text-base-200">
+                Description
+              </label>
+              <textarea
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+              />
+            </div>
+            <div className="flex justify-end gap-4">
+              <SnipppButton
+                onClick={handleCancel}
+                colorType="delete"
+              >
+                CANCEL
+              </SnipppButton>
+              <SnipppButton
+                onClick={handleSaveList}
+                disabled={isSaving}
+              >
+                SAVE
+              </SnipppButton>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
