@@ -7,6 +7,7 @@ interface ListData {
   description: string;
   createdat: string;
   lastupdated: string;
+  snippet_count: string;
 }
 
 export async function getUserLists(userId: string): Promise<ListData[]> {

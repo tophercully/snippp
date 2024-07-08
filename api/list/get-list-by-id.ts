@@ -17,9 +17,12 @@ export default async function handler(request: any, response: any) {
 
   try {
     const result = await pool.sql`
-      SELECT listid, listname, description, createdat, lastupdated
-      FROM snippet_lists
-      WHERE userid = ${userId} AND listid = ${listId}
+      SELECT sl.listid, sl.listname, sl.description, sl.createdat, sl.lastupdated,
+             COUNT(ls.snippetid) AS snippet_count
+      FROM snippet_lists sl
+      LEFT JOIN list_snippets ls ON sl.listid = ls.listid
+      WHERE sl.userid = ${userId} AND sl.listid = ${listId}
+      GROUP BY sl.listid, sl.listname, sl.description, sl.createdat, sl.lastupdated
     `;
 
     if (result.rows.length === 0) {

@@ -50,6 +50,7 @@ export const Display = ({
   const { snippetID, name, author, code, authorID, isFavorite, copyCount } =
     selection;
   const [isLoading, setIsLoading] = useState(false);
+  console.log(selection);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
@@ -365,7 +366,6 @@ export const Display = ({
                     src="/add-to-list.svg"
                     className="h-5 invert group-hover:invert-0 dark:invert-0"
                   />
-                  <span className="hidden 2xl:inline">ADD TO LIST</span>
                 </span>
               </button>
             )}
@@ -382,7 +382,6 @@ export const Display = ({
                   src="/share.svg"
                   className="h-5 invert group-hover:invert-0 dark:invert-0"
                 />
-                <span className="hidden 2xl:inline">SHARE</span>
               </span>
             </button>
             {userProfile && userProfile.id === authorID && (
@@ -400,7 +399,7 @@ export const Display = ({
                       src="/edit.svg"
                       className="h-5 group-hover:invert dark:invert"
                     />
-                    <span className="hidden 2xl:inline">EDIT SNIPPET</span>
+                    <span className="hidden 2xl:inline">EDIT</span>
                   </span>
                 </a>
                 <button
@@ -416,7 +415,7 @@ export const Display = ({
                       src="/x.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
-                    <span className="hidden 2xl:inline">DELETE SNIPPET</span>
+                    <span className="hidden 2xl:inline">DELETE</span>
                   </span>
                 </button>
               </>

@@ -74,6 +74,7 @@ export const Dashboard: React.FC = () => {
         description: "",
         createdat: "",
         lastupdated: "",
+        snippet_count: "-1",
       },
       {
         listid: "favorites",
@@ -82,6 +83,7 @@ export const Dashboard: React.FC = () => {
         description: "",
         createdat: "",
         lastupdated: "",
+        snippet_count: "-1",
       },
     ],
     [userProfile],
@@ -94,6 +96,7 @@ export const Dashboard: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -257,7 +260,7 @@ export const Dashboard: React.FC = () => {
     };
 
     filterAndSortSnippets();
-  }, [snippets, snippetMods, query, sortMethod, sortOrder, selection]);
+  }, [snippets, snippetMods, query, sortMethod, sortOrder]);
 
   const SnippetExplorer: React.FC = () => {
     if (!snippetsLoading) {
@@ -268,9 +271,11 @@ export const Dashboard: React.FC = () => {
               query={query}
               setQuery={setQuery}
               placeHolder={
-                list?.listid === "mysnippets" ?
-                  "search creations"
-                : "search favorites"
+                Number(list?.listid) < 0 ?
+                  list?.listid === "mysnippets" ?
+                    "search creations"
+                  : "search favorites"
+                : `search list`
               }
               setSortMethod={setSortMethod}
               sortMethod={sortMethod}
@@ -386,8 +391,24 @@ export const Dashboard: React.FC = () => {
                     )}
                 </div>
 
-                {list.description && (
-                  <h1 className="mt-4 font-thin">{list?.description}</h1>
+                {list?.description && (
+                  <div className="mt-4">
+                    <p
+                      className={`overflow-hidden font-thin transition-all duration-300 ${
+                        isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
+                      }`}
+                    >
+                      {list.description}
+                    </p>
+                    <button
+                      className="mt-2 text-sm text-base-950 hover:underline dark:text-base-50"
+                      onClick={() =>
+                        setIsDescriptionExpanded(!isDescriptionExpanded)
+                      }
+                    >
+                      {isDescriptionExpanded ? "Show less" : "Show more"}
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

@@ -19,10 +19,13 @@ export default async function handler(req: any, res: any) {
 
   try {
     const result = await pool.sql`
-      SELECT listid, userid, listname, description, createdat, lastupdated
-      FROM snippet_lists
-      WHERE userid = ${userId}
-      ORDER BY lastupdated DESC;
+      SELECT sl.listid, sl.userid, sl.listname, sl.description, sl.createdat, sl.lastupdated,
+             COUNT(ls.snippetid) AS snippet_count
+      FROM snippet_lists sl
+      LEFT JOIN list_snippets ls ON sl.listid = ls.listid
+      WHERE sl.userid = ${userId}
+      GROUP BY sl.listid, sl.userid, sl.listname, sl.description, sl.createdat, sl.lastupdated
+      ORDER BY sl.lastupdated DESC;
     `;
 
     res.status(200).json(result.rows);

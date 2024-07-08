@@ -12,6 +12,7 @@ export interface ListData {
   description: string;
   createdat: string;
   lastupdated: string;
+  snippet_count?: string;
 }
 
 interface UserListsProps {
@@ -122,11 +123,23 @@ export const ListLists: React.FC<UserListsProps> = ({
         {lists.map((list) => (
           <div
             key={list.listid}
-            className="flex w-full cursor-pointer flex-col border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-900 dark:hover:bg-base-700"
+            className="flex w-full cursor-pointer flex-col gap-2 border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-900 dark:hover:bg-base-700"
             onClick={() => onSelectList(list)}
           >
-            <h2 className="text-xl text-base-900 dark:text-base-50">
+            <h2 className="flex items-center gap-2 text-xl text-base-900 dark:text-base-50">
               {list.listname}
+              {list.listid == "mysnippets" && (
+                <img
+                  src="/tools.svg"
+                  className="invert dark:invert-0"
+                />
+              )}
+              {list.listid == "favorites" && (
+                <img
+                  src="/heart-full.svg"
+                  className="dark:invert"
+                />
+              )}
             </h2>
 
             {list.description && (
@@ -134,9 +147,21 @@ export const ListLists: React.FC<UserListsProps> = ({
                 {list.description}
               </p>
             )}
-            <p className="text-xs text-base-500 dark:text-base-400">
-              Last updated: {new Date(list.lastupdated).toLocaleDateString()}
-            </p>
+
+            {list.lastupdated && (
+              <p className="text-xs text-base-500 dark:text-base-400">
+                Last updated: {new Date(list.lastupdated).toLocaleDateString()}
+              </p>
+            )}
+            {Number(list.snippet_count) != -1 && (
+              <span className="flex items-center gap-1 text-xs text-base-500 dark:text-base-400">
+                <img
+                  src="/scissors.svg"
+                  className="h-3 brightness-0 dark:invert"
+                />
+                {list.snippet_count}
+              </span>
+            )}
           </div>
         ))}
       </div>
