@@ -47,11 +47,22 @@ export const Display = ({
   snippetMods: SnippetMods;
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const { snippetID, name, author, code, authorID, isFavorite, copyCount } =
-    selection;
+  const {
+    snippetID,
+    name,
+    author,
+    code,
+    authorID,
+    isFavorite,
+    copyCount,
+    description,
+  } = selection;
   const [isLoading, setIsLoading] = useState(false);
   console.log(selection);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
+    useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
@@ -282,6 +293,40 @@ export const Display = ({
             </span>
           </div>
         </div>
+        {description && (
+          <div className="relative mt-4">
+            <p
+              ref={(el) => {
+                if (el) {
+                  setIsDescriptionOverflowing(
+                    el.scrollHeight > el.clientHeight,
+                  );
+                }
+              }}
+              className={`overflow-hidden font-thin transition-all duration-300 ${
+                isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
+              }`}
+            >
+              {description}
+            </p>
+            {(isDescriptionOverflowing || isDescriptionExpanded) && (
+              <button
+                className="mt-2 text-sm text-base-500 hover:underline dark:text-base-500"
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              >
+                {isDescriptionExpanded ? "Show less" : "Show more"}
+              </button>
+            )}
+          </div>
+        )}
+        {/* {description && (
+          <div
+            id="snippet-description"
+            className="dark:bg-base-850"
+          >
+            <p className="font-thin">{description}</p>
+          </div>
+        )} */}
         <div
           onClick={copySnippet}
           className="rounded-xs group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
