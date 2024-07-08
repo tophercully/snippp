@@ -1,11 +1,12 @@
 import { GoogleUser, Snippet } from "../typeInterfaces";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import  SyntaxHighlighter  from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
 import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
+// import "highlight.js/styles/default.css";
 const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
 
 languages.forEach((lang) => {
@@ -67,7 +68,6 @@ export const Display = ({
     description,
   } = selection;
   const [isLoading, setIsLoading] = useState(false);
-  console.log(selection);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
@@ -347,14 +347,14 @@ export const Display = ({
           </div>
           <SyntaxHighlighter
             style={selectedStyle}
-            language={detectedLanguage}
+            language={detectedLanguage || "javascript"}
             customStyle={{
               background: "transparent",
               fontSize: codeFontSize,
             }}
           >
             {code}
-          </SyntaxHighlighter>
+          </SyntaxHighlighter>{" "}
         </div>
         {selection && (
           <div
