@@ -2,7 +2,7 @@ import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
@@ -36,6 +36,15 @@ type SnippetMod = {
 };
 
 type SnippetMods = { [snippetID: number]: SnippetMod };
+
+const formatDescription = (text) => {
+  return text.split("\n").map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ));
+};
 
 export const Display = ({
   selection,
@@ -307,7 +316,7 @@ export const Display = ({
                 isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
               }`}
             >
-              {description}
+              {formatDescription(description)}
             </p>
             {(isDescriptionOverflowing || isDescriptionExpanded) && (
               <button
