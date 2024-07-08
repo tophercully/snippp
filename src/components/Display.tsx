@@ -6,11 +6,13 @@ import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
+// import "highlight.js/styles/default.css";
 const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
 
 languages.forEach((lang) => {
   const language = hljs.getLanguage(lang);
   if (language) {
+    console.log(language)
     hljs.registerLanguage(lang, () => language);
   } else {
     console.warn(`Language '${lang}' not found in highlight.js`);
@@ -347,14 +349,14 @@ export const Display = ({
           </div>
           <SyntaxHighlighter
             style={selectedStyle}
-            language={detectedLanguage}
+            language={detectedLanguage || "javascript"}
             customStyle={{
               background: "transparent",
               fontSize: codeFontSize,
             }}
           >
             {code}
-          </SyntaxHighlighter>
+          </SyntaxHighlighter>{" "}
         </div>
         {selection && (
           <div
