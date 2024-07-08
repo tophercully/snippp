@@ -17,6 +17,7 @@ import {
 } from "../backend/list/listFunctions";
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
+import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 
 type SortOrder = "asc" | "desc";
 
@@ -98,6 +99,7 @@ export const Dashboard: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const { showNotif } = useNotif();
   const fetchAndSetLists = async () => {
@@ -132,7 +134,10 @@ export const Dashboard: React.FC = () => {
     [],
   );
 
-  const handleDeleteList = async () => {
+  const handleDeleteList = () => {
+    setShowDeleteConfirmation(true);
+  };
+  const confirmDeleteList = async () => {
     try {
       await deleteList(list?.listid as number);
       setList(null);
@@ -142,6 +147,7 @@ export const Dashboard: React.FC = () => {
       showNotif("Error Deleting List:" + error, "error");
     }
   };
+
   const handleEditList = () => {
     if (list) {
       setNewListName(list?.listname);
@@ -346,8 +352,8 @@ export const Dashboard: React.FC = () => {
                 <p className="hidden group-hover:flex">BACK TO LISTS</p>
               </button>
               <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
-                <div className="mb-4 flex items-center justify-between">
-                  <h1 className="mr-auto text-3xl font-bold">
+                <div className="flex items-center justify-between">
+                  <h1 className="mr-auto text-2xl font-bold">
                     {list?.listname}
                   </h1>
                   {list.listid != "mysnippets" &&
@@ -380,11 +386,18 @@ export const Dashboard: React.FC = () => {
                 </div>
 
                 {list.description && (
-                  <h1 className="font-thin">{list?.description}</h1>
+                  <h1 className="mt-4 font-thin">{list?.description}</h1>
                 )}
               </div>
             </div>
             <SnippetExplorer />
+            <DeleteConfirmationPopup
+              isOpen={showDeleteConfirmation}
+              onClose={() => setShowDeleteConfirmation(false)}
+              onConfirm={confirmDeleteList}
+              itemName={list?.listname || ""}
+              itemType="list"
+            />
           </div>
         )}
 
