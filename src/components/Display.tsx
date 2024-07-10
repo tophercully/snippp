@@ -331,26 +331,28 @@ export const Display = ({
   </div>
 )}
 
-        <div
-          onClick={copySnippet}
-          className="rounded-xs group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
-        >
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[1px] backdrop-filter transition-opacity duration-200 active:backdrop-blur-[2px] group-hover:opacity-100">
-            <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
-              CLICK TO COPY
-            </span>
-          </div>
-          <SyntaxHighlighter
-            style={selectedStyle}
-            language={detectedLanguage || "javascript"}
-            customStyle={{
-              background: "transparent",
-              fontSize: codeFontSize,
-            }}
-          >
-            {code}
-          </SyntaxHighlighter>{" "}
-        </div>
+<div
+  onClick={copySnippet}
+  className="group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
+>
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
+        CLICK TO COPY
+      </span>
+    </div>
+  </div>
+  <SyntaxHighlighter
+    style={selectedStyle}
+    language={detectedLanguage || "javascript"}
+    customStyle={{
+      background: "transparent",
+      fontSize: codeFontSize,
+    }}
+  >
+    {code}
+  </SyntaxHighlighter>
+</div>
         {selection && (
           <div
             id="controls"
