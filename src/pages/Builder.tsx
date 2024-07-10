@@ -5,7 +5,7 @@ import Editor from "@monaco-editor/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { updateSnippet } from "../backend/snippet/editSnippet";
 import { useNotif } from "../hooks/Notif";
@@ -15,11 +15,10 @@ import { CategoryInfo } from "../utils/categories";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate()
   const [categories, setCategories] = useState<CategoryInfo[] | undefined>([])
 
-  const snippetId = searchParams.get("snippetid");
+  const {snippetId} = useParams()
   if(snippetId) {
     document.title = `Editor - Snippp`;
   } else {
@@ -127,8 +126,9 @@ export const Builder = () => {
                 description: snippet.description,
                 tags: snippet.tags,
                 public: snippet.public,
-              });
+              }) as any;
               showNotif("Snippet updated successfully", "success", 10000);
+              navigate(`/snippet/${snippetId}`)
             } else {
               console.log({
                 ...snippet,
@@ -141,7 +141,6 @@ export const Builder = () => {
                 authorID: userProfile.id,
               });
               showNotif("Snippet created successfully", "success", 10000);
-              console.log(result)
               navigate(`/snippet/${result.snippetID}`)
             }
           } catch (error) {

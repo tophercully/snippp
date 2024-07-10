@@ -59,6 +59,7 @@ export const Display = ({
   const {
     snippetID,
     name,
+    tags,
     author,
     code,
     authorID,
@@ -69,8 +70,8 @@ export const Display = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
-    useState(false);
+  // const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
+  //   useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
@@ -83,7 +84,8 @@ export const Display = ({
   const { showNotif } = useNotif();
 
   const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
-  console.log(detectedLanguage)
+
+  const worthExpanding = Boolean(tags) || Boolean(description)
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
@@ -302,32 +304,35 @@ export const Display = ({
             </span>
           </div>
         </div>
-        {description && (
-          <div className="relative mt-4">
-            <p
-              ref={(el) => {
-                if (el) {
-                  setIsDescriptionOverflowing(
-                    el.scrollHeight > el.clientHeight,
-                  );
-                }
-              }}
-              className={`overflow-hidden font-thin transition-all duration-300 ${
-                isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
-              }`}
-            >
-              {formatDescription(description)}
-            </p>
-            {(isDescriptionOverflowing || isDescriptionExpanded) && (
-              <button
-                className="mt-2 text-sm text-base-500 hover:underline dark:text-base-500"
-                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              >
-                {isDescriptionExpanded ? "Show less" : "Show more"}
-              </button>
-            )}
-          </div>
-        )}
+        {worthExpanding && (
+  <div className="relative mt-4">
+    <p
+      className={`overflow-hidden font-thin transition-all duration-300 ${
+        isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
+      }`}
+    >
+      {formatDescription(description)}
+    </p>
+    {isDescriptionExpanded && tags && (
+      <div className="mt-2 flex flex-wrap gap-1">
+        {tags.split(',').map((tag, index) => (
+          <span
+            key={index}
+            className="rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
+          >
+            {tag.trim()}
+          </span>
+        ))}
+      </div>
+    )}
+    <button
+      className="mt-2 text-sm text-base-500 hover:underline dark:text-base-500"
+      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+    >
+      {isDescriptionExpanded ? "Show less" : "Show more"}
+    </button>
+  </div>
+)}
         {/* {description && (
           <div
             id="snippet-description"
@@ -441,7 +446,7 @@ export const Display = ({
             {userProfile && userProfile.id === authorID && (
               <>
                 <a
-                  href={`/builder?snippetid=${selection.snippetID}`}
+                  href={`/builder/${selection.snippetID}`}
                   className="group relative ml-auto flex items-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 >
                   <div

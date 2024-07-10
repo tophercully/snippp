@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: <Dashboard />,
   },
   {
-    path: "/builder",
+    path: "/builder/:snippetId?",
     element: <Builder />,
   },
   {
