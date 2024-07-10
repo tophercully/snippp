@@ -801,6 +801,10 @@ video {
   aspect-ratio: 1 / 1;
 }
 
+.aspect-auto {
+  aspect-ratio: auto;
+}
+
 .h-1 {
   height: 0.25rem;
 }
@@ -2053,6 +2057,10 @@ video {
 
   .lg\:w-2\/3 {
     width: 66.666667%;
+  }
+
+  .lg\:w-96 {
+    width: 24rem;
   }
 
   .lg\:max-w-\[50svh\] {
