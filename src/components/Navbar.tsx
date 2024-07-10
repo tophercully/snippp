@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { newUser } from "../backend/user/newUser";
+import { newUser } from "../backend/user/userFunctions";
 import categories from "../utils/categories";
 import { GoogleUser } from "../typeInterfaces";
 
@@ -212,18 +212,12 @@ export const Navbar: React.FC = () => {
             {isDropdownOpen && (
               <div className="absolute right-0 z-20 max-h-[25vh] w-48 rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
                 <a href="/dashboard">
-                  <button
-                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                    onClick={() => console.log("My Snippets clicked")}
-                  >
+                  <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
                     DASHBOARD
                   </button>
                 </a>
-                <a href="/profile">
-                  <button
-                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                    onClick={() => console.log("Profile clicked")}
-                  >
+                <a href={`/user/${userProfile.id}`}>
+                  <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
                     PROFILE
                   </button>
                 </a>

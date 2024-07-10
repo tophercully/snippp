@@ -17,11 +17,13 @@ export interface ListData {
 
 interface UserListsProps {
   lists: ListData[];
+  addDisabled: boolean;
   onSelectList: (list: ListData) => void;
 }
 
 export const ListLists: React.FC<UserListsProps> = ({
   lists,
+  addDisabled,
   onSelectList,
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
@@ -128,7 +130,7 @@ export const ListLists: React.FC<UserListsProps> = ({
           >
             <h2 className="flex items-center gap-2 text-xl text-base-900 dark:text-base-50">
               {list.listname}
-              {list.listid == "mysnippets" && (
+              {(list.listid == "mysnippets" || list.listid == "creations") && (
                 <img
                   src="/scissors.svg"
                   className="brightness-0 dark:invert"
@@ -165,15 +167,17 @@ export const ListLists: React.FC<UserListsProps> = ({
           </div>
         ))}
       </div>
-      <button
-        className="flex h-16 w-full items-center justify-center bg-base-950 p-2 hover:bg-base-700 dark:invert"
-        onClick={handleAddList}
-      >
-        <img
-          src="/add.svg"
-          className="h-full"
-        />
-      </button>
+      {!addDisabled && (
+        <button
+          className="flex h-16 w-full items-center justify-center bg-base-950 p-2 hover:bg-base-700 dark:invert"
+          onClick={handleAddList}
+        >
+          <img
+            src="/add.svg"
+            className="h-full"
+          />
+        </button>
+      )}
     </div>
   );
 };
