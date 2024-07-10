@@ -82,6 +82,7 @@ export const Profile: React.FC = () => {
       const response = await fetchUserProfile(userid as string);
       setProfile(response as SnipppProfile);
       setIsLoading(false);
+      setPageTitle(profile?.name as string);
     };
     getAndSetProfile();
   }, [userid]);
@@ -149,7 +150,7 @@ export const Profile: React.FC = () => {
       const listToSet = lists.find((l) => l.listid.toString() === listid);
       if (listToSet) {
         setList(listToSet);
-        setPageTitle(`${listToSet.listname} - Dashboard`);
+        setPageTitle(`${listToSet.listname} - ${profile?.name}`);
       } else {
         // Handle case when listid doesn't match any list
         navigate("/dashboard");
