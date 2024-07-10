@@ -74,7 +74,7 @@ export const ListLists: React.FC<UserListsProps> = ({
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-      <h1 className="dark:bg-base-850 bg-base-150 p-4 font-bold dark:text-base-50">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
+      <h1 className="bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
       <div className="relative h-full w-full overflow-y-auto">
         {isAdding && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
@@ -170,7 +170,7 @@ export const ListLists: React.FC<UserListsProps> = ({
         onClick={handleAddList}
       >
         <img
-          src="add.svg"
+          src="/add.svg"
           className="h-full"
         />
       </button>
