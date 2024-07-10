@@ -20,6 +20,7 @@ import SnipppButton from "../components/SnipppButton";
 import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
+import { formatDescription } from "../utils/formatDescription";
 
 type SortOrder = "asc" | "desc";
 
@@ -61,8 +62,8 @@ function sortByProperty<T>(
 }
 
 export const Dashboard: React.FC = () => {
-  const {listid} = useParams()
-  const navigate = useNavigate()
+  const { listid } = useParams();
+  const navigate = useNavigate();
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
@@ -70,7 +71,6 @@ export const Dashboard: React.FC = () => {
     Snippet[]
   >([]);
 
-  
   const defaultLists = useMemo(
     () => [
       {
@@ -103,14 +103,15 @@ export const Dashboard: React.FC = () => {
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  console.log(list)
+  console.log(list);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  
+
   const { showNotif } = useNotif();
+
   const fetchAndSetLists = useCallback(async () => {
     try {
       setListsLoading(true);
@@ -134,13 +135,13 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (!listsLoading && listid && lists.length > 0) {
-      const listToSet = lists.find(l => l.listid.toString() === listid);
+      const listToSet = lists.find((l) => l.listid.toString() === listid);
       if (listToSet) {
         setList(listToSet);
         setPageTitle(`${listToSet.listname} - Dashboard`);
       } else {
         // Handle case when listid doesn't match any list
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
     }
   }, [listid, lists]);
@@ -262,13 +263,14 @@ export const Dashboard: React.FC = () => {
     fetchSnippets();
   }, [fetchSnippets]);
 
-
-  const handleSelectList = useCallback((listToSet: ListData) => {
-    navigate(`/dashboard/${listToSet.listid}`);
-    setList(listToSet);
-    setPageTitle(`${listToSet.listname} - Dashboard`);
-  }, [navigate]);
- 
+  const handleSelectList = useCallback(
+    (listToSet: ListData) => {
+      navigate(`/dashboard/${listToSet.listid}`);
+      setList(listToSet);
+      setPageTitle(`${listToSet.listname} - Dashboard`);
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     const filterAndSortSnippets = () => {
@@ -375,7 +377,7 @@ export const Dashboard: React.FC = () => {
       <div className="flex h-[96%] w-full shadow-lg">
         {!list && (
           <div
-            className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full lg:w-1/3 flex-col overflow-hidden`}
+            className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
           >
             <ListLists
               lists={lists}
@@ -396,7 +398,7 @@ export const Dashboard: React.FC = () => {
                 className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
                 onClick={async () => {
                   setList(null);
-                  navigate('/dashboard')
+                  navigate("/dashboard");
                   setLists(defaultLists);
                   fetchAndSetLists();
                 }}
@@ -409,7 +411,10 @@ export const Dashboard: React.FC = () => {
               </button>
               <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
                 <div className="flex items-center justify-between">
-                  <a href={`${window.location.origin}/list/${list?.listid}`} className="mr-auto text-2xl font-bold">
+                  <a
+                    href={`${window.location.origin}/list/${list?.listid}`}
+                    className="mr-auto text-2xl font-bold"
+                  >
                     {list?.listname}
                   </a>
                   {list.listid != "mysnippets" &&
@@ -458,9 +463,10 @@ export const Dashboard: React.FC = () => {
                       className={`overflow-hidden font-thin transition-all duration-300 ${
                         isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
                       }`}
-                    >
-                      {list.description}
-                    </p>
+                      dangerouslySetInnerHTML={{
+                        __html: formatDescription(list.description),
+                      }}
+                    ></p>
                     <button
                       className="mt-2 text-sm text-base-950 hover:underline dark:text-base-50"
                       onClick={() =>
@@ -485,7 +491,7 @@ export const Dashboard: React.FC = () => {
         )}
 
         {selection && (
-          <div className="hidden h-full lg:w-2/3 overflow-y-auto lg:flex">
+          <div className="hidden h-full overflow-y-auto lg:flex lg:w-2/3">
             <Display
               selection={selection}
               updateSnippetMod={updateSnippetMod}

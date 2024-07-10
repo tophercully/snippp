@@ -21,6 +21,8 @@ import {
 } from "../backend/list/listFunctions";
 import formatPostgresDate from "../utils/formatPostgresDate";
 
+import { formatDescription } from "../utils/formatDescription";
+
 type SnippetMod = {
   favoriteStatus?: boolean;
   favoriteCount?: number;
@@ -29,19 +31,6 @@ type SnippetMod = {
 };
 
 type SnippetMods = { [snippetID: number]: SnippetMod };
-
-const formatDescription = (text) => {
-  if (text) {
-    return text.split("\n").map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        <br />
-      </React.Fragment>
-    ));
-  } else {
-    return "";
-  }
-};
 
 export const Display = ({
   selection,
@@ -311,9 +300,10 @@ export const Display = ({
               className={`overflow-hidden font-thin transition-all duration-300 ${
                 isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
               }`}
-            >
-              {formatDescription(description)}
-            </p>
+              dangerouslySetInnerHTML={{
+                __html: formatDescription(description),
+              }}
+            ></p>
             {isDescriptionExpanded && tags && (
               <div className="mt-2 flex flex-wrap gap-1">
                 {tags

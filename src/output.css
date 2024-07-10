@@ -950,6 +950,18 @@ video {
   min-height: 3.75rem;
 }
 
+.min-h-52 {
+  min-height: 13rem;
+}
+
+.min-h-\[40svh\] {
+  min-height: 40svh;
+}
+
+.min-h-\[20svh\] {
+  min-height: 20svh;
+}
+
 .w-1\/2 {
   width: 50%;
 }
