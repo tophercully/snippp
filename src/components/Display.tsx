@@ -1,33 +1,25 @@
 import { GoogleUser, Snippet } from "../typeInterfaces";
-import  SyntaxHighlighter  from "react-syntax-highlighter";
+import SyntaxHighlighter from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
 import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
-// import "highlight.js/styles/default.css";
-const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
 
-languages.forEach((lang) => {
-  const language = hljs.getLanguage(lang);
-  if (language) {
-    hljs.registerLanguage(lang, () => language);
-  } else {
-    console.warn(`Language '${lang}' not found in highlight.js`);
-  }
-});
+import { detectLanguage } from "../utils/detectLanguage";
 import categories from "../utils/categories";
 import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 import {
   ListWithSnippetStatus,
   addSnippetToList,
   getListsWithSnippetStatus,
   removeSnippetFromList,
 } from "../backend/list/listFunctions";
+import formatPostgresDate from "../utils/formatPostgresDate";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -39,12 +31,16 @@ type SnippetMod = {
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 const formatDescription = (text) => {
-  return text.split("\n").map((line, index) => (
-    <React.Fragment key={index}>
-      {line}
-      <br />
-    </React.Fragment>
-  ));
+  if (text) {
+    return text.split("\n").map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
+  } else {
+    return "";
+  }
 };
 
 export const Display = ({
@@ -60,6 +56,8 @@ export const Display = ({
   const {
     snippetID,
     name,
+    tags,
+    createdAt,
     author,
     code,
     authorID,
@@ -70,8 +68,6 @@ export const Display = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
-    useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
@@ -83,7 +79,9 @@ export const Display = ({
   const favoriteStatus = snippetMod.favoriteStatus ?? isFavorite;
   const { showNotif } = useNotif();
 
-  const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
+  const detectedLanguage = detectLanguage(code) || "plaintext";
+
+  const worthExpanding = Boolean(tags) || Boolean(description);
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
@@ -267,9 +265,14 @@ export const Display = ({
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
         <div className="flex h-fit w-fit gap-4">
-          <div className="h-fit w-fit rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
+          <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
             <h1 className="text-3xl font-bold">{name}</h1>
-            <h1 className="text-xl font-thin">{author}</h1>
+            <div className="flex items-end justify-between gap-10">
+              <h1 className="text-xl font-thin">{author}</h1>
+              <h1 className="text-sm font-thin">
+                {createdAt ? formatPostgresDate(createdAt.toString()) : ""}
+              </h1>
+            </div>
           </div>
           <div className="mr-8 flex h-full w-fit flex-col justify-between">
             {snippetCategories.length > 0 && (
@@ -302,48 +305,50 @@ export const Display = ({
             </span>
           </div>
         </div>
-        {description && (
+        {worthExpanding && (
           <div className="relative mt-4">
             <p
-              ref={(el) => {
-                if (el) {
-                  setIsDescriptionOverflowing(
-                    el.scrollHeight > el.clientHeight,
-                  );
-                }
-              }}
               className={`overflow-hidden font-thin transition-all duration-300 ${
                 isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
               }`}
             >
               {formatDescription(description)}
             </p>
-            {(isDescriptionOverflowing || isDescriptionExpanded) && (
-              <button
-                className="mt-2 text-sm text-base-500 hover:underline dark:text-base-500"
-                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              >
-                {isDescriptionExpanded ? "Show less" : "Show more"}
-              </button>
+            {isDescriptionExpanded && tags && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {tags
+                  .split(",")
+                  .map((tag) => tag.trim())
+                  .filter((tag) => tag !== "")
+                  .map((tag, index) => (
+                    <span
+                      key={index}
+                      className="rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+              </div>
             )}
+            <button
+              className="mt-2 text-sm text-base-500 hover:underline dark:text-base-500"
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+            >
+              {isDescriptionExpanded ? "Show less" : "Show more"}
+            </button>
           </div>
         )}
-        {/* {description && (
-          <div
-            id="snippet-description"
-            className="dark:bg-base-850"
-          >
-            <p className="font-thin">{description}</p>
-          </div>
-        )} */}
+
         <div
           onClick={copySnippet}
-          className="rounded-xs group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
+          className="group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
         >
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[1px] backdrop-filter transition-opacity duration-200 active:backdrop-blur-[2px] group-hover:opacity-100">
-            <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
-              CLICK TO COPY
-            </span>
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
+                CLICK TO COPY
+              </span>
+            </div>
           </div>
           <SyntaxHighlighter
             style={selectedStyle}
@@ -354,7 +359,7 @@ export const Display = ({
             }}
           >
             {code}
-          </SyntaxHighlighter>{" "}
+          </SyntaxHighlighter>
         </div>
         {selection && (
           <div
@@ -368,7 +373,7 @@ export const Display = ({
                 disabled={isLoading}
               >
                 <div
-                  className="absolute inset-0 -translate-x-full transform bg-green-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  className="absolute inset-0 -translate-x-[110%] transform bg-green-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                   aria-hidden="true"
                 />
                 <span className="relative flex items-center gap-3">
@@ -389,7 +394,7 @@ export const Display = ({
                 disabled={isLoading}
               >
                 <div
-                  className="absolute inset-0 -translate-x-full transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                   aria-hidden="true"
                 />
                 <span className="relative flex items-center gap-3">
@@ -412,7 +417,7 @@ export const Display = ({
                 className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
               >
                 <div
-                  className="absolute inset-0 -translate-x-full transform bg-purple-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  className="absolute inset-0 -translate-x-[110%] transform bg-purple-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                   aria-hidden="true"
                 />
                 <span className="relative flex items-center gap-3">
@@ -428,7 +433,7 @@ export const Display = ({
               className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
             >
               <div
-                className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                 aria-hidden="true"
               />
               <span className="relative flex items-center gap-3">
@@ -441,11 +446,11 @@ export const Display = ({
             {userProfile && userProfile.id === authorID && (
               <>
                 <a
-                  href={`/builder?snippetid=${selection.snippetID}`}
+                  href={`/builder/${selection.snippetID}`}
                   className="group relative ml-auto flex items-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 >
                   <div
-                    className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                    className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                     aria-hidden="true"
                   />
                   <span className="relative flex items-center gap-3">
@@ -461,7 +466,7 @@ export const Display = ({
                   className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 >
                   <div
-                    className="absolute inset-0 -translate-x-full transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                    className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
                     aria-hidden="true"
                   />
                   <span className="relative flex items-center gap-3">
@@ -502,7 +507,7 @@ export const Display = ({
         )}
         {showListPopup && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="dark:bg-base-850 w-full max-w-md rounded-sm bg-white p-6">
+            <div className="w-full max-w-md rounded-sm bg-white p-6 dark:bg-base-850">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-xl font-bold dark:text-white">
                   ADD TO LIST

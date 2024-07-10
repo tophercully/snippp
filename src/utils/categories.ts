@@ -2,6 +2,7 @@ export interface CategoryInfo {
   name: string;
   tags: string[];
   kind: "language" | "framework/library";
+  autoDetected?: boolean; 
 }
 
 export type Categories = Record<string, CategoryInfo>;
@@ -31,6 +32,11 @@ const categories: Categories = {
     name: "p5.js",
     tags: ["p5", "p5js", "p5.js"],
     kind: "framework/library",
+  },
+  css: {
+    name: "CSS",
+    tags: ['css', 'scss', 'sass', 'less', 'stylus'],
+    kind: "language",
   },
   three: {
     name: "ThreeJS",

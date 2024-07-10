@@ -23,11 +23,11 @@ const router = createBrowserRouter([
     element: <Browser />,
   },
   {
-    path: "/dashboard",
+    path: "/dashboard/:listid?",
     element: <Dashboard />,
   },
   {
-    path: "/builder",
+    path: "/builder/:snippetId?",
     element: <Builder />,
   },
   {

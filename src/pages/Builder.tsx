@@ -5,17 +5,24 @@ import Editor from "@monaco-editor/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { updateSnippet } from "../backend/snippet/editSnippet";
 import { useNotif } from "../hooks/Notif";
+import {
+  categorizeLanguage,
+  determineCategories,
+} from "../utils/categoryTools";
+import { CategoryInfo } from "../utils/categories";
+import { detectLanguage } from "../utils/detectLanguage";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<CategoryInfo[] | undefined>([]);
 
-  const snippetId = searchParams.get("snippetid");
-  if(snippetId) {
+  const { snippetId } = useParams();
+  if (snippetId) {
     document.title = `Editor - Snippp`;
   } else {
     document.title = `Builder - Snippp`;
@@ -64,12 +71,21 @@ export const Builder = () => {
     if (isEditing && snippetId) {
       const loadSnippet = async () => {
         const fetchedSnippet = await loadSnippetById(Number(snippetId));
-        console.log(fetchedSnippet);
         setSnippet(fetchedSnippet as Snippet);
       };
       loadSnippet();
     }
   }, [isEditing, snippetId]);
+
+  useEffect(() => {
+    const langCategory = categorizeLanguage(
+      detectLanguage(snippet.code) as string,
+    );
+    const finalCategories = determineCategories(snippet.tags, langCategory);
+    if (finalCategories.length > 0) {
+      setCategories(finalCategories);
+    }
+  }, [snippet.tags, snippet.code]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -108,26 +124,23 @@ export const Builder = () => {
         if (isCreator) {
           try {
             if (isEditing) {
-              await updateSnippet(Number(snippetId), {
+              (await updateSnippet(Number(snippetId), {
                 name: snippet.name,
                 code: snippet.code,
                 description: snippet.description,
                 tags: snippet.tags,
                 public: snippet.public,
-              });
+              })) as any;
               showNotif("Snippet updated successfully", "success", 10000);
+              navigate(`/snippet/${snippetId}`);
             } else {
-              console.log({
-                ...snippet,
-                author: userProfile.name,
-                authorID: userProfile.id,
-              });
-              await newSnippet({
+              const result = await newSnippet({
                 ...snippet,
                 author: userProfile.name,
                 authorID: userProfile.id,
               });
               showNotif("Snippet created successfully", "success", 10000);
+              navigate(`/snippet/${result.snippetID}`);
             }
           } catch (error) {
             showNotif("An error occurred while saving the snippet", "error");
@@ -170,7 +183,7 @@ export const Builder = () => {
                 onChange={handleChange}
               />
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
               <p className="text-sm text-base-300 dark:text-base-50">
                 TAGS, COMMA SEPARATED
               </p>
@@ -180,6 +193,35 @@ export const Builder = () => {
                 value={snippet.tags}
                 onChange={handleChange}
               />
+              <p className="text-sm text-base-300 dark:text-base-50">
+                THIS SNIPPET WILL BE ASSIGNED TO THESE CATEGORIES:
+              </p>
+              {categories && categories.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {categories.map((category, index) => (
+                    <span
+                      key={index}
+                      className="group relative flex h-8 items-center rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
+                    >
+                      {category.autoDetected &&
+                        category.kind === "language" && (
+                          <img
+                            src="/auto-sparkle.svg"
+                            className="mr-1 dark:invert"
+                          />
+                        )}
+                      {category.name}
+                      {category.autoDetected &&
+                        category.kind === "language" && (
+                          <span className="invisible absolute left-1/2 right-1/2 top-full mx-auto mt-2 w-max max-w-xs -translate-x-1/2 transform rounded-sm bg-base-950 p-3 text-xs text-base-50 group-hover:visible dark:invert">
+                            Language autodetected, you can overwrite this by
+                            entering the correct language into the tags
+                          </span>
+                        )}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="mt-auto flex w-full items-center justify-end gap-4">
               <div className="flex h-full w-fit items-center self-center">
@@ -193,7 +235,7 @@ export const Builder = () => {
                   />
                   <label
                     htmlFor="public"
-                    className="dark:bg-base-850 relative block aspect-square h-full cursor-pointer overflow-hidden rounded-sm bg-base-150 before:absolute before:inset-0 before:-translate-x-[110%] before:bg-blue-700 before:transition-transform before:duration-300 before:content-[''] peer-checked:before:translate-x-0 dark:border-base-600"
+                    className="relative block aspect-square min-h-[3.75rem] cursor-pointer overflow-hidden rounded-sm bg-base-150 before:absolute before:inset-0 before:-translate-x-[110%] before:bg-blue-700 before:transition-transform before:duration-300 before:content-[''] peer-checked:before:translate-x-0 dark:border-base-600 dark:bg-base-850"
                   >
                     <img
                       src={snippet.public ? "/lock-open.svg" : "/lock.svg"}
@@ -225,7 +267,7 @@ export const Builder = () => {
               <button
                 onClick={handleSubmit}
                 disabled={!snippet.name || !snippet.code}
-                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 disabled:invert-[50%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
+                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
               >
                 <div
                   className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-[110%] transform transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
