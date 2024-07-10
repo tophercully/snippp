@@ -19,6 +19,7 @@ import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
 import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
+import { useNavigate, useParams } from "react-router-dom";
 
 type SortOrder = "asc" | "desc";
 
@@ -60,13 +61,16 @@ function sortByProperty<T>(
 }
 
 export const Dashboard: React.FC = () => {
-  
+  const {listid} = useParams()
+  const navigate = useNavigate()
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
+
+  
   const defaultLists = useMemo(
     () => [
       {
@@ -99,15 +103,15 @@ export const Dashboard: React.FC = () => {
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-
+  console.log(list)
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
+  
   const { showNotif } = useNotif();
-  const fetchAndSetLists = async () => {
+  const fetchAndSetLists = useCallback(async () => {
     try {
       setListsLoading(true);
       document.title = `Dashboard - Snippp`;
@@ -122,10 +126,24 @@ export const Dashboard: React.FC = () => {
     } finally {
       setListsLoading(false);
     }
-  };
+  }, []);
+
   useEffect(() => {
     fetchAndSetLists();
-  }, []);
+  }, [fetchAndSetLists]);
+
+  useEffect(() => {
+    if (!listsLoading && listid && lists.length > 0) {
+      const listToSet = lists.find(l => l.listid.toString() === listid);
+      if (listToSet) {
+        setList(listToSet);
+        setPageTitle(`${listToSet.listname} - Dashboard`);
+      } else {
+        // Handle case when listid doesn't match any list
+        navigate('/dashboard');
+      }
+    }
+  }, [listid, lists]);
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -244,10 +262,13 @@ export const Dashboard: React.FC = () => {
     fetchSnippets();
   }, [fetchSnippets]);
 
-  const handleSelectList = (listToSet: ListData) => {
+
+  const handleSelectList = useCallback((listToSet: ListData) => {
+    navigate(`/dashboard/${listToSet.listid}`);
     setList(listToSet);
-    setPageTitle(`${listToSet.listname} - Dashboard`)
-  };
+    setPageTitle(`${listToSet.listname} - Dashboard`);
+  }, [navigate]);
+ 
 
   useEffect(() => {
     const filterAndSortSnippets = () => {
@@ -354,7 +375,7 @@ export const Dashboard: React.FC = () => {
       <div className="flex h-[96%] w-full shadow-lg">
         {!list && (
           <div
-            className={`flex ${listsLoading ? "h-fit" : "h-full"} w-1/3 flex-col overflow-hidden`}
+            className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full lg:w-1/3 flex-col overflow-hidden`}
           >
             <ListLists
               lists={lists}
@@ -375,6 +396,7 @@ export const Dashboard: React.FC = () => {
                 className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
                 onClick={async () => {
                   setList(null);
+                  navigate('/dashboard')
                   setLists(defaultLists);
                   fetchAndSetLists();
                 }}
@@ -463,7 +485,7 @@ export const Dashboard: React.FC = () => {
         )}
 
         {selection && (
-          <div className="hidden h-full w-2/3 overflow-y-auto lg:flex">
+          <div className="hidden h-full lg:w-2/3 overflow-y-auto lg:flex">
             <Display
               selection={selection}
               updateSnippetMod={updateSnippetMod}

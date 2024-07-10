@@ -59,7 +59,6 @@ function sortByProperty<T>(
 
 export const ListPage: React.FC = () => {
   const { listId } = useParams<{ listId: string }>();
-
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});

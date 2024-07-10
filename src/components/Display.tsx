@@ -30,12 +30,17 @@ type SnippetMod = {
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 const formatDescription = (text) => {
-  return text.split("\n").map((line, index) => (
-    <React.Fragment key={index}>
+  if(text) {
+
+    return text.split("\n").map((line, index) => (
+      <React.Fragment key={index}>
       {line}
       <br />
     </React.Fragment>
   ));
+} else {
+  return ''
+}
 };
 
 export const Display = ({
