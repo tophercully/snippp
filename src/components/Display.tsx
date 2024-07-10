@@ -6,21 +6,13 @@ import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
-const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
-// import '../utils/hljs-glsl.js'
-languages.forEach((lang) => {
-  const language = hljs.getLanguage(lang);
-  if (language) {
-    hljs.registerLanguage(lang, () => language);
-  } else {
-    console.warn(`Language '${lang}' not found in highlight.js`);
-  }
-});
+
+import { detectLanguage } from "../utils/detectLanguage";
 import categories from "../utils/categories";
 import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 import {
   ListWithSnippetStatus,
   addSnippetToList,
@@ -83,7 +75,8 @@ export const Display = ({
   const favoriteStatus = snippetMod.favoriteStatus ?? isFavorite;
   const { showNotif } = useNotif();
 
-  const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
+  // const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
+  const detectedLanguage = detectLanguage(code) || "plaintext";
 
   const worthExpanding = Boolean(tags) || Boolean(description)
 
@@ -315,14 +308,18 @@ export const Display = ({
     </p>
     {isDescriptionExpanded && tags && (
       <div className="mt-2 flex flex-wrap gap-1">
-        {tags.split(',').map((tag, index) => (
-          <span
-            key={index}
-            className="rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
-          >
-            {tag.trim()}
-          </span>
-        ))}
+        {tags.split(',')
+  .map(tag => tag.trim())
+  .filter(tag => tag !== '')
+  .map((tag, index) => (
+    <span
+      key={index}
+      className="rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
+    >
+      {tag}
+    </span>
+  ))
+}
       </div>
     )}
     <button
@@ -333,14 +330,7 @@ export const Display = ({
     </button>
   </div>
 )}
-        {/* {description && (
-          <div
-            id="snippet-description"
-            className="dark:bg-base-850"
-          >
-            <p className="font-thin">{description}</p>
-          </div>
-        )} */}
+
         <div
           onClick={copySnippet}
           className="rounded-xs group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"

@@ -33,6 +33,11 @@ const categories: Categories = {
     tags: ["p5", "p5js", "p5.js"],
     kind: "framework/library",
   },
+  css: {
+    name: "CSS",
+    tags: ['css', 'scss', 'sass', 'less', 'stylus'],
+    kind: "language",
+  },
   three: {
     name: "ThreeJS",
     tags: ["three", "3", "threejs", "three.js"],

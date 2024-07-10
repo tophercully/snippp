@@ -10,8 +10,8 @@ import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { updateSnippet } from "../backend/snippet/editSnippet";
 import { useNotif } from "../hooks/Notif";
 import { categorizeLanguage, determineCategories } from "../utils/categoryTools";
-import hljs from "highlight.js";
 import { CategoryInfo } from "../utils/categories";
+import { detectLanguage } from "../utils/detectLanguage";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -68,7 +68,6 @@ export const Builder = () => {
     if (isEditing && snippetId) {
       const loadSnippet = async () => {
         const fetchedSnippet = await loadSnippetById(Number(snippetId));
-        console.log(fetchedSnippet);
         setSnippet(fetchedSnippet as Snippet);
       };
       loadSnippet();
@@ -76,7 +75,7 @@ export const Builder = () => {
   }, [isEditing, snippetId]);
 
   useEffect(() => {
-    const langCategory = categorizeLanguage(hljs.highlightAuto(snippet.code).language as string);
+    const langCategory = categorizeLanguage(detectLanguage(snippet.code) as string);
     const finalCategories = determineCategories(snippet.tags, langCategory);
     if (finalCategories.length > 0) {
       setCategories(finalCategories);
@@ -130,11 +129,6 @@ export const Builder = () => {
               showNotif("Snippet updated successfully", "success", 10000);
               navigate(`/snippet/${snippetId}`)
             } else {
-              console.log({
-                ...snippet,
-                author: userProfile.name,
-                authorID: userProfile.id,
-              });
               const result = await newSnippet({
                 ...snippet,
                 author: userProfile.name,
@@ -194,6 +188,9 @@ export const Builder = () => {
     value={snippet.tags}
     onChange={handleChange}
   />
+  <p className="text-sm text-base-300 dark:text-base-50">
+    THIS SNIPPET WILL BE ASSIGNED TO THESE CATEGORIES:
+  </p>
   {categories && categories.length > 0 && (
     <div className="flex flex-wrap gap-1">
       {categories.map((category, index) => (
