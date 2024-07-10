@@ -2,6 +2,7 @@ export interface CategoryInfo {
   name: string;
   tags: string[];
   kind: "language" | "framework/library";
+  autoDetected?: boolean; 
 }
 
 export type Categories = Record<string, CategoryInfo>;

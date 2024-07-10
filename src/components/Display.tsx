@@ -6,9 +6,8 @@ import React, { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
-// import "highlight.js/styles/default.css";
 const languages = ["javascript", "typescript", "css", "html", "python", "jsx"];
-
+// import '../utils/hljs-glsl.js'
 languages.forEach((lang) => {
   const language = hljs.getLanguage(lang);
   if (language) {
@@ -84,6 +83,7 @@ export const Display = ({
   const { showNotif } = useNotif();
 
   const detectedLanguage = hljs.highlightAuto(code).language || "plaintext";
+  console.log(detectedLanguage)
 
   const snippetCategories = useMemo(() => {
     const snippetTags = selection.tags
