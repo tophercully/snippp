@@ -17,6 +17,7 @@ import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
 import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
+import { formatDescription } from "../utils/formatDescription";
 
 type SortOrder = "asc" | "desc";
 
@@ -57,6 +58,40 @@ function sortByProperty<T>(
   }
 }
 
+// const formatDescription = (text: string) => {
+//   if (!text) return "";
+//   console.log(text);
+//   // Regular expression to match URLs
+//   const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+//   const convertLinksToAnchors = (line: string) => {
+//     const parts = line.split(urlRegex);
+//     return parts.map((part, index) => {
+//       if (part.match(urlRegex)) {
+//         return (
+//           <a
+//             key={index}
+//             href={part}
+//             target="_blank"
+//             rel="noopener noreferrer"
+//             style={{ textDecoration: "underline" }}
+//           >
+//             {part}
+//           </a>
+//         );
+//       }
+//       return part;
+//     });
+//   };
+
+//   return text.split("\n").map((line, index) => (
+//     <React.Fragment key={index}>
+//       {convertLinksToAnchors(line)}
+//       <br />
+//     </React.Fragment>
+//   ));
+// };
+
 export const ListPage: React.FC = () => {
   const { listId } = useParams<{ listId: string }>();
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
@@ -81,7 +116,6 @@ export const ListPage: React.FC = () => {
 
   const { showNotif } = useNotif();
 
-
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
       setSnippetMods((prevMods) => ({
@@ -102,7 +136,7 @@ export const ListPage: React.FC = () => {
           getListSnippets(userProfile.id, Number(listId)),
         ]);
         setListData(listResult);
-        setPageTitle(listResult.listname)
+        setPageTitle(listResult.listname);
         setSnippets(snippetsResult);
         setSnippetMods({});
       } catch (error) {
@@ -116,7 +150,6 @@ export const ListPage: React.FC = () => {
 
   useEffect(() => {
     fetchListAndSnippets();
-    
   }, [fetchListAndSnippets]);
 
   useEffect(() => {
@@ -278,8 +311,11 @@ export const ListPage: React.FC = () => {
                     className={`overflow-hidden font-thin transition-all duration-300 ${
                       isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
                     }`}
+                    dangerouslySetInnerHTML={{
+                      __html: formatDescription(listData.description),
+                    }}
                   >
-                    {listData.description}
+                    {/* {formatDescription(listData?.description)} */}
                   </p>
                   <button
                     className="mt-2 text-sm text-base-950 hover:underline dark:text-base-50"
@@ -372,7 +408,7 @@ export const ListPage: React.FC = () => {
               <textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+                className="mt-1 block min-h-[20svh] w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
               />
             </div>
             <div className="flex justify-end gap-4">

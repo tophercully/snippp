@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { SearchBar } from "../components/SearchBar";
-import { GoogleUser, Snippet } from "../typeInterfaces";
+import { GoogleUser, Snippet, SnipppProfile } from "../typeInterfaces";
 import { Navbar } from "../components/Navbar";
 import { ListSnippets } from "../components/ListSnippets";
 import { ListLists, ListData } from "../components/ListLists";
@@ -21,6 +21,8 @@ import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
+import { ProfileInfo } from "../components/ProfileInfo";
+import { fetchUserProfile } from "../backend/user/userFunctions";
 
 type SortOrder = "asc" | "desc";
 
@@ -61,8 +63,8 @@ function sortByProperty<T>(
   }
 }
 
-export const Dashboard: React.FC = () => {
-  const { listid } = useParams();
+export const Profile: React.FC = () => {
+  const { listid, userid } = useParams();
   const navigate = useNavigate();
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
@@ -70,13 +72,25 @@ export const Dashboard: React.FC = () => {
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
     Snippet[]
   >([]);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [profile, setProfile] = useState<SnipppProfile | null>(null);
+
+  useEffect(() => {
+    const getAndSetProfile = async () => {
+      setIsLoading(true);
+      const response = await fetchUserProfile(userid as string);
+      setProfile(response as SnipppProfile);
+      setIsLoading(false);
+    };
+    getAndSetProfile();
+  }, [userid]);
   const defaultLists = useMemo(
     () => [
       {
-        listid: "mysnippets",
+        listid: "creations",
         userid: userProfile?.id || "",
-        listname: "My Snippets",
+        listname: "Creations",
         description: "",
         createdat: "",
         lastupdated: "",
@@ -103,7 +117,6 @@ export const Dashboard: React.FC = () => {
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  console.log(list);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -115,10 +128,8 @@ export const Dashboard: React.FC = () => {
   const fetchAndSetLists = useCallback(async () => {
     try {
       setListsLoading(true);
-      document.title = `Dashboard - Snippp`;
-
       if (userProfile) {
-        const result = await getUserLists(userProfile.id);
+        const result = await getUserLists(userid as string);
         setLists([...defaultLists, ...result]);
       }
     } catch (error) {
@@ -230,12 +241,15 @@ export const Dashboard: React.FC = () => {
       setSnippetsLoading(true);
       let result: Snippet[] = [];
       if (list) {
-        if (list.listid === "mysnippets") {
-          result = await loadUserSnippets(userProfile.id);
+        if (list.listid === "creations") {
+          result = await loadUserSnippets(userid as string);
         } else if (list.listid === "favorites") {
-          result = await loadFavorites({ userID: userProfile.id });
+          result = await loadFavorites({ userID: userid as string });
         } else {
-          result = await getListSnippets(userProfile.id, list.listid as number);
+          result = await getListSnippets(
+            userid as string,
+            list.listid as number,
+          );
         }
       }
       if (Array.isArray(result)) {
@@ -265,7 +279,7 @@ export const Dashboard: React.FC = () => {
 
   const handleSelectList = useCallback(
     (listToSet: ListData) => {
-      navigate(`/dashboard/${listToSet.listid}`);
+      navigate(`/user/${userid}/${listToSet.listid}`);
       setList(listToSet);
       setPageTitle(`${listToSet.listname} - Dashboard`);
     },
@@ -313,6 +327,18 @@ export const Dashboard: React.FC = () => {
     filterAndSortSnippets();
   }, [snippets, snippetMods, query, sortMethod, sortOrder]);
 
+  const handleUpdateProfile = (updatedProfileData: Partial<SnipppProfile>) => {
+    setProfile((prevProfile) => {
+      if (prevProfile) {
+        return {
+          ...prevProfile,
+          ...updatedProfileData,
+        };
+      }
+      return prevProfile;
+    });
+  };
+
   const SnippetExplorer: React.FC = () => {
     if (!snippetsLoading) {
       if (snippets.length > 0) {
@@ -323,7 +349,7 @@ export const Dashboard: React.FC = () => {
               setQuery={setQuery}
               placeHolder={
                 Number(list?.listid) < 0 ?
-                  list?.listid === "mysnippets" ?
+                  list?.listid === "creations" ?
                     "search creations"
                   : "search favorites"
                 : `search list`
@@ -352,10 +378,10 @@ export const Dashboard: React.FC = () => {
               NO SNIPPPETS TO DISPLAY
             </h1>
             <a
-              href={list?.listid === "mysnippets" ? "/builder" : "/browse"}
+              href={list?.listid === "creations" ? "/builder" : "/browse"}
               className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
             >
-              {list?.listid === "mysnippets" ?
+              {list?.listid === "creations" ?
                 "CREATE SNIPPPET"
               : "DISCOVER SNIPPPETS"}
             </a>
@@ -372,135 +398,148 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="over flex h-screen w-full flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
+    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
-      <div className="flex h-[96%] w-full shadow-lg">
-        {!list && (
-          <div
-            className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
-          >
-            <ListLists
-              lists={lists}
-              addDisabled={false}
-              onSelectList={handleSelectList}
-            />
-
-            {listsLoading && (
-              <div className="w-full p-4 text-center text-base-600 dark:text-base-50">
-                LOADING LISTS...
-              </div>
-            )}
-          </div>
-        )}
-        {list && (
-          <div className="flex h-full w-full flex-col lg:w-1/3">
-            <div className="flex w-full flex-col justify-start">
-              <button
-                className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
-                onClick={async () => {
-                  setList(null);
-                  navigate("/dashboard");
-                  setLists(defaultLists);
-                  fetchAndSetLists();
-                }}
+      {!isLoading ?
+        <>
+          <ProfileInfo
+            snipppUser={profile as SnipppProfile}
+            onUpdateUser={handleUpdateProfile}
+          />
+          <div className="flex h-[96%] w-full shadow-lg">
+            {!list && (
+              <div
+                className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
               >
-                <img
-                  src="/arrow-left.svg"
-                  className="h-full invert"
+                <ListLists
+                  lists={lists}
+                  addDisabled={userProfile ? !(userProfile.id == userid) : true}
+                  onSelectList={handleSelectList}
                 />
-                <p className="hidden group-hover:flex">BACK TO LISTS</p>
-              </button>
-              <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
-                <div className="flex items-center justify-between">
-                  <a
-                    href={`${window.location.origin}/list/${list?.listid}`}
-                    className="mr-auto text-2xl font-bold"
-                  >
-                    {list?.listname}
-                  </a>
-                  {list.listid != "mysnippets" &&
-                    list.listid != "favorites" && (
-                      <div className="flex gap-4">
-                        <SnipppButton
-                          onClick={handleShare}
-                          fit={true}
-                          size={"sm"}
-                          colorType="neutral"
-                        >
-                          <img
-                            src="/share.svg"
-                            className="invert group-hover:invert-0 dark:invert-0"
-                          />
-                        </SnipppButton>
-                        <SnipppButton
-                          onClick={handleEditList}
-                          fit={true}
-                          size={"sm"}
-                          colorType="neutral"
-                        >
-                          <img
-                            src="/edit.svg"
-                            className="group-hover:invert dark:invert"
-                          />
-                        </SnipppButton>
-                        <SnipppButton
-                          onClick={handleDeleteList}
-                          fit={true}
-                          size={"sm"}
-                          colorType="delete"
-                        >
-                          <img
-                            src="/x.svg"
-                            className="invert group-hover:invert-0 dark:invert-0"
-                          />
-                        </SnipppButton>
-                      </div>
-                    )}
-                </div>
 
-                {list?.description && (
-                  <div className="mt-4">
-                    <p
-                      className={`overflow-hidden font-thin transition-all duration-300 ${
-                        isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
-                      }`}
-                      dangerouslySetInnerHTML={{
-                        __html: formatDescription(list.description),
-                      }}
-                    ></p>
-                    <button
-                      className="mt-2 text-sm text-base-950 hover:underline dark:text-base-50"
-                      onClick={() =>
-                        setIsDescriptionExpanded(!isDescriptionExpanded)
-                      }
-                    >
-                      {isDescriptionExpanded ? "Show less" : "Show more"}
-                    </button>
+                {listsLoading && (
+                  <div className="w-full p-4 text-center text-base-600 dark:text-base-50">
+                    LOADING LISTS...
                   </div>
                 )}
               </div>
-            </div>
-            <SnippetExplorer />
-            <DeleteConfirmationPopup
-              isOpen={showDeleteConfirmation}
-              onClose={() => setShowDeleteConfirmation(false)}
-              onConfirm={confirmDeleteList}
-              itemName={list?.listname || ""}
-              itemType="list"
-            />
-          </div>
-        )}
+            )}
+            {list && (
+              <div className="flex h-full w-full flex-col lg:w-1/3">
+                <div className="flex w-full flex-col justify-start">
+                  <button
+                    className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
+                    onClick={async () => {
+                      setList(null);
+                      navigate(`/user/${userid}`);
+                      setLists(defaultLists);
+                      fetchAndSetLists();
+                    }}
+                  >
+                    <img
+                      src="/arrow-left.svg"
+                      className="h-full invert"
+                    />
+                    <p className="hidden group-hover:flex">BACK TO LISTS</p>
+                  </button>
+                  <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
+                    <div className="flex items-center justify-between">
+                      <a
+                        href={`${window.location.origin}/list/${list?.listid}`}
+                        className="mr-auto text-2xl font-bold"
+                      >
+                        {list?.listname}
+                      </a>
+                      {list.listid != "creations" &&
+                        list.listid != "favorites" && (
+                          <div className="flex gap-4">
+                            <SnipppButton
+                              onClick={handleShare}
+                              fit={true}
+                              size={"sm"}
+                              colorType="neutral"
+                            >
+                              <img
+                                src="/share.svg"
+                                className="invert group-hover:invert-0 dark:invert-0"
+                              />
+                            </SnipppButton>
+                            <SnipppButton
+                              onClick={handleEditList}
+                              fit={true}
+                              size={"sm"}
+                              colorType="neutral"
+                            >
+                              <img
+                                src="/edit.svg"
+                                className="group-hover:invert dark:invert"
+                              />
+                            </SnipppButton>
+                            <SnipppButton
+                              onClick={handleDeleteList}
+                              fit={true}
+                              size={"sm"}
+                              colorType="delete"
+                            >
+                              <img
+                                src="/x.svg"
+                                className="invert group-hover:invert-0 dark:invert-0"
+                              />
+                            </SnipppButton>
+                          </div>
+                        )}
+                    </div>
 
-        {selection && (
-          <div className="hidden h-full overflow-y-auto lg:flex lg:w-2/3">
-            <Display
-              selection={selection}
-              updateSnippetMod={updateSnippetMod}
-              snippetMods={snippetMods}
-            />
+                    {list?.description && (
+                      <div className="mt-4">
+                        <p
+                          className={`overflow-hidden font-thin transition-all duration-300 ${
+                            isDescriptionExpanded ? "max-h-[1000px]" : (
+                              "max-h-[3em]"
+                            )
+                          }`}
+                          dangerouslySetInnerHTML={{
+                            __html: formatDescription(list.description),
+                          }}
+                        ></p>
+                        <button
+                          className="mt-2 text-sm text-base-950 hover:underline dark:text-base-50"
+                          onClick={() =>
+                            setIsDescriptionExpanded(!isDescriptionExpanded)
+                          }
+                        >
+                          {isDescriptionExpanded ? "Show less" : "Show more"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <SnippetExplorer />
+                <DeleteConfirmationPopup
+                  isOpen={showDeleteConfirmation}
+                  onClose={() => setShowDeleteConfirmation(false)}
+                  onConfirm={confirmDeleteList}
+                  itemName={list?.listname || ""}
+                  itemType="list"
+                />
+              </div>
+            )}
+
+            {selection && (
+              <div className="hidden h-full overflow-y-auto lg:flex lg:w-2/3">
+                <Display
+                  selection={selection}
+                  updateSnippetMod={updateSnippetMod}
+                  snippetMods={snippetMods}
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      : <div className="flex h-full w-full items-center justify-center text-base-950 dark:text-base-50">
+          Loading...
+        </div>
+      }
       <Footer />
       {isEditing && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">

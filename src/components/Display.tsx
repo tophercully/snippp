@@ -2,7 +2,7 @@ import { GoogleUser, Snippet } from "../typeInterfaces";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../backend/snippet/deleteSnippet";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
@@ -12,7 +12,7 @@ import categories from "../utils/categories";
 import { useNotif } from "../hooks/Notif";
 import { addCopy } from "../backend/snippet/addCopy";
 import { simplifyNumber } from "../utils/simplifyNumber";
-// import hljs from "highlight.js";
+
 import {
   ListWithSnippetStatus,
   addSnippetToList,
@@ -20,6 +20,8 @@ import {
   removeSnippetFromList,
 } from "../backend/list/listFunctions";
 import formatPostgresDate from "../utils/formatPostgresDate";
+
+import { formatDescription } from "../utils/formatDescription";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -29,19 +31,6 @@ type SnippetMod = {
 };
 
 type SnippetMods = { [snippetID: number]: SnippetMod };
-
-const formatDescription = (text) => {
-  if (text) {
-    return text.split("\n").map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        <br />
-      </React.Fragment>
-    ));
-  } else {
-    return "";
-  }
-};
 
 export const Display = ({
   selection,
@@ -268,7 +257,12 @@ export const Display = ({
           <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
             <h1 className="text-3xl font-bold">{name}</h1>
             <div className="flex items-end justify-between gap-10">
-              <h1 className="text-xl font-thin">{author}</h1>
+              <a
+                href={`/user/${authorID}`}
+                className="text-xl font-thin"
+              >
+                {author}
+              </a>
               <h1 className="text-sm font-thin">
                 {createdAt ? formatPostgresDate(createdAt.toString()) : ""}
               </h1>
@@ -311,9 +305,10 @@ export const Display = ({
               className={`overflow-hidden font-thin transition-all duration-300 ${
                 isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
               }`}
-            >
-              {formatDescription(description)}
-            </p>
+              dangerouslySetInnerHTML={{
+                __html: formatDescription(description),
+              }}
+            ></p>
             {isDescriptionExpanded && tags && (
               <div className="mt-2 flex flex-wrap gap-1">
                 {tags

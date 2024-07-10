@@ -67,9 +67,18 @@ export interface GoogleUser {
   picture: string;
 }
 
-export interface SnipppUser {
-  userID: number;
-  username: string;
+export interface SnipppProfile {
+  userId: string;
+  name: string;
   email: string;
-  created_at: number;
+  profile_picture: string;
+  bio: string;
+  last_login: string;
+}
+
+export interface EditableUserFields {
+  id: string;
+  name?: string;
+  bio?: string;
+  profilePicture?: string;
 }

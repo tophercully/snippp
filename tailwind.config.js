@@ -4,12 +4,13 @@ export default {
   theme: {
     extend: {
       keyframes: {
-        dash: {
-          to: { "stroke-dashoffset": -1000 },
+        online: {
+          "0%, 100%": { border: "transparent" },
+          "50%": { borderColor: "#16a34a" },
         },
       },
       animation: {
-        dash: "dash 10s linear infinite",
+        online: "online 1s ease-in-out infinite",
       },
       colors: {
         base: {
@@ -28,10 +29,10 @@ export default {
           900: "#101010",
           950: "#030303",
         },
-        error: '#dc2626',
-        success: '#16a34a',
-        info: '#1d4ed8',
-        special: '#7e22ce',
+        error: "#dc2626",
+        success: "#16a34a",
+        info: "#1d4ed8",
+        special: "#7e22ce",
       },
       fontFamily: {
         satoshi: [
