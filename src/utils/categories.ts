@@ -2,10 +2,11 @@ export interface CategoryInfo {
   name: string;
   tags: string[];
   kind: "language" | "framework/library";
-  autoDetected?: boolean; 
+  autoDetected?: boolean;
+  urlPath?: string;
 }
 
-export type Categories = Record<string, CategoryInfo>;
+export type Categories = Record<string, Omit<CategoryInfo, "urlPath">>;
 
 const categories: Categories = {
   js: {
@@ -35,7 +36,7 @@ const categories: Categories = {
   },
   css: {
     name: "CSS",
-    tags: ['css', 'scss', 'sass', 'less', 'stylus'],
+    tags: ["css", "scss", "sass", "less", "stylus"],
     kind: "language",
   },
   three: {

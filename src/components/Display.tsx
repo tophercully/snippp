@@ -77,11 +77,15 @@ export const Display = ({
       .toLowerCase()
       .split(",")
       .map((tag) => tag.trim());
+
     return Object.entries(categories)
       .filter(([, categoryInfo]) =>
         categoryInfo.tags.some((catTag) => snippetTags.includes(catTag)),
       )
-      .map(([, categoryInfo]) => categoryInfo.name);
+      .map(([key, categoryInfo]) => ({
+        name: categoryInfo.name,
+        link: `/browse/${key}`,
+      }));
   }, [selection.tags]);
 
   const copySnippet = () => {
@@ -253,7 +257,7 @@ export const Display = ({
   if (selection) {
     return (
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
-        <div className="flex h-fit w-fit gap-4">
+        <div className="flex h-fit w-fit flex-wrap gap-4">
           <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
             <h1 className="text-3xl font-bold">{name}</h1>
             <div className="flex items-end justify-between gap-10">
@@ -268,16 +272,17 @@ export const Display = ({
               </h1>
             </div>
           </div>
-          <div className="mr-8 flex h-full w-fit flex-col justify-between">
+          <div className="mr-8 flex h-fit flex-col justify-between gap-3">
             {snippetCategories.length > 0 && (
               <div className="flex flex-nowrap gap-1 self-end">
                 {snippetCategories.map((category, index) => (
-                  <span
+                  <a
+                    href={category.link}
                     key={index}
-                    className="rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
+                    className="flex flex-wrap items-center justify-center text-nowrap rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
                   >
-                    {category}
-                  </span>
+                    {category.name}
+                  </a>
                 ))}
               </div>
             )}
