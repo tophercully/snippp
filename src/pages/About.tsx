@@ -19,11 +19,11 @@ export const About = () => {
           </p>
         </div>
         <div className="mb-24 flex w-full flex-col gap-10 xl:px-12">
-          <h1 className="w-full text-center text-4xl underline decoration-dashed underline-offset-8 md:-mb-3 md:text-7xl">
+          <h1 className="w-full px-4 text-left text-4xl underline decoration-dashed underline-offset-8 md:-mb-3 md:text-7xl">
             Core Concepts:
           </h1>
 
-          <div className="flex w-full flex-col rounded-sm p-4 md:w-3/5 md:min-w-[40rem]">
+          <div className="mt-12 flex w-full flex-col rounded-sm p-4 md:w-3/5 md:min-w-[40rem]">
             <h1 className="-mb-[9px] border-2 border-base-950 px-4 pt-2 text-4xl md:-mb-[12px] md:text-7xl dark:border-base-50">
               EFFICIENCY
             </h1>

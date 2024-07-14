@@ -23,6 +23,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
 import { ProfileInfo } from "../components/ProfileInfo";
 import { fetchUserProfile } from "../backend/user/userFunctions";
+import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 
 type SortOrder = "asc" | "desc";
 
@@ -451,6 +452,30 @@ export const Profile: React.FC = () => {
                       >
                         {list?.listname}
                       </a>
+                      {(list.listid == "creations" ||
+                        list.listid == "favorites") &&
+                        userid == userProfile?.id && (
+                          <SnipppButton
+                            size="sm"
+                            onClick={() => {
+                              exportAndDownloadUserSnippets(
+                                list.listname,
+                                snippets,
+                              );
+                              showNotif(
+                                "Downloaded Snippets as JSON",
+                                "success",
+                                5000,
+                              );
+                            }}
+                          >
+                            <img
+                              src="/download.svg"
+                              className="invert group-hover:invert-0 dark:invert-0"
+                            />
+                          </SnipppButton>
+                        )}
+
                       {list.listid != "creations" &&
                         list.listid != "favorites" && (
                           <div className="flex gap-4">

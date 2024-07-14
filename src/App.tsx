@@ -25,23 +25,23 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="font-satoshi flex min-h-[100svh] w-screen flex-col items-center justify-center bg-base-50 p-2 pt-24 md:p-10 dark:bg-base-950">
+    <div className="flex h-fit min-h-[100svh] w-screen flex-col items-center justify-center bg-base-50 p-2 pt-24 font-satoshi md:p-10 dark:bg-base-950">
       <Navbar />
-      <div className="relative">
-        <div
-          id="hero"
-          className="border-base-150 box-content flex items-center justify-center border-2 border-dashed p-10 text-blue-600 transition-all duration-300 dark:border-base-800 dark:text-blue-700"
-        >
-          <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1>
-        </div>
-        <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
+
+      <div
+        id="hero"
+        className="box-content flex items-center justify-center border-2 border-dashed border-base-150 p-10 text-blue-600 transition-all duration-300 dark:border-base-800 dark:text-blue-700"
+      >
+        <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1>
       </div>
-      <h3 className="mt-24 w-full text-center text-xl text-base-950 md:text-2xl dark:text-base-50">
+      <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
+
+      <h3 className="mt-12 w-full max-w-96 text-center text-xl text-base-500 md:mt-24 md:text-2xl dark:text-base-400">
         UNINTERRUPTED CREATIVITY FOR CREATIVE CODERS – YOUR SNIPPET ORGANIZER
       </h3>
       <a
         href="/browse"
-        className={`${stats ? "opacity-100" : "opacity-0"} group relative mt-24 flex items-center overflow-hidden rounded-sm bg-base-950 px-4 text-base-50 shadow-md duration-200 dark:bg-base-50 dark:text-base-950 dark:shadow-sm dark:shadow-base-600`}
+        className={`${stats ? "opacity-100" : "opacity-0"} group relative mt-12 flex items-center justify-center overflow-hidden rounded-sm bg-base-950 px-4 text-base-50 shadow-md duration-200 md:mt-24 dark:bg-base-50 dark:text-base-950 dark:shadow-sm dark:shadow-base-600`}
       >
         <div
           className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0 dark:text-base-950"

@@ -123,16 +123,22 @@ export const Builder = () => {
       if (userProfile) {
         if (isCreator) {
           try {
+            // Assign autodetected language tag if not already present
+            const detectedLang = detectLanguage(snippet.code);
+            const tagsArray = snippet.tags.split(",").map((tag) => tag.trim());
+            if (detectedLang && !tagsArray.includes(detectedLang)) {
+              tagsArray.push(detectedLang);
+            }
+            const updatedTags = tagsArray.join(", ");
+
             if (isEditing) {
-              (await updateSnippet(Number(snippetId), {
+              await updateSnippet(Number(snippetId), {
                 name: snippet.name,
                 code: snippet.code,
                 description: snippet.description,
-                tags: snippet.tags,
+                tags: updatedTags,
                 public: snippet.public,
-              })) as any;
-              showNotif("Snippet updated successfully", "success", 10000);
-              navigate(`/snippet/${snippetId}`);
+              });
             } else {
               const result = await newSnippet({
                 ...snippet,
