@@ -63,7 +63,18 @@ export const Stats = () => {
           />
         </div>
       : <div className="flex h-full w-full items-center justify-center">
-          <div className="animate-spinslow mt-32 h-12 w-12 rounded-full border-4 border-dashed border-base-950 dark:border-base-50"></div>
+          <svg
+            className="mt-32 aspect-square h-32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              className="animate-dash"
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+            />
+          </svg>
         </div>
       }
       {stats && (

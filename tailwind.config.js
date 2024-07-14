@@ -8,9 +8,21 @@ export default {
           "0%, 100%": { rotate: "0deg" },
           "50%": { rotate: "180deg" },
         },
+        dash: {
+          "0%": {
+            "stroke-dashoffset": "656",
+            "stroke-dasharray": "10 10",
+          },
+          "100%": {
+            "stroke-dashoffset": "0",
+            "stroke-dasharray": "10 10",
+          },
+        },
       },
       animation: {
         spinslow: "spin 4s infinite",
+        dash: "dash 10s linear infinite",
+        dashin: "dash 2s ease-out",
       },
       colors: {
         base: {
@@ -55,5 +67,18 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".animate-dash": {
+          "stroke-dasharray": "1000",
+          "stroke-dashoffset": "1000",
+          stroke: "#767676", // Blue-500
+          "stroke-width": "4",
+          fill: "none",
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };
