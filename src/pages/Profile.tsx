@@ -507,9 +507,10 @@ export const Profile: React.FC = () => {
                               fit={true}
                               size={"sm"}
                               colorType="delete"
+                              tooltip="Delete List"
                             >
                               <img
-                                src="/x.svg"
+                                src="/trash.svg"
                                 className="invert group-hover:invert-0 dark:invert-0"
                               />
                             </SnipppButton>

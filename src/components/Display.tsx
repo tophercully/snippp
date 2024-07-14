@@ -390,7 +390,7 @@ export const Display = ({
                 colorType="add"
                 fit={true}
                 size="md"
-                tooltip="Add/Remove to favorites"
+                tooltip="Add/Remove Favorite"
               >
                 <span className="flex items-center">
                   <img
@@ -410,7 +410,7 @@ export const Display = ({
                 colorType="delete"
                 fit={true}
                 size="md"
-                tooltip="Add/Remove from favorites"
+                tooltip="Add/Remove Favorite"
               >
                 <span className="flex items-center">
                   <img
@@ -432,10 +432,10 @@ export const Display = ({
                 }}
                 colorType="neutral"
                 size="md"
-                tooltip="Add to list"
+                tooltip="Add to List"
               >
                 <img
-                  src="/add-to-list.svg"
+                  src="/folder.svg"
                   className="h-5 invert group-hover:invert-0 dark:invert-0"
                 />
               </SnipppButton>
@@ -462,7 +462,7 @@ export const Display = ({
                   colorType="neutral"
                   size="md"
                   className="ml-auto"
-                  tooltip="Edit snippet"
+                  tooltip="Edit Snippet"
                 >
                   <span className="flex items-center gap-3">
                     <img
@@ -476,11 +476,11 @@ export const Display = ({
                   onClick={() => setShowDeleteConfirm(true)}
                   colorType="delete"
                   size="md"
-                  tooltip="Delete snippet"
+                  tooltip="Delete Snippet"
                 >
                   <span className="flex items-center gap-3">
                     <img
-                      src="/x.svg"
+                      src="/trash.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
                     <span className="hidden 2xl:inline">DELETE</span>

@@ -104,7 +104,6 @@ export const Dashboard: React.FC = () => {
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  console.log(list);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -233,6 +232,7 @@ export const Dashboard: React.FC = () => {
       if (list) {
         if (list.listid === "mysnippets") {
           result = await loadUserSnippets(userProfile.id);
+          console.log(result);
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userProfile.id });
         } else {
@@ -419,28 +419,26 @@ export const Dashboard: React.FC = () => {
                   >
                     {list?.listname}
                   </a>
-                  {(list.listid == "creations" || list.listid == "favorites") &&
-                    userProfile?.id && (
-                      <SnipppButton
-                        size="sm"
-                        onClick={() => {
-                          exportAndDownloadUserSnippets(
-                            list.listname,
-                            snippets,
-                          );
-                          showNotif(
-                            "Downloaded Snippets as JSON",
-                            "success",
-                            5000,
-                          );
-                        }}
-                      >
-                        <img
-                          src="/download.svg"
-                          className="invert group-hover:invert-0 dark:invert-0"
-                        />
-                      </SnipppButton>
-                    )}
+                  {(list.listid == "mysnippets" ||
+                    list.listid == "favorites") && (
+                    <SnipppButton
+                      size="sm"
+                      tooltip="Export Snippets as JSON"
+                      onClick={() => {
+                        exportAndDownloadUserSnippets(list.listname, snippets);
+                        showNotif(
+                          "Downloaded Snippets as JSON",
+                          "success",
+                          5000,
+                        );
+                      }}
+                    >
+                      <img
+                        src="/download.svg"
+                        className="invert group-hover:invert-0 dark:invert-0"
+                      />
+                    </SnipppButton>
+                  )}
                   {list.listid != "mysnippets" &&
                     list.listid != "favorites" && (
                       <div className="flex gap-4">
@@ -449,6 +447,7 @@ export const Dashboard: React.FC = () => {
                           fit={true}
                           size={"sm"}
                           colorType="neutral"
+                          tooltip="Share List"
                         >
                           <img
                             src="/share.svg"
@@ -460,6 +459,7 @@ export const Dashboard: React.FC = () => {
                           fit={true}
                           size={"sm"}
                           colorType="neutral"
+                          tooltip="Edit List"
                         >
                           <img
                             src="/edit.svg"
@@ -471,9 +471,10 @@ export const Dashboard: React.FC = () => {
                           fit={true}
                           size={"sm"}
                           colorType="delete"
+                          tooltip="Delete List"
                         >
                           <img
-                            src="/x.svg"
+                            src="/trash.svg"
                             className="invert group-hover:invert-0 dark:invert-0"
                           />
                         </SnipppButton>
