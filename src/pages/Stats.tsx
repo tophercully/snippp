@@ -59,7 +59,6 @@ export const Stats = () => {
   useEffect(() => {
     const getStats = async () => {
       const result = await fetchExtendedStats();
-      console.log(result);
       setStats(result);
     };
     getStats();
