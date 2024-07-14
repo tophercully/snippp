@@ -15,6 +15,7 @@ import {
 } from "../utils/categoryTools";
 import { CategoryInfo } from "../utils/categories";
 import { detectLanguage } from "../utils/detectLanguage";
+import { track } from "@vercel/analytics";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -125,11 +126,31 @@ export const Builder = () => {
           try {
             // Assign autodetected language tag if not already present
             const detectedLang = detectLanguage(snippet.code);
+            const detectedCategory = categorizeLanguage(detectedLang);
+
             const tagsArray = snippet.tags.split(",").map((tag) => tag.trim());
-            if (detectedLang && !tagsArray.includes(detectedLang)) {
-              tagsArray.push(detectedLang);
+
+            // Check if any existing tag is a known language category
+            const hasLanguageTag = tagsArray.some(
+              (tag) => categorizeLanguage(tag) !== "unknown",
+            );
+
+            let updatedTags = snippet.tags;
+            let detectedLanguageUsed = false;
+
+            // Only add detected language if no language tag exists
+            if (detectedCategory !== "unknown" && !hasLanguageTag) {
+              updatedTags =
+                snippet.tags ?
+                  `${snippet.tags}, ${detectedCategory}`
+                : detectedCategory;
+              detectedLanguageUsed = true;
             }
-            const updatedTags = tagsArray.join(", ");
+
+            // Track if detected language was used
+            if (detectedLanguageUsed) {
+              track("Language Auto-Detected");
+            }
 
             if (isEditing) {
               await updateSnippet(Number(snippetId), {
@@ -139,6 +160,8 @@ export const Builder = () => {
                 tags: updatedTags,
                 public: snippet.public,
               });
+              showNotif("Snippet updated successfully", "success", 10000);
+              navigate(`/snippet/${snippetId}`);
             } else {
               const result = await newSnippet({
                 ...snippet,
