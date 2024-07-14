@@ -21,6 +21,7 @@ import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
+import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 
 type SortOrder = "asc" | "desc";
 
@@ -418,6 +419,28 @@ export const Dashboard: React.FC = () => {
                   >
                     {list?.listname}
                   </a>
+                  {(list.listid == "creations" || list.listid == "favorites") &&
+                    userProfile?.id && (
+                      <SnipppButton
+                        size="sm"
+                        onClick={() => {
+                          exportAndDownloadUserSnippets(
+                            list.listname,
+                            snippets,
+                          );
+                          showNotif(
+                            "Downloaded Snippets as JSON",
+                            "success",
+                            5000,
+                          );
+                        }}
+                      >
+                        <img
+                          src="/download.svg"
+                          className="invert group-hover:invert-0 dark:invert-0"
+                        />
+                      </SnipppButton>
+                    )}
                   {list.listid != "mysnippets" &&
                     list.listid != "favorites" && (
                       <div className="flex gap-4">
