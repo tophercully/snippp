@@ -1,6 +1,8 @@
 import { GoogleUser } from "../../typeInterfaces";
+import { track } from "@vercel/analytics";
 
 export const newUser = async (userProfile: GoogleUser): Promise<boolean> => {
+  track("New User");
   try {
     const response = await fetch("/api/user/new-user", {
       method: "POST",

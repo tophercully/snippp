@@ -1,4 +1,5 @@
 import { Snippet } from "../../typeInterfaces";
+import { track } from "@vercel/analytics";
 
 interface Params {
   name: string;
@@ -11,6 +12,7 @@ interface Params {
 }
 
 export const newSnippet = async (params: Params): Promise<Snippet> => {
+  track("Create Snippet");
   try {
     const response = await fetch("/api/snippet/new-snippet", {
       method: "POST",
