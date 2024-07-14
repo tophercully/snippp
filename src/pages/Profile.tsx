@@ -381,7 +381,7 @@ export const Profile: React.FC = () => {
             </h1>
             <a
               href={list?.listid === "creations" ? "/builder" : "/browse"}
-              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
+              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-75 dark:bg-base-50 dark:text-base-950"
             >
               {list?.listid === "creations" ?
                 "CREATE SNIPPPET"
@@ -430,7 +430,7 @@ export const Profile: React.FC = () => {
               <div className="flex h-full w-full flex-col lg:w-1/3">
                 <div className="flex w-full flex-col justify-start">
                   <button
-                    className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
+                    className="group flex h-10 items-center gap-3 p-2 duration-75 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
                     onClick={async () => {
                       setList(null);
                       navigate(`/user/${userid}`);
@@ -519,7 +519,7 @@ export const Profile: React.FC = () => {
                     {list?.description && (
                       <div className="mt-4">
                         <p
-                          className={`overflow-hidden font-thin transition-all duration-300 ${
+                          className={`overflow-hidden font-thin transition-all duration-75 ${
                             isDescriptionExpanded ? "max-h-[1000px]" : (
                               "max-h-[3em]"
                             )

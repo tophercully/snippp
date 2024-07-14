@@ -307,7 +307,7 @@ export const Display = ({
         {worthExpanding && (
           <div className="relative mt-4">
             <p
-              className={`overflow-hidden font-thin transition-all duration-300 ${
+              className={`overflow-hidden font-thin transition-all duration-75 ${
                 isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
               }`}
               dangerouslySetInnerHTML={{
@@ -341,10 +341,10 @@ export const Display = ({
 
         <div
           onClick={copySnippet}
-          className="group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
+          className="group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-75 hover:cursor-pointer dark:border-base-800"
         >
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-75 group-hover:opacity-100">
               <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
                 CLICK TO COPY
               </span>
@@ -368,12 +368,12 @@ export const Display = ({
           >
             {userProfile && !favoriteStatus && (
               <button
-                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-75 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 onClick={handleAddFavorite}
                 disabled={isLoading}
               >
                 <div
-                  className="absolute inset-0 -translate-x-[110%] transform bg-green-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  className="absolute inset-0 -translate-x-[110%] transform bg-green-600 transition-transform duration-75 ease-in-out group-hover:translate-x-0"
                   aria-hidden="true"
                 />
                 <span className="relative flex items-center gap-3">
@@ -389,12 +389,12 @@ export const Display = ({
             )}
             {userProfile && favoriteStatus && (
               <button
-                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-75 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 onClick={handleRemoveFavorite}
                 disabled={isLoading}
               >
                 <div
-                  className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-75 ease-in-out group-hover:translate-x-0"
                   aria-hidden="true"
                 />
                 <span className="relative flex items-center gap-3">
@@ -414,10 +414,10 @@ export const Display = ({
                   setShowListPopup(true);
                   fetchUserLists();
                 }}
-                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-75 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
               >
                 <div
-                  className="absolute inset-0 -translate-x-[110%] transform bg-purple-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                  className="absolute inset-0 -translate-x-[110%] transform bg-purple-700 transition-transform duration-75 ease-in-out group-hover:translate-x-0"
                   aria-hidden="true"
                 />
                 <span className="relative flex items-center gap-3">
@@ -430,10 +430,10 @@ export const Display = ({
             )}
             <button
               onClick={handleShare}
-              className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+              className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-75 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
             >
               <div
-                className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-75 ease-in-out group-hover:translate-x-0"
                 aria-hidden="true"
               />
               <span className="relative flex items-center gap-3">
@@ -447,10 +447,10 @@ export const Display = ({
               <>
                 <a
                   href={`/builder/${selection.snippetID}`}
-                  className="group relative ml-auto flex items-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                  className="group relative ml-auto flex items-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-75 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 >
                   <div
-                    className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                    className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-75 ease-in-out group-hover:translate-x-0"
                     aria-hidden="true"
                   />
                   <span className="relative flex items-center gap-3">
@@ -463,10 +463,10 @@ export const Display = ({
                 </a>
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                  className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-75 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
                 >
                   <div
-                    className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
+                    className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-75 ease-in-out group-hover:translate-x-0"
                     aria-hidden="true"
                   />
                   <span className="relative flex items-center gap-3">

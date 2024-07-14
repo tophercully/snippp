@@ -56,10 +56,10 @@ export const Browser: React.FC = () => {
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const { category } = useParams();
-  if(category) {
-    setPageTitle(`${categories[category].name} Snippets`)
+  if (category) {
+    setPageTitle(`${categories[category].name} Snippets`);
   } else {
-    setPageTitle('All Snippets')
+    setPageTitle("All Snippets");
   }
   const [sortMethod, setSortMethod] =
     useState<SortableSnippetKeys>("favoriteCount");
@@ -148,7 +148,7 @@ export const Browser: React.FC = () => {
           />
           <div className="relative h-full w-full overflow-hidden">
             <div
-              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${
                 isLoading || isTransitioning ? "opacity-100" : (
                   "pointer-events-none opacity-0"
                 )
@@ -159,7 +159,7 @@ export const Browser: React.FC = () => {
               </p>
             </div>
             <div
-              className={`h-full w-full transition-opacity duration-300 ${
+              className={`h-full w-full transition-opacity duration-75 ${
                 isLoading || isTransitioning ?
                   "pointer-events-none opacity-0"
                 : "opacity-100"
@@ -188,7 +188,7 @@ export const Browser: React.FC = () => {
           </div>
         </div>
         <div
-          className={`hidden h-[90svh] w-full overflow-y-auto transition-opacity duration-300 lg:flex lg:h-full lg:w-2/3 ${
+          className={`hidden h-[90svh] w-full overflow-y-auto transition-opacity duration-75 lg:flex lg:h-full lg:w-2/3 ${
             isReady ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >

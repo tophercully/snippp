@@ -308,7 +308,7 @@ export const ListPage: React.FC = () => {
               {listData?.description && (
                 <div className="mt-4">
                   <p
-                    className={`overflow-hidden font-thin transition-all duration-300 ${
+                    className={`overflow-hidden font-thin transition-all duration-75 ${
                       isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
                     }`}
                     dangerouslySetInnerHTML={{

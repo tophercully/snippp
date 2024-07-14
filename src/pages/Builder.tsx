@@ -264,7 +264,7 @@ export const Builder = () => {
                   />
                   <label
                     htmlFor="public"
-                    className="relative block aspect-square min-h-[3.75rem] cursor-pointer overflow-hidden rounded-sm bg-base-150 before:absolute before:inset-0 before:-translate-x-[110%] before:bg-blue-700 before:transition-transform before:duration-300 before:content-[''] peer-checked:before:translate-x-0 dark:border-base-600 dark:bg-base-850"
+                    className="relative block aspect-square min-h-[3.75rem] cursor-pointer overflow-hidden rounded-sm bg-base-150 before:absolute before:inset-0 before:-translate-x-[110%] before:bg-blue-700 before:transition-transform before:duration-75 before:content-[''] peer-checked:before:translate-x-0 dark:border-base-600 dark:bg-base-850"
                   >
                     <img
                       src={snippet.public ? "/lock-open.svg" : "/lock.svg"}
@@ -272,7 +272,7 @@ export const Builder = () => {
                       className={`absolute inset-0 h-full w-full p-4 ${snippet.public ? "invert-0" : "invert"} object-cover dark:invert-0`}
                     />
                   </label>
-                  <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform opacity-0 transition-opacity duration-75 group-hover:opacity-100">
                     <div className="relative w-fit text-nowrap rounded-sm bg-gray-800 px-2 py-1 text-xs text-white">
                       {snippet.public ?
                         "Snippet is Public"
@@ -296,10 +296,10 @@ export const Builder = () => {
               <button
                 onClick={handleSubmit}
                 disabled={!snippet.name || !snippet.code}
-                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-200 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
+                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-75 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
               >
                 <div
-                  className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-[110%] transform transition-transform duration-300 ease-in-out group-hover:translate-x-0`}
+                  className={`${isCreator ? "bg-blue-700" : "bg-red-600"} absolute inset-0 -translate-x-[110%] transform transition-transform duration-75 ease-in-out group-hover:translate-x-0`}
                   aria-hidden="true"
                 />
                 <span className="relative z-10 text-xl font-bold">

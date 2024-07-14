@@ -1775,6 +1775,11 @@ video {
   transition-duration: 300ms;
 }
 
+.before\:duration-75::before {
+  content: var(--tw-content);
+  transition-duration: 75ms;
+}
+
 .before\:content-\[\'\'\]::before {
   --tw-content: '';
   content: var(--tw-content);
