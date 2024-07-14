@@ -123,6 +123,7 @@ export const Builder = () => {
       if (userProfile) {
         if (isCreator) {
           try {
+            // Assign autodetected language tag if not already present
             const detectedLang = detectLanguage(snippet.code);
             const tagsArray = snippet.tags.split(",").map((tag) => tag.trim());
             if (detectedLang && !tagsArray.includes(detectedLang)) {
