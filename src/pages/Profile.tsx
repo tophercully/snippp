@@ -457,6 +457,7 @@ export const Profile: React.FC = () => {
                         userid == userProfile?.id && (
                           <SnipppButton
                             size="sm"
+                            tooltip={`Download ${list.listname} JSON`}
                             onClick={() => {
                               exportAndDownloadUserSnippets(
                                 list.listname,
