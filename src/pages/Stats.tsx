@@ -103,7 +103,7 @@ export const Stats = () => {
           data={frameworkDistribution}
         />
       </div>
-      <div className="justify-self-end">
+      <div className="absolute bottom-0 left-0 w-full justify-self-end p-2">
         <Footer />
       </div>
     </div>
