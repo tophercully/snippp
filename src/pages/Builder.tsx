@@ -130,7 +130,6 @@ export const Builder = () => {
             }
             const updatedTags = tagsArray.join(", ");
 
-            // Update these lines to use updatedTags instead of snippet.tags
             if (isEditing) {
               await updateSnippet(Number(snippetId), {
                 name: snippet.name,
