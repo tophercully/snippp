@@ -23,38 +23,7 @@ interface ExtendedHomepageInfo {
 
 export const Stats = () => {
   document.title = `Stats - Snippp`;
-  const [stats, setStats] = useState<ExtendedHomepageInfo>({
-    totalUsers: 0,
-    totalSnippets: 0,
-    totalLists: 0,
-    averageUserSnippets: 0,
-    totalSnippetCopies: 0,
-    activeUsers: 0,
-    totalSnippetLength: 0,
-    languageDistribution: {
-      js: 0,
-      ts: 0,
-      css: 0,
-      python: 0,
-      glsl: 0,
-    },
-    frameworkDistribution: {
-      reactjs: 0,
-      reactnative: 0,
-      p5: 0,
-      three: 0,
-    },
-  });
-  const {
-    totalUsers,
-    totalLists,
-    totalSnippets,
-    totalSnippetCopies,
-    totalSnippetLength,
-    activeUsers,
-    languageDistribution,
-    frameworkDistribution,
-  } = stats;
+  const [stats, setStats] = useState<ExtendedHomepageInfo | null>(null);
 
   useEffect(() => {
     const getStats = async () => {
@@ -66,42 +35,49 @@ export const Stats = () => {
   return (
     <div className="flex h-fit min-h-[100vh] w-full flex-col gap-8 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
       <Navbar />
-      <div className="grid h-full w-full grid-cols-2 gap-8 p-2 text-base-950 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 dark:text-base-50">
-        <StatCard
-          name="Users:"
-          value={totalUsers}
-        />
-        <StatCard
-          name="Active Users:"
-          value={activeUsers}
-        />
-        <StatCard
-          name="Total Snippets:"
-          value={totalSnippets}
-        />
-        <StatCard
-          name="Total Lists:"
-          value={totalLists}
-        />
-        <StatCard
-          name="Total Snippet Length:"
-          value={simplifyNumber(totalSnippetLength)}
-        />
-        <StatCard
-          name="Total Snippet Copies:"
-          value={simplifyNumber(totalSnippetCopies)}
-        />
-      </div>
-      <div className="grid grid-cols-1 gap-8 p-2 lg:grid-cols-2">
-        <Distribution
-          title="Language Distribution"
-          data={languageDistribution}
-        />
-        <Distribution
-          title="Framework Distribution"
-          data={frameworkDistribution}
-        />
-      </div>
+      {stats ?
+        <div className="grid h-full w-full grid-cols-2 gap-8 p-2 text-base-950 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 dark:text-base-50">
+          <StatCard
+            name="Users:"
+            value={stats.totalUsers}
+          />
+          <StatCard
+            name="Active Users:"
+            value={stats.activeUsers}
+          />
+          <StatCard
+            name="Total Snippets:"
+            value={stats.totalSnippets}
+          />
+          <StatCard
+            name="Total Lists:"
+            value={stats.totalLists}
+          />
+          <StatCard
+            name="Total Snippet Length:"
+            value={simplifyNumber(stats.totalSnippetLength)}
+          />
+          <StatCard
+            name="Total Snippet Copies:"
+            value={simplifyNumber(stats.totalSnippetCopies)}
+          />
+        </div>
+      : <div className="flex h-full w-full items-center justify-center">
+          <div className="animate-spinslow mt-32 h-12 w-12 rounded-full border-4 border-dashed border-base-950 dark:border-base-50"></div>
+        </div>
+      }
+      {stats && (
+        <div className="grid grid-cols-1 gap-8 p-2 lg:grid-cols-2">
+          <Distribution
+            title="Language Distribution"
+            data={stats.languageDistribution}
+          />
+          <Distribution
+            title="Framework Distribution"
+            data={stats.frameworkDistribution}
+          />
+        </div>
+      )}
       <div className="absolute bottom-0 left-0 w-full justify-self-end p-2">
         <Footer />
       </div>

@@ -4,13 +4,13 @@ export default {
   theme: {
     extend: {
       keyframes: {
-        online: {
-          "0%, 100%": { border: "transparent" },
-          "50%": { borderColor: "#16a34a" },
+        spinslow: {
+          "0%, 100%": { rotate: "0deg" },
+          "50%": { rotate: "180deg" },
         },
       },
       animation: {
-        online: "online 1s ease-in-out infinite",
+        spinslow: "spin 4s infinite",
       },
       colors: {
         base: {
