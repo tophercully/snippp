@@ -188,7 +188,7 @@ export const Browser: React.FC = () => {
           </div>
         </div>
         <div
-          className={`hidden h-[90svh] w-full overflow-y-auto transition-opacity duration-75 lg:flex lg:h-full lg:w-2/3 ${
+          className={`hidden h-[90svh] w-full transition-opacity duration-75 lg:flex lg:h-full lg:w-2/3 ${
             isReady ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >

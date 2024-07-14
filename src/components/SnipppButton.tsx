@@ -44,7 +44,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
       case "sm":
         return "p-2";
       case "md":
-        return "p-4";
+        return "p-3";
       case "lg":
         return "p-4";
       default:
@@ -53,13 +53,11 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
   };
 
   return (
-    <div className="relative inline-block">
+    <div className={`relative ${fit ? "inline-block" : "w-full"}`}>
       {tooltip && showTooltip && (
-        <div className="relative">
-          <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-800 px-3 py-2 text-sm text-white dark:bg-base-100 dark:text-black">
-            {tooltip}
-            <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-950 dark:border-t-base-50"></div>
-          </div>
+        <div className="absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-800 px-3 py-2 text-sm text-white dark:bg-base-100 dark:text-black">
+          {tooltip}
+          <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-800 dark:border-t-base-100"></div>
         </div>
       )}
       <button

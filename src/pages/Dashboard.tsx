@@ -515,7 +515,7 @@ export const Dashboard: React.FC = () => {
         )}
 
         {selection && (
-          <div className="hidden h-full overflow-y-auto lg:flex lg:w-2/3">
+          <div className="hidden h-full lg:flex lg:w-2/3">
             <Display
               selection={selection}
               updateSnippetMod={updateSnippetMod}
