@@ -1,9 +1,10 @@
 import { Snippet } from "../typeInterfaces";
-
+import { track } from "@vercel/analytics";
 export const exportAndDownloadUserSnippets = (
   fileName: string,
   snippets: Snippet[],
 ): void => {
+  track("Snippets Exported");
   const exportedSnippets = snippets.map((snippet) => ({
     name: snippet.name,
     code: snippet.code,
