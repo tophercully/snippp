@@ -64,9 +64,9 @@ export const Stats = () => {
     getStats();
   }, []);
   return (
-    <div className="flex h-fit min-h-[100vh] w-full flex-col gap-5 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
+    <div className="flex h-fit min-h-[100vh] w-full flex-col gap-8 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
       <Navbar />
-      <div className="grid h-full w-full grid-cols-2 gap-4 p-2 text-base-950 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 dark:text-base-50">
+      <div className="grid h-full w-full grid-cols-2 gap-8 p-2 text-base-950 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 dark:text-base-50">
         <StatCard
           name="Users:"
           value={totalUsers}
@@ -92,7 +92,7 @@ export const Stats = () => {
           value={simplifyNumber(totalSnippetCopies)}
         />
       </div>
-      <div className="grid grid-cols-1 gap-4 p-2 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 p-2 lg:grid-cols-2">
         <Distribution
           title="Language Distribution"
           data={languageDistribution}
