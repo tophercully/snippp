@@ -13,6 +13,7 @@ import { About } from "./pages/About.tsx";
 import { SnippetPage } from "./pages/SnippetPage.tsx";
 import { ListPage } from "./pages/ListPage.tsx";
 import { Profile } from "./pages/Profile.tsx";
+import { Stats } from "./pages/Stats.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
   {
     path: "/user/:userid/:listid?",
     element: <Profile />,
+  },
+  {
+    path: "/stats",
+    element: <Stats />,
   },
 ]);
 

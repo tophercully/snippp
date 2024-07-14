@@ -55,7 +55,7 @@ export const SnippetPage: React.FC = () => {
         try {
           const snippet = await loadSnippetById(Number(id));
           setSelection(snippet as Snippet);
-          setPageTitle(snippet.name)
+          setPageTitle(snippet.name);
           setSnippetMods({
             [snippet.snippetID]: {
               favoriteStatus: snippet.isFavorite,

@@ -1,3 +1,4 @@
+import { track } from "@vercel/analytics";
 import { Snippet } from "../../typeInterfaces";
 
 interface ListData {
@@ -163,6 +164,7 @@ export const createList = async ({
   listName,
   description,
 }: CreateListParams): Promise<{ listid: string | number }> => {
+  track("Create List");
   try {
     const response = await fetch("/api/list/create-list", {
       method: "POST",
