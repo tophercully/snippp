@@ -327,6 +327,48 @@ export const Navbar: React.FC = () => {
               </span>
               <span>Deselect List</span>
             </li>
+            <li className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ⌘
+                </span>
+
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ↑
+                </span>
+              </span>
+              <span>Sort Order Ascending</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ⌘
+                </span>
+
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ↓
+                </span>
+              </span>
+              <span>Sort Order Descending</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                A
+              </span>
+              <span>Sort Alphabetically</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                T
+              </span>
+              <span>Sort By Time</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                P
+              </span>
+              <span>Sort By Popularity</span>
+            </li>
           </ul>
         </div>
       )}

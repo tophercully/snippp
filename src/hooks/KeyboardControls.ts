@@ -74,10 +74,28 @@ export const useKeyboardControls = (keyHandlers: KeyHandlers) => {
             keyHandlers.spacebar(event);
           }
           break;
-        case "f":
+        case "f" || "F":
           if (keyHandlers.f) {
             event.preventDefault();
             keyHandlers.f(event);
+          }
+          break;
+        case "a" || "A":
+          if (keyHandlers.a) {
+            event.preventDefault();
+            keyHandlers.a(event);
+          }
+          break;
+        case "t" || "T":
+          if (keyHandlers.t) {
+            event.preventDefault();
+            keyHandlers.t(event);
+          }
+          break;
+        case "p" || "P":
+          if (keyHandlers.p) {
+            event.preventDefault();
+            keyHandlers.p(event);
           }
           break;
         default:

@@ -53,28 +53,32 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
 
   useKeyboardControls({
     arrowUp: (event) => {
-      setSelectedIndex((prev) => {
-        let newIndex;
-        if (event.shiftKey) {
-          newIndex = 0; // Jump to the first item
-        } else {
-          newIndex = prev > 0 ? prev - 1 : prev;
-        }
-        setSelection(snippets[newIndex]);
-        return newIndex;
-      });
+      if (!event.ctrlKey && !event.metaKey) {
+        setSelectedIndex((prev) => {
+          let newIndex;
+          if (event.shiftKey) {
+            newIndex = 0; // Jump to the first item
+          } else {
+            newIndex = prev > 0 ? prev - 1 : prev;
+          }
+          setSelection(snippets[newIndex]);
+          return newIndex;
+        });
+      }
     },
     arrowDown: (event) => {
-      setSelectedIndex((prev) => {
-        let newIndex;
-        if (event.shiftKey) {
-          newIndex = snippets.length - 1; // Jump to the last item
-        } else {
-          newIndex = prev < snippets.length - 1 ? prev + 1 : prev;
-        }
-        setSelection(snippets[newIndex]);
-        return newIndex;
-      });
+      if (!event.ctrlKey && !event.metaKey) {
+        setSelectedIndex((prev) => {
+          let newIndex;
+          if (event.shiftKey) {
+            newIndex = snippets.length - 1; // Jump to the last item
+          } else {
+            newIndex = prev < snippets.length - 1 ? prev + 1 : prev;
+          }
+          setSelection(snippets[newIndex]);
+          return newIndex;
+        });
+      }
     },
   });
 
