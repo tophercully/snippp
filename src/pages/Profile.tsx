@@ -25,6 +25,7 @@ import { ProfileInfo } from "../components/ProfileInfo";
 import { fetchUserProfile } from "../backend/user/userFunctions";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type SortOrder = "asc" | "desc";
 
@@ -404,8 +405,8 @@ export const Profile: React.FC = () => {
       }
     } else {
       return (
-        <div className="w-full p-6 text-center dark:text-base-50">
-          LOADING SNIPPPETS...
+        <div className="flex w-full items-center justify-center p-6 text-center dark:text-base-50">
+          <LoadingSpinner />
         </div>
       );
     }
@@ -432,8 +433,8 @@ export const Profile: React.FC = () => {
                 />
 
                 {listsLoading && (
-                  <div className="w-full p-4 text-center text-base-600 dark:text-base-50">
-                    LOADING LISTS...
+                  <div className="flex w-full items-center justify-center p-4 text-center text-base-600 dark:text-base-50">
+                    <LoadingSpinner />
                   </div>
                 )}
               </div>
@@ -577,7 +578,7 @@ export const Profile: React.FC = () => {
           </div>
         </>
       : <div className="flex h-full w-full items-center justify-center text-base-950 dark:text-base-50">
-          Loading...
+          <LoadingSpinner />
         </div>
       }
       <Footer />

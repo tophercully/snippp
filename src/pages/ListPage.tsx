@@ -18,6 +18,7 @@ import SnipppButton from "../components/SnipppButton";
 import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { formatDescription } from "../utils/formatDescription";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type SortOrder = "asc" | "desc";
 
@@ -371,7 +372,7 @@ export const ListPage: React.FC = () => {
       )}
       {isLoading && (
         <div className="flex h-full w-full items-center justify-center">
-          LOADING LIST...
+          <LoadingSpinner />
         </div>
       )}
       {!isLoading && !listData && (

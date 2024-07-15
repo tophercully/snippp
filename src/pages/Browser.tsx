@@ -9,6 +9,7 @@ import { Display } from "../components/Display";
 import categories from "../utils/categories";
 import { useParams } from "react-router-dom";
 import { setPageTitle } from "../utils/setPageTitle";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -154,9 +155,10 @@ export const Browser: React.FC = () => {
                 )
               }`}
             >
-              <p className="text-xl text-base-950 dark:text-base-50">
+              {/* <p className="text-xl text-base-950 dark:text-base-50">
                 Loading...
-              </p>
+              </p> */}
+              <LoadingSpinner />
             </div>
             <div
               className={`h-full w-full transition-opacity duration-75 ${
