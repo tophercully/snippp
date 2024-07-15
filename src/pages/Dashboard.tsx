@@ -23,6 +23,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type SortOrder = "asc" | "desc";
 
@@ -377,8 +378,8 @@ export const Dashboard: React.FC = () => {
       }
     } else {
       return (
-        <div className="w-full p-6 text-center dark:text-base-50">
-          LOADING SNIPPPETS...
+        <div className="flex w-full items-center justify-center p-6 text-center dark:text-base-50">
+          <LoadingSpinner />
         </div>
       );
     }
@@ -399,8 +400,8 @@ export const Dashboard: React.FC = () => {
             />
 
             {listsLoading && (
-              <div className="w-full p-4 text-center text-base-600 dark:text-base-50">
-                LOADING LISTS...
+              <div className="flex w-full items-center justify-center p-4 text-center text-base-600 dark:text-base-50">
+                <LoadingSpinner />
               </div>
             )}
           </div>

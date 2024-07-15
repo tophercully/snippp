@@ -1,7 +1,7 @@
 export const LoadingSpinner = () => {
   return (
     <svg
-      className="aspect-square h-32"
+      className="aspect-square h-32 p-5"
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect
