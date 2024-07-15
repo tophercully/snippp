@@ -244,7 +244,7 @@ export const Profile: React.FC = () => {
       let result: Snippet[] = [];
       if (list) {
         if (list.listid === "creations") {
-          result = await loadUserSnippets(userid as string);
+          result = await loadUserSnippets(userid as string, userProfile.id);
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userid as string });
         } else {

@@ -231,7 +231,7 @@ export const Dashboard: React.FC = () => {
       let result: Snippet[] = [];
       if (list) {
         if (list.listid === "mysnippets") {
-          result = await loadUserSnippets(userProfile.id);
+          result = await loadUserSnippets(userProfile.id, userProfile.id);
           console.log(result);
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userProfile.id });
