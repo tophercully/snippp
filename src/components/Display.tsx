@@ -23,6 +23,7 @@ import formatPostgresDate from "../utils/formatPostgresDate";
 
 import { formatDescription } from "../utils/formatDescription";
 import SnipppButton from "./SnipppButton";
+import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -104,45 +105,82 @@ export const Display = ({
 
   const handleAddFavorite = async () => {
     if (userProfile) {
-      setIsLoading(true);
+      // Calculate the new favorite count
+      const currentFavoriteCount =
+        snippetMod.favoriteCount ?? selection.favoriteCount;
+      const newFavoriteCount = Number(currentFavoriteCount) + 1;
+
+      // Optimistic update
+      updateSnippetMod(snippetID, {
+        favoriteStatus: true,
+        favoriteCount: newFavoriteCount,
+      });
+
       try {
         await addSnippetToFavorites({
           userID: userProfile.id,
           snippetIDToAdd: snippetID,
         });
-        updateSnippetMod(snippetID, {
-          favoriteStatus: true,
-          favoriteCount: (snippetMod.favoriteCount || 0) + 1,
-        });
-        showNotif("Added Favorite", "success", 2000);
+        // showNotif("Added Favorite", "success", 2000);
       } catch (error) {
         console.error("Failed to add favorite:", error);
-      } finally {
-        setIsLoading(false);
+        // Revert optimistic update
+        updateSnippetMod(snippetID, {
+          favoriteStatus: false,
+          favoriteCount: currentFavoriteCount,
+        });
+        showNotif("Failed to add favorite", "error", 2000);
       }
     }
   };
 
   const handleRemoveFavorite = async () => {
     if (userProfile) {
-      setIsLoading(true);
+      // Calculate the new favorite count
+      const currentFavoriteCount =
+        snippetMod.favoriteCount ?? selection.favoriteCount;
+      const newFavoriteCount = Math.max(currentFavoriteCount - 1, 0);
+
+      // Optimistic update
+      updateSnippetMod(snippetID, {
+        favoriteStatus: false,
+        favoriteCount: newFavoriteCount,
+      });
+
       try {
         await removeSnippetFromFavorites({
           userID: userProfile.id,
           snippetIDToRemove: snippetID,
         });
-        updateSnippetMod(snippetID, {
-          favoriteStatus: false,
-          favoriteCount: Math.max((snippetMod.favoriteCount || 1) - 1, 0),
-        });
-        showNotif("Removed Favorite", "success", 2000);
+        // showNotif("Removed Favorite", "success", 2000);
       } catch (error) {
         console.error("Failed to remove favorite:", error);
-      } finally {
-        setIsLoading(false);
+        // Revert optimistic update
+        updateSnippetMod(snippetID, {
+          favoriteStatus: true,
+          favoriteCount: currentFavoriteCount,
+        });
+        showNotif("Failed to remove favorite", "error", 2000);
       }
     }
   };
+
+  useKeyboardControls({
+    enter: (event) => {
+      event.preventDefault();
+      copySnippet();
+    },
+    f: (event) => {
+      event.preventDefault();
+      if (userProfile) {
+        if (favoriteStatus) {
+          handleRemoveFavorite();
+        } else {
+          handleAddFavorite();
+        }
+      }
+    },
+  });
 
   const fetchUserLists = async () => {
     if (userProfile) {

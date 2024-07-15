@@ -12,6 +12,7 @@ interface KeyHandlers {
   slash?: KeyHandler;
   questionMark?: KeyHandler;
   spacebar?: KeyHandler;
+  f?: KeyHandler;
   [key: string]: KeyHandler | undefined;
 }
 
@@ -71,6 +72,12 @@ export const useKeyboardControls = (keyHandlers: KeyHandlers) => {
           if (keyHandlers.spacebar) {
             event.preventDefault();
             keyHandlers.spacebar(event);
+          }
+          break;
+        case "f":
+          if (keyHandlers.f) {
+            event.preventDefault();
+            keyHandlers.f(event);
           }
           break;
         default:
