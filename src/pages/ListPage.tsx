@@ -270,6 +270,7 @@ export const ListPage: React.FC = () => {
                         fit={true}
                         size={"sm"}
                         colorType="neutral"
+                        tooltip="Share List"
                       >
                         <img
                           src="/share.svg"
@@ -283,6 +284,7 @@ export const ListPage: React.FC = () => {
                             fit={true}
                             size={"sm"}
                             colorType="neutral"
+                            tooltip="Edit List"
                           >
                             <img
                               src="/edit.svg"
@@ -294,9 +296,10 @@ export const ListPage: React.FC = () => {
                             fit={true}
                             size={"sm"}
                             colorType="delete"
+                            tooltip="Delete List"
                           >
                             <img
-                              src="/x.svg"
+                              src="/trash.svg"
                               className="invert group-hover:invert-0 dark:invert-0"
                             />
                           </SnipppButton>
@@ -308,7 +311,7 @@ export const ListPage: React.FC = () => {
               {listData?.description && (
                 <div className="mt-4">
                   <p
-                    className={`overflow-hidden font-thin transition-all duration-300 ${
+                    className={`overflow-hidden font-thin transition-all duration-75 ${
                       isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
                     }`}
                     dangerouslySetInnerHTML={{

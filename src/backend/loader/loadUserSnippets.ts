@@ -1,9 +1,12 @@
 import { Snippet } from "../../typeInterfaces";
 
-export const loadUserSnippets = async (userID: string): Promise<Snippet[]> => {
+export const loadUserSnippets = async (
+  userID: string,
+  signedInID: string,
+): Promise<Snippet[]> => {
   try {
     const response = await fetch(
-      `/api/loader/load-user-snippets?userID=${userID}`,
+      `/api/loader/load-user-snippets?userID=${userID}&isSignedIn=${userID == signedInID}`,
     );
 
     if (!response.ok) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Snippet } from "../typeInterfaces";
+import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 type SortOrder = "asc" | "desc";
 
@@ -34,6 +35,33 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       setIsOpen(false);
     }
   };
+
+  useKeyboardControls({
+    a: (event) => {
+      event.preventDefault();
+      setSortMethod("name");
+    },
+    t: (event) => {
+      event.preventDefault();
+      setSortMethod("snippetID");
+    },
+    p: (event) => {
+      event.preventDefault();
+      setSortMethod("favoriteCount");
+    },
+    arrowUp: (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        setSortOrder("asc");
+      }
+    },
+    arrowDown: (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        setSortOrder("desc");
+      }
+    },
+  });
 
   useEffect(() => {
     if (isOpen) {

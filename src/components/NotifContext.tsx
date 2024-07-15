@@ -108,7 +108,7 @@ const Notif: React.FC<NotifProps> = ({ message, type, onClose, timeout }) => {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 transition-all duration-300 ease-in-out ${
+      className={`fixed bottom-4 right-4 transition-all duration-200 ease-in-out ${
         isVisible ?
           "translate-x-0 transform opacity-100"
         : "translate-x-full transform opacity-0"

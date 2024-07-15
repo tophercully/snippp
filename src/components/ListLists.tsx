@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createList } from "../backend/list/listFunctions";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { GoogleUser } from "../typeInterfaces";
@@ -32,6 +32,58 @@ export const ListLists: React.FC<UserListsProps> = ({
   const [newDescription, setNewDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const { showNotif } = useNotif();
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    itemRefs.current = itemRefs.current.slice(0, lists.length);
+  }, [lists]);
+
+  const scrollToSelectedItem = () => {
+    if (itemRefs.current[selectedIndex]) {
+      itemRefs.current[selectedIndex]?.scrollIntoView({
+        behavior: "auto",
+        block: "nearest",
+      });
+    }
+  };
+
+  useEffect(() => {
+    scrollToSelectedItem();
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "ArrowUp":
+          event.preventDefault();
+          setSelectedIndex((prev) =>
+            event.shiftKey ? 0 : Math.max(0, prev - 1),
+          );
+          break;
+        case "ArrowDown":
+          event.preventDefault();
+          setSelectedIndex((prev) =>
+            event.shiftKey ?
+              lists.length - 1
+            : Math.min(lists.length - 1, prev + 1),
+          );
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          if (lists[selectedIndex]) {
+            onSelectList(lists[selectedIndex]);
+          }
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lists, selectedIndex, onSelectList]);
 
   const handleAddList = () => {
     setIsAdding(true);
@@ -40,11 +92,6 @@ export const ListLists: React.FC<UserListsProps> = ({
   const handleSaveList = async () => {
     if (userProfile) {
       setIsSaving(true);
-
-      // Reset form and hide it
-      setNewListName("");
-      setNewDescription("");
-      setIsAdding(false);
 
       try {
         const result = await createList({
@@ -64,6 +111,12 @@ export const ListLists: React.FC<UserListsProps> = ({
         showNotif("List Created", "success", 5000);
       } catch (error) {
         showNotif("Error Saving List", "error", 5000);
+      } finally {
+        // Reset form and hide it
+        setNewListName("");
+        setNewDescription("");
+        setIsAdding(false);
+        setIsSaving(false);
       }
     }
   };
@@ -77,7 +130,10 @@ export const ListLists: React.FC<UserListsProps> = ({
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
       <h1 className="bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
-      <div className="relative h-full w-full overflow-y-auto">
+      <div
+        ref={containerRef}
+        className="relative h-full w-full overflow-y-auto"
+      >
         {isAdding && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
             <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
@@ -122,11 +178,19 @@ export const ListLists: React.FC<UserListsProps> = ({
             </div>
           </div>
         )}
-        {lists.map((list) => (
+        {lists.map((list, index) => (
           <div
             key={list.listid}
-            className="flex w-full cursor-pointer flex-col gap-2 border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-900 dark:hover:bg-base-700"
-            onClick={() => onSelectList(list)}
+            ref={(el) => (itemRefs.current[index] = el)}
+            className={`flex w-full cursor-pointer flex-col gap-2 border-b border-dashed border-base-300 p-5 ${
+              index === selectedIndex ?
+                "bg-base-200 dark:bg-base-700"
+              : "bg-base-50 dark:bg-base-900"
+            } hover:bg-base-200 dark:hover:bg-base-700`}
+            onClick={() => {
+              setSelectedIndex(index);
+              onSelectList(list);
+            }}
           >
             <h2 className="flex items-center gap-2 text-xl text-base-900 dark:text-base-50">
               {list.listname}

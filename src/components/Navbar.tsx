@@ -22,6 +22,8 @@ export const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
     useState<boolean>(false);
+  const [isShortcutsPopupOpen, setIsShortcutsPopupOpen] =
+    useState<boolean>(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -84,154 +86,292 @@ export const Navbar: React.FC = () => {
     }
   }, [userProfile, isUserCreated, setUserToken, setIsUserCreated]);
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "?") {
+        setIsShortcutsPopupOpen(!isShortcutsPopupOpen);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [isShortcutsPopupOpen]);
+
   const isBuilderPage = window.location.pathname.includes("builder");
 
   return (
-    <div className="absolute left-0 right-0 top-0 w-full p-2 lg:px-10">
-      <div className="flex h-fit w-full items-center justify-start gap-5">
-        <a
-          href="/"
-          className="group flex items-center gap-1 rounded-sm bg-base-950 p-3 text-base-50 dark:bg-base-50 dark:text-base-950"
-        >
-          <img
-            src="/scissors.svg"
-            className="h-6 w-6 brightness-0 invert dark:invert-0"
-          />
-          <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out group-hover:max-w-xs group-hover:px-3">
-            SNIPPP
-          </span>
-        </a>
-        <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
+    <>
+      <div className="absolute left-0 right-0 top-0 w-full p-2 lg:px-10">
+        <div className="flex h-fit w-full items-center justify-start gap-5">
           <a
-            href="/browse"
-            className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+            href="/"
+            className="group flex items-center gap-1 rounded-sm bg-base-950 p-3 text-base-50 dark:bg-base-50 dark:text-base-950"
           >
-            BROWSE
+            <img
+              src="/scissors.svg"
+              className="h-6 w-6 brightness-0 invert dark:invert-0"
+            />
+            <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out group-hover:max-w-xs group-hover:px-3">
+              SNIPPP
+            </span>
           </a>
-          {Object.keys(categories).length > 0 && (
-            <div className="relative">
-              <button
-                onClick={toggleCategoryDropdown}
-                className="flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
-              >
-                CATEGORIES
-                <svg
-                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${
-                    isCategoryDropdownOpen ? "rotate-180" : ""
-                  }`}
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+          <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
+            <a
+              href="/browse"
+              className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+            >
+              BROWSE
+            </a>
+            {Object.keys(categories).length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={toggleCategoryDropdown}
+                  className="flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-              {isCategoryDropdownOpen && (
-                <div className="absolute left-0 z-20 mt-2 w-48 rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
-                  <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
-                    Languages
+                  CATEGORIES
+                  <svg
+                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                      isCategoryDropdownOpen ? "rotate-180" : ""
+                    }`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                {isCategoryDropdownOpen && (
+                  <div className="absolute left-0 z-20 mt-2 w-48 rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
+                    <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
+                      Languages
+                    </div>
+                    {Object.entries(categories)
+                      .filter(([, info]) => info.kind === "language")
+                      .map(([key, info]) => (
+                        <a
+                          key={key}
+                          href={`/browse/${key}`}
+                          className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                          onClick={() => setIsCategoryDropdownOpen(false)}
+                        >
+                          {info.name.toUpperCase()}
+                        </a>
+                      ))}
+                    <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
+                      Frameworks/Libraries
+                    </div>
+                    {Object.entries(categories)
+                      .filter(([, info]) => info.kind === "framework/library")
+                      .map(([key, info]) => (
+                        <a
+                          key={key}
+                          href={`/browse/${key}`}
+                          className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                          onClick={() => setIsCategoryDropdownOpen(false)}
+                        >
+                          {info.name.toUpperCase()}
+                        </a>
+                      ))}
                   </div>
-                  {Object.entries(categories)
-                    .filter(([, info]) => info.kind === "language")
-                    .map(([key, info]) => (
-                      <a
-                        key={key}
-                        href={`/browse/${key}`}
-                        className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                        onClick={() => setIsCategoryDropdownOpen(false)}
-                      >
-                        {info.name.toUpperCase()}
-                      </a>
-                    ))}
-                  <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
-                    Frameworks/Libraries
-                  </div>
-                  {Object.entries(categories)
-                    .filter(([, info]) => info.kind === "framework/library")
-                    .map(([key, info]) => (
-                      <a
-                        key={key}
-                        href={`/browse/${key}`}
-                        className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                        onClick={() => setIsCategoryDropdownOpen(false)}
-                      >
-                        {info.name.toUpperCase()}
-                      </a>
-                    ))}
+                )}
+              </div>
+            )}
+            <a
+              href="/about"
+              className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+            >
+              ABOUT
+            </a>
+          </div>
+
+          {!userProfile && (
+            <div
+              onClick={handleSignIn}
+              className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-200 hover:cursor-pointer hover:bg-base-900 dark:invert"
+            >
+              <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 ease-in-out group-hover:max-w-xs group-hover:pl-4">
+                Sign in with Google
+              </span>
+              <img
+                src="/person.svg"
+                className="rounded-sm p-3"
+              />
+            </div>
+          )}
+          {userProfile && !isBuilderPage && (
+            <a
+              href="/builder"
+              className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-200 hover:cursor-pointer hover:bg-base-900 dark:invert"
+            >
+              <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 ease-in-out group-hover:max-w-xs group-hover:pl-4">
+                CREATE SNIPPET
+              </span>
+              <img
+                src="/add.svg"
+                className="rounded-sm p-2"
+              />
+            </a>
+          )}
+          {userProfile && (
+            <div className={`relative ${isBuilderPage ? "ml-auto" : ""}`}>
+              <img
+                onClick={toggleDropdown}
+                src={userProfile.picture}
+                className={`z-30 max-h-12 cursor-pointer ${isDropdownOpen ? "rounded-t-sm" : "rounded-sm"} bg-base-950`}
+                alt="User Profile"
+              />
+              {isDropdownOpen && (
+                <div className="absolute right-0 z-20 max-h-[25vh] w-48 rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
+                  <a href="/dashboard">
+                    <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
+                      DASHBOARD
+                    </button>
+                  </a>
+                  <a href={`/user/${userProfile.id}`}>
+                    <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
+                      PROFILE
+                    </button>
+                  </a>
+                  <button
+                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
+                    onClick={handleSignIn}
+                  >
+                    SIGN OUT
+                  </button>
                 </div>
               )}
             </div>
           )}
-          <a
-            href="/about"
-            className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
-          >
-            ABOUT
-          </a>
         </div>
-
-        {!userProfile && (
-          <div
-            onClick={handleSignIn}
-            className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-200 hover:cursor-pointer hover:bg-base-900 dark:invert"
-          >
-            <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 ease-in-out group-hover:max-w-xs group-hover:pl-4">
-              Sign in with Google
-            </span>
-            <img
-              src="/person.svg"
-              className="rounded-sm p-3"
-            />
-          </div>
-        )}
-        {userProfile && !isBuilderPage && (
-          <a
-            href="/builder"
-            className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-200 hover:cursor-pointer hover:bg-base-900 dark:invert"
-          >
-            <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 ease-in-out group-hover:max-w-xs group-hover:pl-4">
-              CREATE SNIPPET
-            </span>
-            <img
-              src="/add.svg"
-              className="rounded-sm p-2"
-            />
-          </a>
-        )}
-        {userProfile && (
-          <div className={`relative ${isBuilderPage ? "ml-auto" : ""}`}>
-            <img
-              onClick={toggleDropdown}
-              src={userProfile.picture}
-              className={`z-30 max-h-12 cursor-pointer ${isDropdownOpen ? "rounded-t-sm" : "rounded-sm"} bg-base-950`}
-              alt="User Profile"
-            />
-            {isDropdownOpen && (
-              <div className="absolute right-0 z-20 max-h-[25vh] w-48 rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
-                <a href="/dashboard">
-                  <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
-                    DASHBOARD
-                  </button>
-                </a>
-                <a href={`/user/${userProfile.id}`}>
-                  <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
-                    PROFILE
-                  </button>
-                </a>
-                <button
-                  className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                  onClick={handleSignIn}
-                >
-                  SIGN OUT
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </div>
+
+      {isShortcutsPopupOpen && (
+        <div className="fixed bottom-4 right-4 z-50 rounded-sm bg-base-950 p-4 text-base-50 shadow-lg">
+          <h3 className="mb-2 font-bold">Keyboard Shortcuts</h3>
+          <ul className="flex max-h-52 flex-col flex-wrap gap-x-8 gap-y-2">
+            <li className="row-span-2 flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                ?
+              </span>
+              <span>Toggle Control Popup</span>
+            </li>
+            <li className="row-span-2 flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                /
+              </span>
+              <span>Search</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                ↑
+              </span>
+              <span>Selection Up</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                ↓
+              </span>
+              <span>Selection Down</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ⇧
+                </span>
+
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ↑
+                </span>
+              </span>
+              <span>Jump To First Selection</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ⇧
+                </span>
+
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ↓
+                </span>
+              </span>
+              <span>Jump To Last Selection</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                F
+              </span>
+              <span>Add/Remove Favorite</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                ⏎
+              </span>
+              <span>Copy Snippet</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                →
+              </span>
+              <span>Select List</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                ←
+              </span>
+              <span>Deselect List</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ⌘
+                </span>
+
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ↑
+                </span>
+              </span>
+              <span>Sort Order Ascending</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ⌘
+                </span>
+
+                <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                  ↓
+                </span>
+              </span>
+              <span>Sort Order Descending</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                A
+              </span>
+              <span>Sort Alphabetically</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                T
+              </span>
+              <span>Sort By Time</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+                P
+              </span>
+              <span>Sort By Popularity</span>
+            </li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 };

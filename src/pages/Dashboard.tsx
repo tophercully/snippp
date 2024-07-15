@@ -22,6 +22,7 @@ import { setPageTitle } from "../utils/setPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
+import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 type SortOrder = "asc" | "desc";
 
@@ -104,7 +105,6 @@ export const Dashboard: React.FC = () => {
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  console.log(list);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -146,6 +146,17 @@ export const Dashboard: React.FC = () => {
       }
     }
   }, [listid, lists]);
+
+  useKeyboardControls({
+    arrowLeft: async () => {
+      if (list) {
+        setList(null);
+        navigate("/dashboard");
+        setLists(defaultLists);
+        fetchAndSetLists();
+      }
+    },
+  });
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -232,7 +243,8 @@ export const Dashboard: React.FC = () => {
       let result: Snippet[] = [];
       if (list) {
         if (list.listid === "mysnippets") {
-          result = await loadUserSnippets(userProfile.id);
+          result = await loadUserSnippets(userProfile.id, userProfile.id);
+          console.log(result);
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userProfile.id });
         } else {
@@ -354,7 +366,7 @@ export const Dashboard: React.FC = () => {
             </h1>
             <a
               href={list?.listid === "mysnippets" ? "/builder" : "/browse"}
-              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
+              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-75 dark:bg-base-50 dark:text-base-950"
             >
               {list?.listid === "mysnippets" ?
                 "CREATE SNIPPPET"
@@ -397,7 +409,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex h-full w-full flex-col lg:w-1/3">
             <div className="flex w-full flex-col justify-start">
               <button
-                className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
+                className="group flex h-10 items-center gap-3 p-2 duration-75 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
                 onClick={async () => {
                   setList(null);
                   navigate("/dashboard");
@@ -419,28 +431,26 @@ export const Dashboard: React.FC = () => {
                   >
                     {list?.listname}
                   </a>
-                  {(list.listid == "creations" || list.listid == "favorites") &&
-                    userProfile?.id && (
-                      <SnipppButton
-                        size="sm"
-                        onClick={() => {
-                          exportAndDownloadUserSnippets(
-                            list.listname,
-                            snippets,
-                          );
-                          showNotif(
-                            "Downloaded Snippets as JSON",
-                            "success",
-                            5000,
-                          );
-                        }}
-                      >
-                        <img
-                          src="/download.svg"
-                          className="invert group-hover:invert-0 dark:invert-0"
-                        />
-                      </SnipppButton>
-                    )}
+                  {(list.listid == "mysnippets" ||
+                    list.listid == "favorites") && (
+                    <SnipppButton
+                      size="sm"
+                      tooltip="Export Snippets as JSON"
+                      onClick={() => {
+                        exportAndDownloadUserSnippets(list.listname, snippets);
+                        showNotif(
+                          "Downloaded Snippets as JSON",
+                          "success",
+                          5000,
+                        );
+                      }}
+                    >
+                      <img
+                        src="/download.svg"
+                        className="invert group-hover:invert-0 dark:invert-0"
+                      />
+                    </SnipppButton>
+                  )}
                   {list.listid != "mysnippets" &&
                     list.listid != "favorites" && (
                       <div className="flex gap-4">
@@ -449,6 +459,7 @@ export const Dashboard: React.FC = () => {
                           fit={true}
                           size={"sm"}
                           colorType="neutral"
+                          tooltip="Share List"
                         >
                           <img
                             src="/share.svg"
@@ -460,6 +471,7 @@ export const Dashboard: React.FC = () => {
                           fit={true}
                           size={"sm"}
                           colorType="neutral"
+                          tooltip="Edit List"
                         >
                           <img
                             src="/edit.svg"
@@ -471,9 +483,10 @@ export const Dashboard: React.FC = () => {
                           fit={true}
                           size={"sm"}
                           colorType="delete"
+                          tooltip="Delete List"
                         >
                           <img
-                            src="/x.svg"
+                            src="/trash.svg"
                             className="invert group-hover:invert-0 dark:invert-0"
                           />
                         </SnipppButton>
@@ -484,7 +497,7 @@ export const Dashboard: React.FC = () => {
                 {list?.description && (
                   <div className="mt-4">
                     <p
-                      className={`overflow-hidden font-thin transition-all duration-300 ${
+                      className={`overflow-hidden font-thin transition-all duration-75 ${
                         isDescriptionExpanded ? "max-h-[1000px]" : "max-h-[3em]"
                       }`}
                       dangerouslySetInnerHTML={{
@@ -515,7 +528,7 @@ export const Dashboard: React.FC = () => {
         )}
 
         {selection && (
-          <div className="hidden h-full overflow-y-auto lg:flex lg:w-2/3">
+          <div className="hidden h-full lg:flex lg:w-2/3">
             <Display
               selection={selection}
               updateSnippetMod={updateSnippetMod}

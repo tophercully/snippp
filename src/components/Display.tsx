@@ -22,6 +22,8 @@ import {
 import formatPostgresDate from "../utils/formatPostgresDate";
 
 import { formatDescription } from "../utils/formatDescription";
+import SnipppButton from "./SnipppButton";
+import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -98,52 +100,87 @@ export const Display = ({
         copyCount: (snippetMod.copyCount || 0) + 1,
       });
       setLastCopyTime(now);
-    } else {
-      showNotif("Please wait before copying again", "error", 2000);
     }
   };
 
   const handleAddFavorite = async () => {
     if (userProfile) {
-      setIsLoading(true);
+      // Calculate the new favorite count
+      const currentFavoriteCount =
+        snippetMod.favoriteCount ?? selection.favoriteCount;
+      const newFavoriteCount = Number(currentFavoriteCount) + 1;
+
+      // Optimistic update
+      updateSnippetMod(snippetID, {
+        favoriteStatus: true,
+        favoriteCount: newFavoriteCount,
+      });
+
       try {
         await addSnippetToFavorites({
           userID: userProfile.id,
           snippetIDToAdd: snippetID,
         });
-        updateSnippetMod(snippetID, {
-          favoriteStatus: true,
-          favoriteCount: (snippetMod.favoriteCount || 0) + 1,
-        });
-        showNotif("Added Favorite", "success", 2000);
+        // showNotif("Added Favorite", "success", 2000);
       } catch (error) {
         console.error("Failed to add favorite:", error);
-      } finally {
-        setIsLoading(false);
+        // Revert optimistic update
+        updateSnippetMod(snippetID, {
+          favoriteStatus: false,
+          favoriteCount: currentFavoriteCount,
+        });
+        showNotif("Failed to add favorite", "error", 2000);
       }
     }
   };
 
   const handleRemoveFavorite = async () => {
     if (userProfile) {
-      setIsLoading(true);
+      // Calculate the new favorite count
+      const currentFavoriteCount =
+        snippetMod.favoriteCount ?? selection.favoriteCount;
+      const newFavoriteCount = Math.max(currentFavoriteCount - 1, 0);
+
+      // Optimistic update
+      updateSnippetMod(snippetID, {
+        favoriteStatus: false,
+        favoriteCount: newFavoriteCount,
+      });
+
       try {
         await removeSnippetFromFavorites({
           userID: userProfile.id,
           snippetIDToRemove: snippetID,
         });
-        updateSnippetMod(snippetID, {
-          favoriteStatus: false,
-          favoriteCount: Math.max((snippetMod.favoriteCount || 1) - 1, 0),
-        });
-        showNotif("Removed Favorite", "success", 2000);
+        // showNotif("Removed Favorite", "success", 2000);
       } catch (error) {
         console.error("Failed to remove favorite:", error);
-      } finally {
-        setIsLoading(false);
+        // Revert optimistic update
+        updateSnippetMod(snippetID, {
+          favoriteStatus: true,
+          favoriteCount: currentFavoriteCount,
+        });
+        showNotif("Failed to remove favorite", "error", 2000);
       }
     }
   };
+
+  useKeyboardControls({
+    enter: (event) => {
+      event.preventDefault();
+      copySnippet();
+    },
+    f: (event) => {
+      event.preventDefault();
+      if (userProfile) {
+        if (favoriteStatus) {
+          handleRemoveFavorite();
+        } else {
+          handleAddFavorite();
+        }
+      }
+    },
+  });
 
   const fetchUserLists = async () => {
     if (userProfile) {
@@ -295,7 +332,14 @@ export const Display = ({
                 />
               </span>
             )}
-            <span className="flex h-fit items-center gap-2">
+            <span
+              className="group relative flex h-fit w-fit cursor-pointer items-center gap-2"
+              onClick={copySnippet}
+            >
+              <div className="absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-base-100 dark:text-black">
+                Times this snippet has been copied
+                <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-800 dark:border-t-base-100"></div>
+              </div>
               <img
                 src="/copy.svg"
                 className="invert dark:invert-0"
@@ -307,7 +351,7 @@ export const Display = ({
         {worthExpanding && (
           <div className="relative mt-4">
             <p
-              className={`overflow-hidden font-thin transition-all duration-300 ${
+              className={`overflow-hidden font-thin transition-all duration-75 ${
                 isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
               }`}
               dangerouslySetInnerHTML={{
@@ -341,10 +385,10 @@ export const Display = ({
 
         <div
           onClick={copySnippet}
-          className="group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-200 hover:cursor-pointer dark:border-base-800"
+          className="group relative h-full w-full overflow-y-auto border border-dashed border-base-200 p-4 text-sm duration-75 hover:cursor-pointer dark:border-base-800"
         >
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-75 group-hover:opacity-100">
               <span className="rounded-sm bg-black bg-opacity-50 px-2 py-1 text-base-50 dark:bg-base-50 dark:text-base-950">
                 CLICK TO COPY
               </span>
@@ -366,124 +410,127 @@ export const Display = ({
             id="controls"
             className="mb-3 flex items-center justify-start gap-5 p-2 lg:mb-0 lg:p-0"
           >
+            <SnipppButton
+              onClick={copySnippet}
+              size="md"
+              tooltip="Copy Snippet"
+            >
+              <img
+                src="/copy.svg"
+                className="mx-10 h-5 invert group-hover:invert-0 dark:invert-0"
+              />
+            </SnipppButton>
+
             {userProfile && !favoriteStatus && (
-              <button
-                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+              <SnipppButton
                 onClick={handleAddFavorite}
                 disabled={isLoading}
+                colorType="add"
+                fit={true}
+                size="md"
+                tooltip="Add/Remove Favorite"
               >
-                <div
-                  className="absolute inset-0 -translate-x-[110%] transform bg-green-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                  aria-hidden="true"
-                />
-                <span className="relative flex items-center gap-3">
+                <span className="flex items-center">
                   <img
                     src="/heart-empty.svg"
                     className="h-5 group-hover:invert dark:invert"
                   />
-                  <span className="hidden sm:inline">
-                    {isLoading ? "ADDING..." : "ADD FAVORITE"}
+                  <span className="hidden text-sm font-normal sm:inline">
+                    {isLoading ? "ADDING..." : ""}
                   </span>
                 </span>
-              </button>
+              </SnipppButton>
             )}
             {userProfile && favoriteStatus && (
-              <button
-                className="group relative flex w-1/2 items-center justify-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+              <SnipppButton
                 onClick={handleRemoveFavorite}
                 disabled={isLoading}
+                colorType="delete"
+                fit={true}
+                size="md"
+                tooltip="Add/Remove Favorite"
               >
-                <div
-                  className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                  aria-hidden="true"
-                />
-                <span className="relative flex items-center gap-3">
+                <span className="flex items-center">
                   <img
                     src="/heart-full.svg"
                     className="h-5 group-hover:invert dark:invert"
                   />
-                  <span className="hidden sm:inline">
-                    {isLoading ? "REMOVING..." : "REMOVE FAVORITE"}
+                  <span className="hidden text-sm font-normal sm:inline">
+                    {isLoading ? "REMOVING..." : ""}
                   </span>
                 </span>
-              </button>
+              </SnipppButton>
             )}
+
             {userProfile && (
-              <button
+              <SnipppButton
                 onClick={() => {
                   setShowListPopup(true);
                   fetchUserLists();
                 }}
-                className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                colorType="neutral"
+                size="md"
+                tooltip="Add to List"
               >
-                <div
-                  className="absolute inset-0 -translate-x-[110%] transform bg-purple-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                  aria-hidden="true"
-                />
-                <span className="relative flex items-center gap-3">
-                  <img
-                    src="/add-to-list.svg"
-                    className="h-5 invert group-hover:invert-0 dark:invert-0"
-                  />
-                </span>
-              </button>
-            )}
-            <button
-              onClick={handleShare}
-              className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
-            >
-              <div
-                className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                aria-hidden="true"
-              />
-              <span className="relative flex items-center gap-3">
                 <img
-                  src="/share.svg"
+                  src="/folder.svg"
                   className="h-5 invert group-hover:invert-0 dark:invert-0"
                 />
-              </span>
-            </button>
+              </SnipppButton>
+            )}
+            <SnipppButton
+              onClick={handleShare}
+              colorType="neutral"
+              size="md"
+              tooltip="Share snippet"
+            >
+              <img
+                src="/share.svg"
+                className="h-5 invert group-hover:invert-0 dark:invert-0"
+              />
+            </SnipppButton>
+
+            <div className="mr-auto"></div>
             {userProfile && userProfile.id === authorID && (
               <>
-                <a
-                  href={`/builder/${selection.snippetID}`}
-                  className="group relative ml-auto flex items-center gap-3 overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                <SnipppButton
+                  onClick={() =>
+                    (window.location.href = `/builder/${selection.snippetID}`)
+                  }
+                  colorType="neutral"
+                  size="md"
+                  className="ml-auto"
+                  tooltip="Edit Snippet"
                 >
-                  <div
-                    className="absolute inset-0 -translate-x-[110%] transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                    aria-hidden="true"
-                  />
-                  <span className="relative flex items-center gap-3">
+                  <span className="flex items-center gap-3">
                     <img
                       src="/edit.svg"
                       className="h-5 group-hover:invert dark:invert"
                     />
                     <span className="hidden 2xl:inline">EDIT</span>
                   </span>
-                </a>
-                <button
+                </SnipppButton>
+                <SnipppButton
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="group relative overflow-hidden rounded-sm border p-2 text-base-950 duration-200 hover:text-base-50 dark:border-base-800 dark:bg-base-900 dark:text-base-50"
+                  colorType="delete"
+                  size="md"
+                  tooltip="Delete Snippet"
                 >
-                  <div
-                    className="absolute inset-0 -translate-x-[110%] transform bg-red-600 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-                    aria-hidden="true"
-                  />
-                  <span className="relative flex items-center gap-3">
+                  <span className="flex items-center gap-3">
                     <img
-                      src="/x.svg"
+                      src="/trash.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
                     <span className="hidden 2xl:inline">DELETE</span>
                   </span>
-                </button>
+                </SnipppButton>
               </>
             )}
           </div>
         )}
         {showDeleteConfirm && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="rounded-lg bg-white p-6 dark:bg-base-800">
+            <div className="rounded-sm bg-white p-6 dark:bg-base-800">
               <h2 className="mb-4 text-xl">
                 Are you sure you want to delete this snippet?
               </h2>
@@ -524,7 +571,7 @@ export const Display = ({
               </div>
               {isLoadingLists ?
                 <p className="mb-4 dark:text-base-200">Loading lists...</p>
-              : <div className="mb-4 max-h-[40svh] overflow-y-auto">
+              : <div className="mb-4 max-h-[40svh]">
                   {userLists.length > 0 ?
                     userLists.map((list) => (
                       <button

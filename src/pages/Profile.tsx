@@ -24,6 +24,7 @@ import { formatDescription } from "../utils/formatDescription";
 import { ProfileInfo } from "../components/ProfileInfo";
 import { fetchUserProfile } from "../backend/user/userFunctions";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
+import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 type SortOrder = "asc" | "desc";
 
@@ -159,6 +160,17 @@ export const Profile: React.FC = () => {
     }
   }, [listid, lists]);
 
+  useKeyboardControls({
+    arrowLeft: async () => {
+      if (list) {
+        setList(null);
+        navigate("/dashboard");
+        setLists(defaultLists);
+        fetchAndSetLists();
+      }
+    },
+  });
+
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
       setSnippetMods((prevMods) => ({
@@ -244,7 +256,7 @@ export const Profile: React.FC = () => {
       let result: Snippet[] = [];
       if (list) {
         if (list.listid === "creations") {
-          result = await loadUserSnippets(userid as string);
+          result = await loadUserSnippets(userid as string, userProfile.id);
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userid as string });
         } else {
@@ -381,7 +393,7 @@ export const Profile: React.FC = () => {
             </h1>
             <a
               href={list?.listid === "creations" ? "/builder" : "/browse"}
-              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-300 dark:bg-base-50 dark:text-base-950"
+              className="text-semibold w-fit bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 duration-75 dark:bg-base-50 dark:text-base-950"
             >
               {list?.listid === "creations" ?
                 "CREATE SNIPPPET"
@@ -430,7 +442,7 @@ export const Profile: React.FC = () => {
               <div className="flex h-full w-full flex-col lg:w-1/3">
                 <div className="flex w-full flex-col justify-start">
                   <button
-                    className="group flex h-10 items-center gap-3 p-2 duration-200 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
+                    className="group flex h-10 items-center gap-3 p-2 duration-75 hover:gap-2 hover:bg-base-200 hover:py-1 dark:invert"
                     onClick={async () => {
                       setList(null);
                       navigate(`/user/${userid}`);
@@ -457,6 +469,7 @@ export const Profile: React.FC = () => {
                         userid == userProfile?.id && (
                           <SnipppButton
                             size="sm"
+                            tooltip={`Download ${list.listname} JSON`}
                             onClick={() => {
                               exportAndDownloadUserSnippets(
                                 list.listname,
@@ -506,9 +519,10 @@ export const Profile: React.FC = () => {
                               fit={true}
                               size={"sm"}
                               colorType="delete"
+                              tooltip="Delete List"
                             >
                               <img
-                                src="/x.svg"
+                                src="/trash.svg"
                                 className="invert group-hover:invert-0 dark:invert-0"
                               />
                             </SnipppButton>
@@ -519,7 +533,7 @@ export const Profile: React.FC = () => {
                     {list?.description && (
                       <div className="mt-4">
                         <p
-                          className={`overflow-hidden font-thin transition-all duration-300 ${
+                          className={`overflow-hidden font-thin transition-all duration-75 ${
                             isDescriptionExpanded ? "max-h-[1000px]" : (
                               "max-h-[3em]"
                             )
@@ -552,7 +566,7 @@ export const Profile: React.FC = () => {
             )}
 
             {selection && (
-              <div className="hidden h-full overflow-y-auto lg:flex lg:w-2/3">
+              <div className="hidden h-full lg:flex lg:w-2/3">
                 <Display
                   selection={selection}
                   updateSnippetMod={updateSnippetMod}
