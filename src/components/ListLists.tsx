@@ -4,7 +4,6 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { GoogleUser } from "../typeInterfaces";
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "./SnipppButton";
-import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 export interface ListData {
   listid: string | number;
@@ -54,28 +53,37 @@ export const ListLists: React.FC<UserListsProps> = ({
     scrollToSelectedItem();
   }, [selectedIndex]);
 
-  useKeyboardControls({
-    arrowUp: (event) => {
-      event.preventDefault();
-      setSelectedIndex((prev) => {
-        return event.shiftKey ? 0 : Math.max(0, prev - 1);
-      });
-    },
-    arrowDown: (event) => {
-      event.preventDefault();
-      setSelectedIndex((prev) => {
-        return event.shiftKey ?
-            lists.length - 1
-          : Math.min(lists.length - 1, prev + 1);
-      });
-    },
-    arrowRight: (event) => {
-      event.preventDefault();
-      if (lists[selectedIndex]) {
-        onSelectList(lists[selectedIndex]);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "ArrowUp":
+          event.preventDefault();
+          setSelectedIndex((prev) =>
+            event.shiftKey ? 0 : Math.max(0, prev - 1),
+          );
+          break;
+        case "ArrowDown":
+          event.preventDefault();
+          setSelectedIndex((prev) =>
+            event.shiftKey ?
+              lists.length - 1
+            : Math.min(lists.length - 1, prev + 1),
+          );
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          if (lists[selectedIndex]) {
+            onSelectList(lists[selectedIndex]);
+          }
+          break;
       }
-    },
-  });
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lists, selectedIndex, onSelectList]);
 
   const handleAddList = () => {
     setIsAdding(true);
@@ -125,7 +133,6 @@ export const ListLists: React.FC<UserListsProps> = ({
       <div
         ref={containerRef}
         className="relative h-full w-full overflow-y-auto"
-        tabIndex={-1} // Remove focus to avoid focusing on the container
       >
         {isAdding && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
@@ -175,9 +182,11 @@ export const ListLists: React.FC<UserListsProps> = ({
           <div
             key={list.listid}
             ref={(el) => (itemRefs.current[index] = el)}
-            className={`flex w-full cursor-pointer flex-col gap-2 border-b border-dashed border-base-300 bg-base-50 p-5 hover:bg-base-200 dark:bg-base-900 dark:hover:bg-base-700 ${
-              index === selectedIndex ? "bg-base-200 dark:bg-base-700" : ""
-            }`}
+            className={`flex w-full cursor-pointer flex-col gap-2 border-b border-dashed border-base-300 p-5 ${
+              index === selectedIndex ?
+                "bg-base-200 dark:bg-base-700"
+              : "bg-base-50 dark:bg-base-900"
+            } hover:bg-base-200 dark:hover:bg-base-700`}
             onClick={() => {
               setSelectedIndex(index);
               onSelectList(list);
