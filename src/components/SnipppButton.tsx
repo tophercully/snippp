@@ -55,7 +55,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
   return (
     <div className={`relative ${fit ? "inline-block" : "w-full"}`}>
       {tooltip && showTooltip && (
-        <div className="absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-800 px-3 py-2 text-sm text-white dark:bg-base-100 dark:text-black">
+        <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-800 px-3 py-2 text-sm text-white dark:bg-base-100 dark:text-black">
           {tooltip}
           <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-800 dark:border-t-base-100"></div>
         </div>
@@ -71,7 +71,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
           className={`absolute inset-0 -translate-x-[101%] transform ${getColorClass()} transition-transform duration-75 ease-in-out group-hover:translate-x-0`}
           aria-hidden="true"
         />
-        <span className="relative z-10 text-xl font-bold">{children}</span>
+        <span className="relative text-xl font-bold">{children}</span>
       </button>
     </div>
   );

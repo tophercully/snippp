@@ -7,6 +7,7 @@ import { GoogleUser, Snippet } from "../typeInterfaces";
 import { useParams } from "react-router-dom";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { setPageTitle } from "../utils/setPageTitle";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -85,9 +86,7 @@ export const SnippetPage: React.FC = () => {
       <div className="relative flex-grow">
         {(isLoading || isTransitioning) && (
           <div className="absolute inset-0 flex items-center justify-center bg-base-100 dark:bg-base-900">
-            <p className="text-xl text-base-950 dark:text-base-50">
-              Loading...
-            </p>
+            <LoadingSpinner />
           </div>
         )}
         {error && (
