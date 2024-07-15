@@ -56,24 +56,21 @@ export const ListLists: React.FC<UserListsProps> = ({
 
   useKeyboardControls({
     arrowUp: (event) => {
+      event.preventDefault();
       setSelectedIndex((prev) => {
-        const newIndex =
-          event.shiftKey ? 0
-          : prev > 0 ? prev - 1
-          : prev;
-        return newIndex;
+        return event.shiftKey ? 0 : Math.max(0, prev - 1);
       });
     },
     arrowDown: (event) => {
+      event.preventDefault();
       setSelectedIndex((prev) => {
-        const newIndex =
-          event.shiftKey ? lists.length - 1
-          : prev < lists.length - 1 ? prev + 1
-          : prev;
-        return newIndex;
+        return event.shiftKey ?
+            lists.length - 1
+          : Math.min(lists.length - 1, prev + 1);
       });
     },
-    arrowRight: () => {
+    arrowRight: (event) => {
+      event.preventDefault();
       if (lists[selectedIndex]) {
         onSelectList(lists[selectedIndex]);
       }
@@ -87,11 +84,6 @@ export const ListLists: React.FC<UserListsProps> = ({
   const handleSaveList = async () => {
     if (userProfile) {
       setIsSaving(true);
-
-      // Reset form and hide it
-      setNewListName("");
-      setNewDescription("");
-      setIsAdding(false);
 
       try {
         const result = await createList({
@@ -111,6 +103,12 @@ export const ListLists: React.FC<UserListsProps> = ({
         showNotif("List Created", "success", 5000);
       } catch (error) {
         showNotif("Error Saving List", "error", 5000);
+      } finally {
+        // Reset form and hide it
+        setNewListName("");
+        setNewDescription("");
+        setIsAdding(false);
+        setIsSaving(false);
       }
     }
   };
@@ -127,6 +125,7 @@ export const ListLists: React.FC<UserListsProps> = ({
       <div
         ref={containerRef}
         className="relative h-full w-full overflow-y-auto"
+        tabIndex={-1} // Remove focus to avoid focusing on the container
       >
         {isAdding && (
           <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">

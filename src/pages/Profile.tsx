@@ -162,10 +162,12 @@ export const Profile: React.FC = () => {
 
   useKeyboardControls({
     arrowLeft: async () => {
-      setList(null);
-      navigate("/dashboard");
-      setLists(defaultLists);
-      fetchAndSetLists();
+      if (list) {
+        setList(null);
+        navigate("/dashboard");
+        setLists(defaultLists);
+        fetchAndSetLists();
+      }
     },
   });
 
