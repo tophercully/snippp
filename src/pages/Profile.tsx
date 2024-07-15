@@ -24,6 +24,7 @@ import { formatDescription } from "../utils/formatDescription";
 import { ProfileInfo } from "../components/ProfileInfo";
 import { fetchUserProfile } from "../backend/user/userFunctions";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
+import { useKeyboardControls } from "../hooks/KeyboardControls";
 
 type SortOrder = "asc" | "desc";
 
@@ -158,6 +159,15 @@ export const Profile: React.FC = () => {
       }
     }
   }, [listid, lists]);
+
+  useKeyboardControls({
+    arrowLeft: async () => {
+      setList(null);
+      navigate("/dashboard");
+      setLists(defaultLists);
+      fetchAndSetLists();
+    },
+  });
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
