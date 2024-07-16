@@ -1,7 +1,7 @@
 // In SelectionsList.tsx
 import React, { useRef, useEffect, useState } from "react";
 import { Snippet } from "../../typeInterfaces";
-import { useWindowSize } from "@uidotdev/usehooks";
+import { useSessionStorage, useWindowSize } from "@uidotdev/usehooks";
 import { simplifyNumber } from "../../utils/simplifyNumber";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 
@@ -30,6 +30,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   );
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
+  const [isEditing] = useSessionStorage("isEditingList", false);
 
   const handleClick = (input: Snippet, index: number) => {
     if (input !== selection) {
@@ -50,37 +51,41 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   useEffect(() => {
     scrollToSelectedItem();
   }, [selectedIndex]);
-
-  useKeyboardControls({
-    arrowUp: (event) => {
-      if (!event.ctrlKey && !event.metaKey) {
-        setSelectedIndex((prev) => {
-          let newIndex;
-          if (event.shiftKey) {
-            newIndex = 0; // Jump to the first item
-          } else {
-            newIndex = prev > 0 ? prev - 1 : prev;
+  console.log(isEditing);
+  const keyboardControlOptions =
+    !isEditing ?
+      {
+        arrowUp: (event) => {
+          if (!event.ctrlKey && !event.metaKey) {
+            setSelectedIndex((prev) => {
+              let newIndex;
+              if (event.shiftKey) {
+                newIndex = 0; // Jump to the first item
+              } else {
+                newIndex = prev > 0 ? prev - 1 : prev;
+              }
+              setSelection(snippets[newIndex]);
+              return newIndex;
+            });
           }
-          setSelection(snippets[newIndex]);
-          return newIndex;
-        });
-      }
-    },
-    arrowDown: (event) => {
-      if (!event.ctrlKey && !event.metaKey) {
-        setSelectedIndex((prev) => {
-          let newIndex;
-          if (event.shiftKey) {
-            newIndex = snippets.length - 1; // Jump to the last item
-          } else {
-            newIndex = prev < snippets.length - 1 ? prev + 1 : prev;
+        },
+        arrowDown: (event) => {
+          if (!event.ctrlKey && !event.metaKey) {
+            setSelectedIndex((prev) => {
+              let newIndex;
+              if (event.shiftKey) {
+                newIndex = snippets.length - 1; // Jump to the last item
+              } else {
+                newIndex = prev < snippets.length - 1 ? prev + 1 : prev;
+              }
+              setSelection(snippets[newIndex]);
+              return newIndex;
+            });
           }
-          setSelection(snippets[newIndex]);
-          return newIndex;
-        });
+        },
       }
-    },
-  });
+    : {};
+  useKeyboardControls(keyboardControlOptions);
 
   useEffect(() => {
     itemRefs.current = itemRefs.current.slice(0, snippets.length);

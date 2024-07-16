@@ -6,7 +6,7 @@ import { ListSnippets } from "../components/browserComponents/ListSnippets";
 import { ListLists, ListData } from "../components/browserComponents/ListLists";
 import { Footer } from "../components/nav/Footer";
 import { Display } from "../components/browserComponents/Display";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loader/loadFavorites";
 import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
 import {
@@ -145,7 +145,8 @@ export const Profile: React.FC = () => {
   const [listsLoading, setListsLoading] = useState<boolean>(false);
   const [snippetsLoading, setSnippetsLoading] = useState<boolean>(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isAdding] = useSessionStorage("isAddingList", false);
+  const [isEditing, setIsEditing] = useSessionStorage("isEditingList", false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -185,16 +186,18 @@ export const Profile: React.FC = () => {
     }
   }, [listid, lists]);
 
-  useKeyboardControls({
-    arrowLeft: async () => {
-      if (list) {
-        setList(null);
-        navigate(`/user/${userid}`);
-        setLists(defaultLists);
-        fetchAndSetLists();
+  const keyboardControlOptions =
+    list && !isEditing && !isAdding ?
+      {
+        arrowLeft: async () => {
+          setList(null);
+          navigate("/dashboard");
+          setLists(defaultLists);
+          fetchAndSetLists();
+        },
       }
-    },
-  });
+    : {};
+  useKeyboardControls(keyboardControlOptions);
 
   const updateSnippetMod = useCallback(
     (id: number, mod: Partial<SnippetMod>) => {
@@ -276,12 +279,15 @@ export const Profile: React.FC = () => {
     setNewDescription("");
   };
   const fetchSnippets = useCallback(async () => {
-    if (userProfile && userProfile.id) {
+    if (userid) {
       setSnippetsLoading(true);
       let result: Snippet[] = [];
       if (list) {
         if (list.listid === "creations") {
-          result = await loadUserSnippets(userid as string, userProfile.id);
+          result = await loadUserSnippets(
+            userid as string,
+            userProfile ? userProfile.id : "",
+          );
         } else if (list.listid === "favorites") {
           result = await loadFavorites({ userID: userid as string });
         } else {
@@ -623,7 +629,7 @@ export const Profile: React.FC = () => {
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
           <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
             <h2 className="mb-4 text-center text-2xl dark:text-white">
-              Add New List
+              {`Edit ${list?.listname}`}
             </h2>
             <div className="mb-4">
               <label className="block text-sm font-medium text-base-700 dark:text-base-200">

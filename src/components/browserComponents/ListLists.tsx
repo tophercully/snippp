@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createList } from "../../backend/list/listFunctions";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { GoogleUser } from "../../typeInterfaces";
 import { useNotif } from "../../hooks/Notif";
 import SnipppButton from "../SnipppButton";
+import { useKeyboardControls } from "../../hooks/KeyboardControls";
 
 export interface ListData {
   listid: string | number;
@@ -27,7 +28,7 @@ export const ListLists: React.FC<UserListsProps> = ({
   onSelectList,
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const [isAdding, setIsAdding] = useState(false);
+  const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -53,37 +54,36 @@ export const ListLists: React.FC<UserListsProps> = ({
     scrollToSelectedItem();
   }, [selectedIndex]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "ArrowUp":
-          event.preventDefault();
-          setSelectedIndex((prev) =>
-            event.shiftKey ? 0 : Math.max(0, prev - 1),
-          );
-          break;
-        case "ArrowDown":
-          event.preventDefault();
-          setSelectedIndex((prev) =>
-            event.shiftKey ?
-              lists.length - 1
-            : Math.min(lists.length - 1, prev + 1),
-          );
-          break;
-        case "ArrowRight":
+  const keyboardControlOptions =
+    !isAdding ?
+      {
+        arrowUp: (event: KeyboardEvent) => {
+          if (!event.ctrlKey && !event.metaKey) {
+            event.preventDefault();
+            setSelectedIndex((prev) =>
+              event.shiftKey ? 0 : Math.max(0, prev - 1),
+            );
+          }
+        },
+        arrowDown: (event: KeyboardEvent) => {
+          if (!event.ctrlKey && !event.metaKey) {
+            event.preventDefault();
+            setSelectedIndex((prev) =>
+              event.shiftKey ?
+                lists.length - 1
+              : Math.min(lists.length - 1, prev + 1),
+            );
+          }
+        },
+        arrowRight: (event: KeyboardEvent) => {
           event.preventDefault();
           if (lists[selectedIndex]) {
             onSelectList(lists[selectedIndex]);
           }
-          break;
+        },
       }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [lists, selectedIndex, onSelectList]);
+    : {};
+  useKeyboardControls(keyboardControlOptions);
 
   const handleAddList = () => {
     setIsAdding(true);
