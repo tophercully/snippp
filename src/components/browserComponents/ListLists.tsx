@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createList } from "../../backend/list/listFunctions";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
-import { GoogleUser } from "../../typeInterfaces";
+import { GoogleUser, SnipppProfile } from "../../typeInterfaces";
 import { useNotif } from "../../hooks/Notif";
 import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
@@ -17,12 +17,14 @@ export interface ListData {
 }
 
 interface UserListsProps {
+  profile: GoogleUser | SnipppProfile;
   lists: ListData[];
   addDisabled: boolean;
   onSelectList: (list: ListData) => void;
 }
 
 export const ListLists: React.FC<UserListsProps> = ({
+  profile,
   lists,
   addDisabled,
   onSelectList,
@@ -129,7 +131,7 @@ export const ListLists: React.FC<UserListsProps> = ({
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-      <h1 className="bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">{`${userProfile ? userProfile.name.toUpperCase() : "User"}'S LISTS`}</h1>
+      <h1 className="bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">{`${profile ? profile.name.toUpperCase() : "User"}'S LISTS`}</h1>
       <div
         ref={containerRef}
         className="relative h-full w-full overflow-y-auto"
