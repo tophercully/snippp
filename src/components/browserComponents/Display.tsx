@@ -3,7 +3,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { deleteSnippet } from "../../backend/snippet/deleteSnippet";
 import { useMemo, useState } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { removeSnippetFromFavorites } from "../../backend/favorite/removeFavorite";
 import { addSnippetToFavorites } from "../../backend/favorite/addFavorite";
 
@@ -63,7 +63,7 @@ export const Display = ({
   const [showListPopup, setShowListPopup] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
-
+  const [isEditing] = useSessionStorage("isEditingList", false);
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
   const snippetMod = snippetMods[snippetID] || {};
@@ -165,22 +165,26 @@ export const Display = ({
     }
   };
 
-  useKeyboardControls({
-    enter: (event) => {
-      event.preventDefault();
-      copySnippet();
-    },
-    arrowRight: (event) => {
-      event.preventDefault();
-      if (userProfile) {
-        if (favoriteStatus) {
-          handleRemoveFavorite();
-        } else {
-          handleAddFavorite();
-        }
+  const keyboardControlOptions =
+    !isEditing ?
+      {
+        enter: (event) => {
+          event.preventDefault();
+          copySnippet();
+        },
+        arrowRight: (event) => {
+          event.preventDefault();
+          if (userProfile) {
+            if (favoriteStatus) {
+              handleRemoveFavorite();
+            } else {
+              handleAddFavorite();
+            }
+          }
+        },
       }
-    },
-  });
+    : {};
+  useKeyboardControls(keyboardControlOptions);
 
   const fetchUserLists = async () => {
     if (userProfile) {

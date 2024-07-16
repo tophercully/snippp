@@ -26,7 +26,7 @@ export const SearchBar = ({
 }: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useSessionStorage("searchFocused", false);
-  console.log(isFocused);
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setQuery(e.target.value);
@@ -41,11 +41,9 @@ export const SearchBar = ({
   );
 
   const handleFocus = () => {
-    console.log("focused");
     setIsFocused(true);
   };
   const handleBlur = () => {
-    console.log("blurred");
     setIsFocused(false);
   };
 

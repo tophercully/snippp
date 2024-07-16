@@ -63,12 +63,6 @@ export const useKeyboardControls = (keyHandlers: KeyHandlers) => {
             keyHandlers.slash(event);
           }
           break;
-        case "]":
-          if (keyHandlers.slash) {
-            event.preventDefault();
-            keyHandlers.slash(event);
-          }
-          break;
         case "?":
           if (keyHandlers.questionMark) {
             event.preventDefault();
@@ -81,25 +75,29 @@ export const useKeyboardControls = (keyHandlers: KeyHandlers) => {
             keyHandlers.spacebar(event);
           }
           break;
-        case "f" || "F":
+        case "f":
+        case "F":
           if (keyHandlers.f) {
             event.preventDefault();
             keyHandlers.f(event);
           }
           break;
-        case "a" || "A":
+        case "a":
+        case "A":
           if (keyHandlers.a) {
             event.preventDefault();
             keyHandlers.a(event);
           }
           break;
-        case "t" || "T":
+        case "t":
+        case "T":
           if (keyHandlers.t) {
             event.preventDefault();
             keyHandlers.t(event);
           }
           break;
-        case "p" || "P":
+        case "p":
+        case "P":
           if (keyHandlers.p) {
             event.preventDefault();
             keyHandlers.p(event);
