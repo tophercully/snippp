@@ -985,6 +985,10 @@ video {
   min-height: 100svh;
 }
 
+.min-h-screen {
+  min-height: 100vh;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -1041,6 +1045,10 @@ video {
 
 .w-8 {
   width: 2rem;
+}
+
+.w-52 {
+  width: 13rem;
 }
 
 .max-w-0 {

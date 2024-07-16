@@ -87,32 +87,35 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         className="aspect-square h-full cursor-pointer p-3 dark:invert"
       />
       {isOpen && (
-        <div className="absolute right-1/2 top-full z-50 flex w-44 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500 dark:shadow-lg dark:invert">
+        <div className="absolute right-1/2 top-full z-50 flex w-52 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500 dark:shadow-lg dark:invert">
           <div className="flex w-full flex-col gap-2">
             <h1>SORT BY </h1>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <button
-                className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 ${sortMethod == "name" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "name" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("name")}
               >
+                Alphabetical
                 <img
                   src="/az.svg"
                   className={`invert`}
                 />
               </button>
               <button
-                className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 ${sortMethod == "snippetID" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "snippetID" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("snippetID")}
               >
+                Time
                 <img
                   src="/clock.svg"
                   className={`invert`}
                 />
               </button>
               <button
-                className={`flex aspect-square w-full items-center justify-center bg-base-50 p-3 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("favoriteCount")}
               >
+                Popularity
                 <img src="/heart-full.svg" />
               </button>
             </div>
