@@ -14,7 +14,7 @@ export const ProfileStats = () => {
     const getStats = async () => {
       setIsLoading(true);
       const result = await fetchUserStats(userid ? userid : "");
-      console.log(result);
+
       setIsLoading(false);
       setStats(result);
     };
