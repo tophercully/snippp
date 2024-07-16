@@ -156,10 +156,9 @@ export const Profile: React.FC = () => {
   const fetchAndSetLists = useCallback(async () => {
     try {
       setListsLoading(true);
-      if (userProfile) {
-        const result = await getUserLists(userid as string);
-        setLists([...defaultLists, ...result]);
-      }
+
+      const result = await getUserLists(userid as string);
+      setLists([...defaultLists, ...result]);
     } catch (error) {
       console.error("Error fetching lists:", error);
       showNotif("Error fetching lists:" + error, "error");
