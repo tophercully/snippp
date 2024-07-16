@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Snippet } from "../typeInterfaces";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { useSessionStorage } from "@uidotdev/usehooks";
 
 type SortOrder = "asc" | "desc";
 
@@ -17,7 +18,10 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   sortOrder,
   setSortOrder,
 }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useSessionStorage<boolean>(
+    "sortDropdownOpen",
+    false,
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
@@ -37,30 +41,30 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
   };
 
   useKeyboardControls({
-    a: (event) => {
-      event.preventDefault();
-      setSortMethod("name");
-    },
-    t: (event) => {
-      event.preventDefault();
-      setSortMethod("snippetID");
-    },
-    p: (event) => {
-      event.preventDefault();
-      setSortMethod("favoriteCount");
-    },
-    arrowUp: (event) => {
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        setSortOrder("asc");
-      }
-    },
-    arrowDown: (event) => {
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault();
-        setSortOrder("desc");
-      }
-    },
+    // a: (event) => {
+    //   event.preventDefault();
+    //   setSortMethod("name");
+    // },
+    // t: (event) => {
+    //   event.preventDefault();
+    //   setSortMethod("snippetID");
+    // },
+    // p: (event) => {
+    //   event.preventDefault();
+    //   setSortMethod("favoriteCount");
+    // },
+    // arrowUp: (event) => {
+    //   if (event.ctrlKey || event.metaKey) {
+    //     event.preventDefault();
+    //     setSortOrder("asc");
+    //   }
+    // },
+    // arrowDown: (event) => {
+    //   if (event.ctrlKey || event.metaKey) {
+    //     event.preventDefault();
+    //     setSortOrder("desc");
+    //   }
+    // },
   });
 
   useEffect(() => {
