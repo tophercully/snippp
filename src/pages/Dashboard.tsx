@@ -408,6 +408,7 @@ export const Dashboard: React.FC = () => {
             className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
           >
             <ListLists
+              profile={userProfile as GoogleUser}
               lists={lists}
               addDisabled={false}
               onSelectList={handleSelectList}

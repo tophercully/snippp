@@ -117,7 +117,7 @@ export const Profile: React.FC = () => {
     () => [
       {
         listid: "creations",
-        userid: userProfile?.id || "",
+        userid: userid || "",
         listname: "Creations",
         description: "",
         createdat: "",
@@ -126,7 +126,7 @@ export const Profile: React.FC = () => {
       },
       {
         listid: "favorites",
-        userid: userProfile?.id || "",
+        userid: userid || "",
         listname: "Favorites",
         description: "",
         createdat: "",
@@ -134,7 +134,7 @@ export const Profile: React.FC = () => {
         snippet_count: "-1",
       },
     ],
-    [userProfile],
+    [userid],
   );
   const [lists, setLists] = useState<ListData[]>(() => defaultLists);
   const [list, setList] = useState<ListData | null>(null);
@@ -191,7 +191,7 @@ export const Profile: React.FC = () => {
       {
         arrowLeft: async () => {
           setList(null);
-          navigate("/dashboard");
+          navigate(`/user/${userid}`);
           setLists(defaultLists);
           fetchAndSetLists();
         },
@@ -326,7 +326,7 @@ export const Profile: React.FC = () => {
     (listToSet: ListData) => {
       navigate(`/user/${userid}/${listToSet.listid}`);
       setList(listToSet);
-      setPageTitle(`${listToSet.listname} - Dashboard`);
+      setPageTitle(`${listToSet.listname} - ${profile?.name}`);
     },
     [navigate],
   );
@@ -481,6 +481,7 @@ export const Profile: React.FC = () => {
                 className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
               >
                 <ListLists
+                  profile={profile as SnipppProfile}
                   lists={lists}
                   addDisabled={userProfile ? !(userProfile.id == userid) : true}
                   onSelectList={handleSelectList}
