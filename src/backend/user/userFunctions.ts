@@ -97,3 +97,31 @@ export const fetchUserProfile = async (
     throw error;
   }
 };
+
+export interface UserStats {
+  totalSnippets: number;
+  totalSnippetLength: number;
+  totalSnippetCopies: number;
+  totalFavorites: number;
+  languageDistribution: { [key: string]: number };
+  frameworkDistribution: { [key: string]: number };
+}
+
+export const fetchUserStats = async (userId: string): Promise<UserStats> => {
+  try {
+    const response = await fetch(`/api/user/fetch-user-stats?userId=${userId}`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `HTTP error! status: ${response.status}`,
+      );
+    }
+
+    const stats: UserStats = await response.json();
+    return stats;
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    throw error;
+  }
+};

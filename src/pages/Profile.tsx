@@ -26,6 +26,7 @@ import { fetchUserProfile } from "../backend/user/userFunctions";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { ProfileStats } from "../components/profile/ProfileStats";
 
 type SortOrder = "asc" | "desc";
 
@@ -156,7 +157,7 @@ export const Profile: React.FC = () => {
         setPageTitle(`${listToSet.listname} - ${profile?.name}`);
       } else {
         // Handle case when listid doesn't match any list
-        navigate("/dashboard");
+        navigate(`/user/${userid}`);
       }
     }
   }, [listid, lists]);
@@ -165,7 +166,7 @@ export const Profile: React.FC = () => {
     arrowLeft: async () => {
       if (list) {
         setList(null);
-        navigate("/dashboard");
+        navigate(`/user/${userid}`);
         setLists(defaultLists);
         fetchAndSetLists();
       }
@@ -417,10 +418,13 @@ export const Profile: React.FC = () => {
       <Navbar />
       {!isLoading ?
         <>
-          <ProfileInfo
-            snipppUser={profile as SnipppProfile}
-            onUpdateUser={handleUpdateProfile}
-          />
+          <div className="flex w-full flex-col gap-4 lg:flex-row">
+            <ProfileInfo
+              snipppUser={profile as SnipppProfile}
+              onUpdateUser={handleUpdateProfile}
+            />
+            <ProfileStats userID={userid} />
+          </div>
           <div className="flex h-[96%] w-full shadow-lg">
             {!list && (
               <div

@@ -90,7 +90,7 @@ export const ProfileInfo = ({
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-sm bg-base-50 p-4 shadow-md lg:w-2/3 lg:flex-row lg:gap-10">
+    <div className="flex w-full flex-col gap-4 rounded-sm bg-base-50 p-4 shadow-md lg:w-2/3 lg:flex-row lg:gap-10 dark:bg-base-950 dark:text-base-50">
       <img
         src={profile_picture}
         className={`aspect-square w-full rounded-sm border-4 lg:w-96 ${isOnline ? "animate-online" : "border-transparent"}`}
