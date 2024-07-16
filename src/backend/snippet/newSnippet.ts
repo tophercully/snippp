@@ -12,8 +12,8 @@ interface Params {
 }
 
 export const newSnippet = async (params: Params): Promise<Snippet> => {
-  track("Create Snippet");
   try {
+    track("Create Snippet");
     const response = await fetch("/api/snippet/new-snippet", {
       method: "POST",
       headers: {

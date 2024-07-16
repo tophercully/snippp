@@ -1,3 +1,5 @@
+import { track } from "@vercel/analytics";
+
 interface AddToListParams {
   listID: number;
   snippetID: number;
@@ -8,6 +10,7 @@ export const addToList = async ({
   snippetID,
 }: AddToListParams): Promise<void> => {
   try {
+    track("Add to List");
     const response = await fetch("/api/list/add-to-list", {
       method: "POST",
       headers: {
