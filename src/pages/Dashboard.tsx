@@ -24,6 +24,7 @@ import { formatDescription } from "../utils/formatDescription";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { track } from "@vercel/analytics";
 
 type SortOrder = "asc" | "desc";
 
@@ -65,6 +66,7 @@ function sortByProperty<T>(
 }
 
 export const Dashboard: React.FC = () => {
+  track("Dashboard Page Load");
   const { listid } = useParams();
   const navigate = useNavigate();
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);

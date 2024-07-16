@@ -19,6 +19,7 @@ import { track } from "@vercel/analytics";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 
 export const Builder = () => {
+  track("Open Builder");
   const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryInfo[] | undefined>([]);

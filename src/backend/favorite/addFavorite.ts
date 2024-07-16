@@ -1,3 +1,5 @@
+import { track } from "@vercel/analytics";
+
 interface Params {
   userID: string;
   snippetIDToAdd: number;
@@ -8,6 +10,7 @@ export const addSnippetToFavorites = async ({
   snippetIDToAdd,
 }: Params): Promise<void> => {
   try {
+    track("Add Favorite");
     const response = await fetch("/api/favorite/add-favorite", {
       method: "POST",
       headers: {

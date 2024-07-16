@@ -164,8 +164,8 @@ export const createList = async ({
   listName,
   description,
 }: CreateListParams): Promise<{ listid: string | number }> => {
-  track("Create List");
   try {
+    track("Create List");
     const response = await fetch("/api/list/create-list", {
       method: "POST",
       headers: {
