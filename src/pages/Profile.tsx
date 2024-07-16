@@ -180,7 +180,8 @@ export const Profile: React.FC = () => {
         setPageTitle(`${listToSet.listname} - ${profile?.name}`);
       } else {
         // Handle case when listid doesn't match any list
-        navigate(`/user/${userid}`);
+        // navigate(`/user/${userid}`);
+        setList(null);
       }
     }
   }, [listid, lists]);
