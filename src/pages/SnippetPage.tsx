@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { setPageTitle } from "../utils/setPageTitle";
 import { LoadingSpinner } from "../components/LoadingSpinner";
-import { track } from "@vercel/analytics";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -20,7 +19,6 @@ type SnippetMod = {
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 export const SnippetPage: React.FC = () => {
-  track("Snippet Page Load");
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});

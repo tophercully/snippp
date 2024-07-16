@@ -6,8 +6,11 @@ import { fetchUserProfile, newUser } from "../../backend/user/userFunctions";
 import categories from "../../utils/categories";
 import { GoogleUser } from "../../typeInterfaces";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
+import { useNavigate } from "react-router-dom";
+import { track } from "@vercel/analytics";
 
 export const Navbar: React.FC = () => {
+  const navigate = useNavigate();
   const [isUserCreated, setIsUserCreated] = useLocalStorage<boolean>(
     "isUserCreated",
     false,
@@ -150,12 +153,15 @@ export const Navbar: React.FC = () => {
             </span>
           </a>
           <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
-            <a
-              href="/browse"
+            <button
+              onClick={() => {
+                track(`Open Browser`);
+                navigate(`/browse`);
+              }}
               className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               BROWSE
-            </a>
+            </button>
             {Object.keys(categories).length > 0 && (
               <div className="relative">
                 <button
@@ -185,14 +191,17 @@ export const Navbar: React.FC = () => {
                     {Object.entries(categories)
                       .filter(([, info]) => info.kind === "language")
                       .map(([key, info]) => (
-                        <a
+                        <button
                           key={key}
-                          href={`/browse/${key}`}
                           className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                          onClick={() => setIsCategoryDropdownOpen(false)}
+                          onClick={() => {
+                            setIsCategoryDropdownOpen(false);
+                            track(`Category ${categories[key]} Browsed`);
+                            navigate(`/browse/${key}`);
+                          }}
                         >
                           {info.name.toUpperCase()}
-                        </a>
+                        </button>
                       ))}
                     <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
                       Frameworks/Libraries
@@ -200,25 +209,31 @@ export const Navbar: React.FC = () => {
                     {Object.entries(categories)
                       .filter(([, info]) => info.kind === "framework/library")
                       .map(([key, info]) => (
-                        <a
+                        <button
                           key={key}
-                          href={`/browse/${key}`}
                           className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                          onClick={() => setIsCategoryDropdownOpen(false)}
+                          onClick={() => {
+                            setIsCategoryDropdownOpen(false);
+                            track(`Category ${categories[key]} Browsed`);
+                            navigate(`/browse/${key}`);
+                          }}
                         >
                           {info.name.toUpperCase()}
-                        </a>
+                        </button>
                       ))}
                   </div>
                 )}
               </div>
             )}
-            <a
-              href="/about"
+            <button
+              onClick={() => {
+                track("Open About Page");
+                navigate("/about");
+              }}
               className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               ABOUT
-            </a>
+            </button>
           </div>
 
           {!userProfile && (
@@ -236,8 +251,11 @@ export const Navbar: React.FC = () => {
             </div>
           )}
           {userProfile && !isBuilderPage && (
-            <a
-              href="/builder"
+            <button
+              onClick={() => {
+                track("Open Builder");
+                navigate("/builder");
+              }}
               className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
             >
               <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
@@ -247,7 +265,7 @@ export const Navbar: React.FC = () => {
                 src="/add.svg"
                 className="rounded-sm p-2"
               />
-            </a>
+            </button>
           )}
           {userProfile && (
             <div className={`relative ${isBuilderPage ? "ml-auto" : ""}`}>
@@ -259,16 +277,24 @@ export const Navbar: React.FC = () => {
               />
               {isDropdownOpen && (
                 <div className="absolute right-0 z-20 max-h-[25vh] w-48 rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
-                  <a href="/dashboard">
-                    <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
-                      DASHBOARD
-                    </button>
-                  </a>
-                  <a href={`/user/${userProfile.id}`}>
-                    <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
-                      PROFILE
-                    </button>
-                  </a>
+                  <button
+                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
+                    onClick={() => {
+                      track("Open Dashboard");
+                      navigate("/dashboard");
+                    }}
+                  >
+                    DASHBOARD
+                  </button>
+                  <button
+                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
+                    onClick={() => {
+                      track("Open Profile");
+                      navigate(`/user/${userProfile.id}`);
+                    }}
+                  >
+                    PROFILE
+                  </button>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={handleSignIn}
