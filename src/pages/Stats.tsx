@@ -33,7 +33,7 @@ export const Stats = () => {
     getStats();
   }, []);
   return (
-    <div className="flex h-fit min-h-[100vh] w-full flex-col gap-8 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
+    <div className="flex h-fit min-h-screen w-full flex-col gap-8 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
       <Navbar />
       {stats ?
         <div className="grid h-full w-full grid-cols-2 gap-8 p-2 text-base-950 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 dark:text-base-50">
@@ -89,7 +89,7 @@ export const Stats = () => {
           />
         </div>
       )}
-      <div className="absolute bottom-0 left-0 w-full justify-self-end p-2">
+      <div className="w-full justify-self-end p-2">
         <Footer />
       </div>
     </div>
