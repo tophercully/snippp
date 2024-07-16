@@ -51,7 +51,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   useEffect(() => {
     scrollToSelectedItem();
   }, [selectedIndex]);
-  console.log(isEditing);
+
   const keyboardControlOptions =
     !isEditing ?
       {

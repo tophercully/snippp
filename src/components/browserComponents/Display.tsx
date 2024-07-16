@@ -337,18 +337,20 @@ export const Display = ({
               </span>
             )}
             <span
-              className="group relative flex h-fit w-fit cursor-pointer items-center gap-2"
+              className="relative flex h-fit w-fit cursor-pointer items-center gap-2"
               onClick={copySnippet}
             >
-              <div className="absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-base-100 dark:text-black">
-                Times this snippet has been copied
-                <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-800 dark:border-t-base-100"></div>
-              </div>
-              <img
-                src="/copy.svg"
-                className="invert dark:invert-0"
-              />
-              <span>{simplifiedAndModdedCount}</span>
+              <span className="group flex gap-1">
+                <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white opacity-0 transition-opacity duration-100 group-hover:opacity-100 dark:bg-base-100 dark:text-black">
+                  Times this snippet has been copied
+                  <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-800 dark:border-t-base-100"></div>
+                </div>
+                <img
+                  src="/copy.svg"
+                  className="invert dark:invert-0"
+                />
+                <span>{simplifiedAndModdedCount}</span>
+              </span>
             </span>
           </div>
         </div>

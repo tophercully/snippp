@@ -115,12 +115,23 @@ export const Browser: React.FC = () => {
     }
 
     if (query) {
-      filteredSnippets = filteredSnippets.filter(
-        (a) =>
-          a.tags.toLowerCase().includes(query.toLowerCase()) ||
-          a.name.toLowerCase().includes(query.toLowerCase()) ||
-          a.author.toLowerCase().includes(query.toLowerCase()),
-      );
+      filteredSnippets = filteredSnippets.filter((a) => {
+        // Ensure the properties exist and are strings before calling toLowerCase
+        const tags = a.tags ? a.tags.toLowerCase() : "";
+        const name = a.name ? a.name.toLowerCase() : "";
+        const description = a.description ? a.description.toLowerCase() : "";
+        // const code = a.code ? a.code.toLowerCase() : "";
+        const author = a.author ? a.author.toLowerCase() : "";
+
+        // Perform the filtering
+        return (
+          tags.includes(query.toLowerCase()) ||
+          name.includes(query.toLowerCase()) ||
+          description.includes(query.toLowerCase()) ||
+          // code.includes(query.toLowerCase()) ||
+          author.includes(query.toLowerCase())
+        );
+      });
     }
 
     return sortByProperty(filteredSnippets, sortMethod, sortOrder);

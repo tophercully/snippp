@@ -91,7 +91,6 @@ export const fetchUserProfile = async (
     const data = await response.json();
 
     if (data.user) {
-      console.log(data.user);
       return data.user;
     } else {
       console.log("User not found");

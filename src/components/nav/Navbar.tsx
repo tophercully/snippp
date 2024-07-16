@@ -145,7 +145,7 @@ export const Navbar: React.FC = () => {
               src="/scissors.svg"
               className="h-6 w-6 brightness-0 invert dark:invert-0"
             />
-            <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out group-hover:max-w-xs group-hover:px-3">
+            <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:px-3">
               SNIPPP
             </span>
           </a>
@@ -164,7 +164,7 @@ export const Navbar: React.FC = () => {
                 >
                   CATEGORIES
                   <svg
-                    className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+                    className={`ml-1 h-4 w-4 transition-transform duration-100 ${
                       isCategoryDropdownOpen ? "rotate-180" : ""
                     }`}
                     viewBox="0 0 20 20"
@@ -224,9 +224,9 @@ export const Navbar: React.FC = () => {
           {!userProfile && (
             <div
               onClick={handleSignIn}
-              className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-200 hover:cursor-pointer hover:bg-base-900 dark:invert"
+              className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
             >
-              <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 ease-in-out group-hover:max-w-xs group-hover:pl-4">
+              <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
                 Sign in with Google
               </span>
               <img
@@ -238,9 +238,9 @@ export const Navbar: React.FC = () => {
           {userProfile && !isBuilderPage && (
             <a
               href="/builder"
-              className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-200 hover:cursor-pointer hover:bg-base-900 dark:invert"
+              className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
             >
-              <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-200 ease-in-out group-hover:max-w-xs group-hover:pl-4">
+              <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
                 CREATE SNIPPET
               </span>
               <img
