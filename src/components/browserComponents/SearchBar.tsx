@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import { Snippet } from "../../typeInterfaces";
 import SortDropdown from "./SortDropdown";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
@@ -25,9 +25,16 @@ export const SearchBar = ({
 }: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.target.value);
+      // Ensure the input retains focus after updating the query
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+    },
+    [setQuery],
+  );
 
   useKeyboardControls({
     slash: (event) => {
@@ -36,6 +43,11 @@ export const SearchBar = ({
         inputRef.current?.focus();
       }
     },
+  });
+
+  // Use useEffect to focus the input after each render
+  useEffect(() => {
+    inputRef.current?.focus();
   });
 
   return (
@@ -56,3 +68,5 @@ export const SearchBar = ({
     </div>
   );
 };
+
+export default SearchBar;

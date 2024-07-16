@@ -458,7 +458,7 @@ export const Profile: React.FC = () => {
             />
             <ProfileStats />
           </div>
-          <div className="flex h-[96%] w-full shadow-lg">
+          <div className="flex h-[96%] min-h-[96%] w-full shadow-lg">
             {!list && (
               <div
                 className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
