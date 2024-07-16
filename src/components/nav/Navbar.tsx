@@ -278,24 +278,22 @@ export const Navbar: React.FC = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 z-20 max-h-[25vh] w-48 rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
                   <button
+                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={() => {
                       track("Open Dashboard");
                       navigate("/dashboard");
                     }}
                   >
-                    <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
-                      DASHBOARD
-                    </button>
+                    DASHBOARD
                   </button>
                   <button
+                    className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={() => {
                       track("Open Profile");
                       navigate(`/user/${userProfile.id}`);
                     }}
                   >
-                    <button className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800">
-                      PROFILE
-                    </button>
+                    PROFILE
                   </button>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
