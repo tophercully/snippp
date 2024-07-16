@@ -10,6 +10,7 @@ interface KeyHandlers {
   enter?: KeyHandler;
   escape?: KeyHandler;
   slash?: KeyHandler;
+  backslash?: KeyHandler;
   questionMark?: KeyHandler;
   spacebar?: KeyHandler;
   f?: KeyHandler;
@@ -57,6 +58,12 @@ export const useKeyboardControls = (keyHandlers: KeyHandlers) => {
           }
           break;
         case "/":
+          if (keyHandlers.slash) {
+            event.preventDefault();
+            keyHandlers.slash(event);
+          }
+          break;
+        case "]":
           if (keyHandlers.slash) {
             event.preventDefault();
             keyHandlers.slash(event);

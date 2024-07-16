@@ -1,6 +1,6 @@
 export const KeyboardShortcuts = () => {
   return (
-    <div className="fixed bottom-4 right-4 z-50 rounded-sm bg-base-950 p-4 text-base-50 shadow-lg">
+    <div className="fixed bottom-8 right-8 z-50 rounded-sm bg-base-950 p-4 text-base-50 shadow-lg">
       <h3 className="mb-2 font-bold">Keyboard Shortcuts</h3>
       <ul className="flex max-h-52 flex-col flex-wrap gap-x-8 gap-y-2">
         <li className="row-span-2 flex items-center gap-3">
@@ -53,7 +53,7 @@ export const KeyboardShortcuts = () => {
         </li>
         <li className="flex items-center gap-3">
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
-            F
+            \
           </span>
           <span>Add/Remove Favorite</span>
         </li>
@@ -67,7 +67,7 @@ export const KeyboardShortcuts = () => {
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
             →
           </span>
-          <span>Select List</span>
+          <span>Select List OR Add/Remove Favorite</span>
         </li>
         <li className="flex items-center gap-3">
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
