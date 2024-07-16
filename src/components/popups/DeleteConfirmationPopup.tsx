@@ -1,5 +1,5 @@
 import React from "react";
-import SnipppButton from "./SnipppButton";
+import SnipppButton from "../SnipppButton";
 
 interface DeleteConfirmationPopupProps {
   isOpen: boolean;

@@ -1,9 +1,9 @@
 // In SelectionsList.tsx
 import React, { useRef, useEffect, useState } from "react";
-import { Snippet } from "../typeInterfaces";
+import { Snippet } from "../../typeInterfaces";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { simplifyNumber } from "../utils/simplifyNumber";
-import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { simplifyNumber } from "../../utils/simplifyNumber";
+import { useKeyboardControls } from "../../hooks/KeyboardControls";
 
 interface DisplaySelectionsProps {
   selection: Snippet | null;

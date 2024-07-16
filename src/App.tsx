@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Footer } from "./components/Footer";
-import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/nav/Footer";
+import { Navbar } from "./components/nav/Navbar";
 import { fetchStats } from "./backend/fetchStats";
 import "./output.css";
 

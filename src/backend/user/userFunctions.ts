@@ -3,6 +3,11 @@ import { track } from "@vercel/analytics";
 
 export const newUser = async (userProfile: GoogleUser): Promise<boolean> => {
   track("New User");
+
+  // Extract base URL and modify the size parameter for higher resolution
+  const highResPicture = userProfile.picture.replace(/s96-c/, "s400-c");
+  userProfile.picture = highResPicture;
+
   try {
     const response = await fetch("/api/user/new-user", {
       method: "POST",
@@ -94,6 +99,34 @@ export const fetchUserProfile = async (
     }
   } catch (error) {
     console.error("Error fetching user:", error);
+    throw error;
+  }
+};
+
+export interface UserStats {
+  totalSnippets: number;
+  totalSnippetLength: number;
+  totalSnippetCopies: number;
+  totalFavorites: number;
+  languageDistribution: { [key: string]: number };
+  frameworkDistribution: { [key: string]: number };
+}
+
+export const fetchUserStats = async (userId: string): Promise<UserStats> => {
+  try {
+    const response = await fetch(`/api/user/fetch-user-stats?userId=${userId}`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `HTTP error! status: ${response.status}`,
+      );
+    }
+
+    const stats: UserStats = await response.json();
+    return stats;
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
     throw error;
   }
 };

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { SearchBar } from "../components/SearchBar";
+import { SearchBar } from "../components/browserComponents/SearchBar";
 import { GoogleUser, Snippet } from "../typeInterfaces";
-import { Navbar } from "../components/Navbar";
-import { ListSnippets } from "../components/ListSnippets";
-import { Footer } from "../components/Footer";
-import { Display } from "../components/Display";
+import { Navbar } from "../components/nav/Navbar";
+import { ListSnippets } from "../components/browserComponents/ListSnippets";
+import { Footer } from "../components/nav/Footer";
+import { Display } from "../components/browserComponents/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import {
   getListSnippets,
@@ -15,7 +15,7 @@ import {
 } from "../backend/list/listFunctions";
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
-import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
+import DeleteConfirmationPopup from "../components/popups/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { formatDescription } from "../utils/formatDescription";
 import { LoadingSpinner } from "../components/LoadingSpinner";

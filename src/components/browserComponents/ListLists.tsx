@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { createList } from "../backend/list/listFunctions";
+import { createList } from "../../backend/list/listFunctions";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { GoogleUser } from "../typeInterfaces";
-import { useNotif } from "../hooks/Notif";
-import SnipppButton from "./SnipppButton";
+import { GoogleUser } from "../../typeInterfaces";
+import { useNotif } from "../../hooks/Notif";
+import SnipppButton from "../SnipppButton";
 
 export interface ListData {
   listid: string | number;

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
-import { StatCard } from "../components/StatCard";
+import { Footer } from "../components/nav/Footer";
+import { Navbar } from "../components/nav/Navbar";
+import { StatCard } from "../components/statsTools/StatCard";
 import { fetchExtendedStats } from "../backend/fetchStats";
 import { simplifyNumber } from "../utils/simplifyNumber";
-import Distribution from "../components/Distribution";
+import Distribution from "../components/statsTools/Distribution";
 
 interface CategoryCount {
   [key: string]: number;

@@ -1,29 +1,29 @@
-import { GoogleUser, Snippet } from "../typeInterfaces";
+import { GoogleUser, Snippet } from "../../typeInterfaces";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { monokai, vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { deleteSnippet } from "../backend/snippet/deleteSnippet";
+import { deleteSnippet } from "../../backend/snippet/deleteSnippet";
 import { useMemo, useState } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { removeSnippetFromFavorites } from "../backend/favorite/removeFavorite";
-import { addSnippetToFavorites } from "../backend/favorite/addFavorite";
+import { removeSnippetFromFavorites } from "../../backend/favorite/removeFavorite";
+import { addSnippetToFavorites } from "../../backend/favorite/addFavorite";
 
-import { detectLanguage } from "../utils/detectLanguage";
-import categories from "../utils/categories";
-import { useNotif } from "../hooks/Notif";
-import { addCopy } from "../backend/snippet/addCopy";
-import { simplifyNumber } from "../utils/simplifyNumber";
+import { detectLanguage } from "../../utils/detectLanguage";
+import categories from "../../utils/categories";
+import { useNotif } from "../../hooks/Notif";
+import { addCopy } from "../../backend/snippet/addCopy";
+import { simplifyNumber } from "../../utils/simplifyNumber";
 
 import {
   ListWithSnippetStatus,
   addSnippetToList,
   getListsWithSnippetStatus,
   removeSnippetFromList,
-} from "../backend/list/listFunctions";
-import formatPostgresDate from "../utils/formatPostgresDate";
+} from "../../backend/list/listFunctions";
+import formatPostgresDate from "../../utils/formatPostgresDate";
 
-import { formatDescription } from "../utils/formatDescription";
-import SnipppButton from "./SnipppButton";
-import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { formatDescription } from "../../utils/formatDescription";
+import SnipppButton from "../SnipppButton";
+import { useKeyboardControls } from "../../hooks/KeyboardControls";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -417,7 +417,7 @@ export const Display = ({
             >
               <img
                 src="/copy.svg"
-                className="mx-10 h-5 invert group-hover:invert-0 dark:invert-0"
+                className="h-5 invert group-hover:invert-0 lg:mx-10 dark:invert-0"
               />
             </SnipppButton>
 

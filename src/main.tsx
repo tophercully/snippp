@@ -8,7 +8,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Builder } from "./pages/Builder.tsx";
 import { Dashboard } from "./pages/Dashboard.tsx";
 import { Analytics } from "@vercel/analytics/react";
-import { NotifProvider } from "./components/NotifContext.tsx";
+import { NotifProvider } from "./components/popups/NotifContext.tsx";
 import { About } from "./pages/About.tsx";
 import { SnippetPage } from "./pages/SnippetPage.tsx";
 import { ListPage } from "./pages/ListPage.tsx";

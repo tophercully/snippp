@@ -29,7 +29,7 @@ export const fetchStats = async (): Promise<HomepageInfo> => {
   }
 };
 
-interface CategoryCount {
+export interface CategoryCount {
   [key: string]: number;
 }
 interface ExtendedHomepageInfo {

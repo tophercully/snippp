@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { SearchBar } from "../components/SearchBar";
+import { SearchBar } from "../components/browserComponents/SearchBar";
 import { GoogleUser, Snippet, SnipppProfile } from "../typeInterfaces";
-import { Navbar } from "../components/Navbar";
-import { ListSnippets } from "../components/ListSnippets";
-import { ListLists, ListData } from "../components/ListLists";
-import { Footer } from "../components/Footer";
-import { Display } from "../components/Display";
+import { Navbar } from "../components/nav/Navbar";
+import { ListSnippets } from "../components/browserComponents/ListSnippets";
+import { ListLists, ListData } from "../components/browserComponents/ListLists";
+import { Footer } from "../components/nav/Footer";
+import { Display } from "../components/browserComponents/Display";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { loadFavorites } from "../backend/loader/loadFavorites";
 import { loadUserSnippets } from "../backend/loader/loadUserSnippets";
@@ -17,15 +17,27 @@ import {
 } from "../backend/list/listFunctions";
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
-import DeleteConfirmationPopup from "../components/DeleteConfirmationPopup";
+import DeleteConfirmationPopup from "../components/popups/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
-import { ProfileInfo } from "../components/ProfileInfo";
+import { ProfileInfo } from "../components/profile/ProfileInfo";
 import { fetchUserProfile } from "../backend/user/userFunctions";
 import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { ProfileStats } from "../components/profile/ProfileStats";
+
+const getHighResGoogleProfilePicture = (pictureUrl: string): string => {
+  // Check if the URL is a Google profile picture URL and replace for higher resolution
+  if (
+    pictureUrl.includes("googleusercontent.com") &&
+    pictureUrl.includes("s96-c")
+  ) {
+    return pictureUrl.replace(/s96-c/, "s400-c");
+  }
+  return pictureUrl;
+};
 
 type SortOrder = "asc" | "desc";
 
@@ -69,7 +81,10 @@ function sortByProperty<T>(
 export const Profile: React.FC = () => {
   const { listid, userid } = useParams();
   const navigate = useNavigate();
-  const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
+  const [userProfile, setUserProfile] = useLocalStorage<GoogleUser | null>(
+    "userProfile",
+    null,
+  );
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
@@ -83,12 +98,21 @@ export const Profile: React.FC = () => {
     const getAndSetProfile = async () => {
       setIsLoading(true);
       const response = await fetchUserProfile(userid as string);
+
+      if (response?.profile_picture) {
+        response.profile_picture = getHighResGoogleProfilePicture(
+          response.profile_picture,
+        );
+      }
+
       setProfile(response as SnipppProfile);
       setIsLoading(false);
-      setPageTitle(profile?.name as string);
+      setPageTitle(response?.name as string);
     };
+
     getAndSetProfile();
   }, [userid]);
+
   const defaultLists = useMemo(
     () => [
       {
@@ -156,7 +180,7 @@ export const Profile: React.FC = () => {
         setPageTitle(`${listToSet.listname} - ${profile?.name}`);
       } else {
         // Handle case when listid doesn't match any list
-        navigate("/dashboard");
+        navigate(`/user/${userid}`);
       }
     }
   }, [listid, lists]);
@@ -165,7 +189,7 @@ export const Profile: React.FC = () => {
     arrowLeft: async () => {
       if (list) {
         setList(null);
-        navigate("/dashboard");
+        navigate(`/user/${userid}`);
         setLists(defaultLists);
         fetchAndSetLists();
       }
@@ -352,6 +376,16 @@ export const Profile: React.FC = () => {
       }
       return prevProfile;
     });
+
+    setUserProfile((prevProfile) => {
+      if (prevProfile) {
+        return {
+          ...prevProfile,
+          name: updatedProfileData.name ?? prevProfile.name, // Ensure name is not undefined
+        };
+      }
+      return prevProfile;
+    });
   };
 
   const SnippetExplorer: React.FC = () => {
@@ -413,15 +447,18 @@ export const Profile: React.FC = () => {
   };
 
   return (
-    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
+    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-50 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
       {!isLoading ?
         <>
-          <ProfileInfo
-            snipppUser={profile as SnipppProfile}
-            onUpdateUser={handleUpdateProfile}
-          />
-          <div className="flex h-[96%] w-full shadow-lg">
+          <div className="flex w-full flex-col gap-4 lg:flex-row">
+            <ProfileInfo
+              snipppUser={profile as SnipppProfile}
+              onUpdateUser={handleUpdateProfile}
+            />
+            <ProfileStats />
+          </div>
+          <div className="flex h-[96%] min-h-[96%] w-full shadow-lg">
             {!list && (
               <div
                 className={`flex ${listsLoading ? "h-fit" : "h-full"} w-full flex-col overflow-hidden lg:w-1/3`}
