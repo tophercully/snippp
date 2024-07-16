@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Display } from "../components/Display";
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
+import { Display } from "../components/browserComponents/Display";
+import { Footer } from "../components/nav/Footer";
+import { Navbar } from "../components/nav/Navbar";
 import { loadSnippetById } from "../backend/loader/loadSnippetByID";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { useParams } from "react-router-dom";

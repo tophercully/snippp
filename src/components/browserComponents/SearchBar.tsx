@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { Snippet } from "../typeInterfaces";
+import { Snippet } from "../../typeInterfaces";
 import SortDropdown from "./SortDropdown";
-import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { useKeyboardControls } from "../../hooks/KeyboardControls";
 
 type SortOrder = "asc" | "desc";
 interface SearchBarProps {

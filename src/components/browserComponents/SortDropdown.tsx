@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { Snippet } from "../typeInterfaces";
-import { useKeyboardControls } from "../hooks/KeyboardControls";
+import { Snippet } from "../../typeInterfaces";
+import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import { useSessionStorage } from "@uidotdev/usehooks";
 
 type SortOrder = "asc" | "desc";

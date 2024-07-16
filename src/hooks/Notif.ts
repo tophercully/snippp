@@ -1,5 +1,8 @@
 import { useContext } from "react";
-import { NotifContext, NotifContextType } from "../components/NotifContext";
+import {
+  NotifContext,
+  NotifContextType,
+} from "../components/popups/NotifContext";
 
 export const useNotif = (): NotifContextType => {
   const context = useContext(NotifContext);

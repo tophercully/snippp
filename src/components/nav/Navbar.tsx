@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { newUser } from "../backend/user/userFunctions";
-import categories from "../utils/categories";
-import { GoogleUser } from "../typeInterfaces";
+import { newUser } from "../../backend/user/userFunctions";
+import categories from "../../utils/categories";
+import { GoogleUser } from "../../typeInterfaces";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 
 export const Navbar: React.FC = () => {

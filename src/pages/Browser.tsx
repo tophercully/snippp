@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { loadAllSnippets } from "../backend/loader/loadAllSnippets";
-import { SearchBar } from "../components/SearchBar";
+import { SearchBar } from "../components/browserComponents/SearchBar";
 import { Snippet } from "../typeInterfaces";
-import { Navbar } from "../components/Navbar";
-import { ListSnippets } from "../components/ListSnippets";
-import { Footer } from "../components/Footer";
-import { Display } from "../components/Display";
+import { Navbar } from "../components/nav/Navbar";
+import { ListSnippets } from "../components/browserComponents/ListSnippets";
+import { Footer } from "../components/nav/Footer";
+import { Display } from "../components/browserComponents/Display";
 import categories from "../utils/categories";
 import { useParams } from "react-router-dom";
 import { setPageTitle } from "../utils/setPageTitle";

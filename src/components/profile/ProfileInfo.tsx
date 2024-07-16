@@ -1,11 +1,11 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
-import { GoogleUser, SnipppProfile } from "../typeInterfaces";
-import SnipppButton from "./SnipppButton";
+import { GoogleUser, SnipppProfile } from "../../typeInterfaces";
+import SnipppButton from "../SnipppButton";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { editUserProfile } from "../backend/user/userFunctions";
-import { useNotif } from "../hooks/Notif";
-import { formatDescription } from "../utils/formatDescription";
+import { editUserProfile } from "../../backend/user/userFunctions";
+import { useNotif } from "../../hooks/Notif";
+import { formatDescription } from "../../utils/formatDescription";
 
 interface ProfileInfoParams {
   snipppUser: SnipppProfile;
