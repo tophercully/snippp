@@ -681,6 +681,14 @@ video {
   top: 100%;
 }
 
+.bottom-8 {
+  bottom: 2rem;
+}
+
+.right-8 {
+  right: 2rem;
+}
+
 .-z-10 {
   z-index: -10;
 }
@@ -1826,6 +1834,11 @@ video {
 
 .ring-opacity-5 {
   --tw-ring-opacity: 0.05;
+}
+
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .brightness-0 {

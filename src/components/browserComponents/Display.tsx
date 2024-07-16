@@ -170,7 +170,7 @@ export const Display = ({
       event.preventDefault();
       copySnippet();
     },
-    f: (event) => {
+    arrowRight: (event) => {
       event.preventDefault();
       if (userProfile) {
         if (favoriteStatus) {

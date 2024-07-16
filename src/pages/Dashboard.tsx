@@ -143,7 +143,7 @@ export const Dashboard: React.FC = () => {
         setPageTitle(`${listToSet.listname} - Dashboard`);
       } else {
         // Handle case when listid doesn't match any list
-        navigate("/dashboard");
+        setList(null);
       }
     }
   }, [listid, lists]);

@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useEffect } from "react";
 import { Snippet } from "../../typeInterfaces";
 import SortDropdown from "./SortDropdown";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
+import { useSessionStorage } from "@uidotdev/usehooks";
 
 type SortOrder = "asc" | "desc";
 interface SearchBarProps {
@@ -24,17 +25,29 @@ export const SearchBar = ({
   setSortOrder,
 }: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const [isFocused, setIsFocused] = useSessionStorage("searchFocused", false);
+  console.log(isFocused);
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setQuery(e.target.value);
       // Ensure the input retains focus after updating the query
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
+      if (isFocused) {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 0);
+      }
     },
     [setQuery],
   );
+
+  const handleFocus = () => {
+    console.log("focused");
+    setIsFocused(true);
+  };
+  const handleBlur = () => {
+    console.log("blurred");
+    setIsFocused(false);
+  };
 
   useKeyboardControls({
     slash: (event) => {
@@ -47,7 +60,9 @@ export const SearchBar = ({
 
   // Use useEffect to focus the input after each render
   useEffect(() => {
-    inputRef.current?.focus();
+    if (isFocused) {
+      inputRef.current?.focus();
+    }
   });
 
   return (
@@ -58,6 +73,8 @@ export const SearchBar = ({
         placeholder={placeHolder ? placeHolder : "search"}
         value={query}
         onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <SortDropdown
         setSortMethod={setSortMethod}
