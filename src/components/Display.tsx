@@ -417,7 +417,7 @@ export const Display = ({
             >
               <img
                 src="/copy.svg"
-                className="mx-10 h-5 invert group-hover:invert-0 dark:invert-0"
+                className="h-5 invert group-hover:invert-0 lg:mx-10 dark:invert-0"
               />
             </SnipppButton>
 

@@ -2130,6 +2130,11 @@ video {
 }
 
 @media (min-width: 1024px) {
+  .lg\:mx-10 {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+  }
+
   .lg\:mb-0 {
     margin-bottom: 0px;
   }
