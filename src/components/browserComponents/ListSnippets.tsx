@@ -147,7 +147,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
       return (
         <div
           ref={(el) => (itemRefs.current[index] = el)}
-          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none hover:cursor-pointer ${selectedClass}`}
+          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 last:border-none hover:cursor-pointer ${selectedClass}`}
           key={snippetID}
           onClick={() => handleClick(item, index)}
         >
@@ -158,7 +158,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
       return (
         <a
           ref={(el) => (itemRefs.current[index] = el)}
-          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 duration-75 last:border-none hover:cursor-alias ${selectedClass}`}
+          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 last:border-none hover:cursor-alias ${selectedClass}`}
           key={snippetID}
           href={`/snippet/${snippetID}`}
         >

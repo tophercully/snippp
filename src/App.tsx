@@ -30,7 +30,7 @@ const Home = () => {
 
       <div
         id="hero"
-        className="box-content flex items-center justify-center border-2 border-dashed border-base-150 p-10 text-blue-600 transition-all duration-300 dark:border-base-800 dark:text-blue-700"
+        className="box-content flex items-center justify-center border-2 border-dashed border-base-150 p-10 text-blue-600 transition-all dark:border-base-800 dark:text-blue-700"
       >
         <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1>
       </div>
@@ -41,10 +41,10 @@ const Home = () => {
       </h3>
       <a
         href="/browse"
-        className={`${stats ? "opacity-100" : "opacity-0"} group relative mt-12 flex items-center justify-center overflow-hidden rounded-sm bg-base-950 px-4 text-base-50 shadow-md duration-200 md:mt-24 dark:bg-base-50 dark:text-base-950 dark:shadow-sm dark:shadow-base-600`}
+        className={`${stats ? "opacity-100" : "opacity-0"} group relative mt-12 flex items-center justify-center overflow-hidden rounded-sm bg-base-950 px-4 text-base-50 shadow-md duration-75 md:mt-24 dark:bg-base-50 dark:text-base-950 dark:shadow-sm dark:shadow-base-600`}
       >
         <div
-          className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-0 dark:text-base-950"
+          className="absolute inset-0 -translate-x-full transform bg-blue-700 transition-transform duration-75 ease-in-out group-hover:translate-x-0 dark:text-base-950"
           aria-hidden="true"
         />
         <span className="relative z-10 text-xl md:text-2xl dark:group-hover:text-base-50">
