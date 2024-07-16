@@ -10,7 +10,6 @@ import categories from "../utils/categories";
 import { useParams } from "react-router-dom";
 import { setPageTitle } from "../utils/setPageTitle";
 import { LoadingSpinner } from "../components/LoadingSpinner";
-import { track } from "@vercel/analytics";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -59,7 +58,6 @@ export const Browser: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const { category } = useParams();
   if (category) {
-    track(`Category ${categories[category].name} browsed`);
     setPageTitle(`${categories[category].name} Snippets`);
   } else {
     setPageTitle("All Snippets");

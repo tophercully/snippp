@@ -24,6 +24,8 @@ import formatPostgresDate from "../../utils/formatPostgresDate";
 import { formatDescription } from "../../utils/formatDescription";
 import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
+import { track } from "@vercel/analytics";
+import { useNavigate } from "react-router-dom";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -69,7 +71,7 @@ export const Display = ({
   const snippetMod = snippetMods[snippetID] || {};
   const favoriteStatus = snippetMod.favoriteStatus ?? isFavorite;
   const { showNotif } = useNotif();
-
+  const navigate = useNavigate();
   const detectedLanguage = detectLanguage(code) || "plaintext";
 
   const worthExpanding = Boolean(tags) || Boolean(description);
@@ -302,12 +304,15 @@ export const Display = ({
           <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
             <h1 className="text-3xl font-bold">{name}</h1>
             <div className="flex items-end justify-between gap-10">
-              <a
-                href={`/user/${authorID}`}
+              <button
+                onClick={() => {
+                  track("User Profile Visited");
+                  navigate(`/user/${authorID}`);
+                }}
                 className="text-xl font-thin"
               >
                 {author}
-              </a>
+              </button>
               <h1 className="text-sm font-thin">
                 {createdAt ? formatPostgresDate(createdAt.toString()) : ""}
               </h1>
@@ -317,13 +322,16 @@ export const Display = ({
             {snippetCategories.length > 0 && (
               <div className="flex flex-nowrap gap-1 self-end">
                 {snippetCategories.map((category, index) => (
-                  <a
-                    href={category.link}
+                  <button
+                    onClick={() => {
+                      track(`Category ${category.name} Browsed`);
+                      navigate(category.link);
+                    }}
                     key={index}
                     className="flex flex-wrap items-center justify-center text-nowrap rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
                   >
                     {category.name}
-                  </a>
+                  </button>
                 ))}
               </div>
             )}
@@ -500,9 +508,10 @@ export const Display = ({
             {userProfile && userProfile.id === authorID && (
               <>
                 <SnipppButton
-                  onClick={() =>
-                    (window.location.href = `/builder/${selection.snippetID}`)
-                  }
+                  onClick={() => {
+                    track("Open Editor");
+                    navigate(`/builder/${selection.snippetID}`);
+                  }}
                   colorType="neutral"
                   size="md"
                   className="ml-auto"

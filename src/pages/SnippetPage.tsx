@@ -20,7 +20,6 @@ type SnippetMod = {
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 export const SnippetPage: React.FC = () => {
-  track("Snippet Page Load");
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});

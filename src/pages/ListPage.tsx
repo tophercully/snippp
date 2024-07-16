@@ -19,7 +19,6 @@ import DeleteConfirmationPopup from "../components/popups/DeleteConfirmationPopu
 import { setPageTitle } from "../utils/setPageTitle";
 import { formatDescription } from "../utils/formatDescription";
 import { LoadingSpinner } from "../components/LoadingSpinner";
-import { track } from "@vercel/analytics";
 
 type SortOrder = "asc" | "desc";
 
@@ -95,7 +94,6 @@ function sortByProperty<T>(
 // };
 
 export const ListPage: React.FC = () => {
-  track("List Page Load");
   const { listId } = useParams<{ listId: string }>();
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);

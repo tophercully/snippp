@@ -27,7 +27,6 @@ import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { ProfileStats } from "../components/profile/ProfileStats";
-import { track } from "@vercel/analytics";
 
 const getHighResGoogleProfilePicture = (pictureUrl: string): string => {
   // Check if the URL is a Google profile picture URL and replace for higher resolution
@@ -80,7 +79,6 @@ function sortByProperty<T>(
 }
 
 export const Profile: React.FC = () => {
-  track("Profile Page Load");
   const { listid, userid } = useParams();
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useLocalStorage<GoogleUser | null>(
