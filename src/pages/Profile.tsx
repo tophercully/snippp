@@ -28,6 +28,17 @@ import { useKeyboardControls } from "../hooks/KeyboardControls";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { ProfileStats } from "../components/profile/ProfileStats";
 
+const getHighResGoogleProfilePicture = (pictureUrl: string): string => {
+  // Check if the URL is a Google profile picture URL and replace for higher resolution
+  if (
+    pictureUrl.includes("googleusercontent.com") &&
+    pictureUrl.includes("s96-c")
+  ) {
+    return pictureUrl.replace(/s96-c/, "s400-c");
+  }
+  return pictureUrl;
+};
+
 type SortOrder = "asc" | "desc";
 
 type SnippetMod = {
@@ -70,7 +81,10 @@ function sortByProperty<T>(
 export const Profile: React.FC = () => {
   const { listid, userid } = useParams();
   const navigate = useNavigate();
-  const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
+  const [userProfile, setUserProfile] = useLocalStorage<GoogleUser | null>(
+    "userProfile",
+    null,
+  );
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
@@ -84,12 +98,21 @@ export const Profile: React.FC = () => {
     const getAndSetProfile = async () => {
       setIsLoading(true);
       const response = await fetchUserProfile(userid as string);
+
+      if (response?.profile_picture) {
+        response.profile_picture = getHighResGoogleProfilePicture(
+          response.profile_picture,
+        );
+      }
+
       setProfile(response as SnipppProfile);
       setIsLoading(false);
-      setPageTitle(profile?.name as string);
+      setPageTitle(response?.name as string);
     };
+
     getAndSetProfile();
   }, [userid]);
+
   const defaultLists = useMemo(
     () => [
       {
@@ -353,6 +376,16 @@ export const Profile: React.FC = () => {
       }
       return prevProfile;
     });
+
+    setUserProfile((prevProfile) => {
+      if (prevProfile) {
+        return {
+          ...prevProfile,
+          name: updatedProfileData.name ?? prevProfile.name, // Ensure name is not undefined
+        };
+      }
+      return prevProfile;
+    });
   };
 
   const SnippetExplorer: React.FC = () => {
@@ -414,7 +447,7 @@ export const Profile: React.FC = () => {
   };
 
   return (
-    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
+    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-50 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
       {!isLoading ?
         <>
@@ -423,7 +456,7 @@ export const Profile: React.FC = () => {
               snipppUser={profile as SnipppProfile}
               onUpdateUser={handleUpdateProfile}
             />
-            <ProfileStats userID={userid} />
+            <ProfileStats />
           </div>
           <div className="flex h-[96%] w-full shadow-lg">
             {!list && (

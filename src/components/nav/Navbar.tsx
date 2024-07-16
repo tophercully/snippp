@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { newUser } from "../../backend/user/userFunctions";
+import { fetchUserProfile, newUser } from "../../backend/user/userFunctions";
 import categories from "../../utils/categories";
 import { GoogleUser } from "../../typeInterfaces";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
@@ -65,7 +65,37 @@ export const Navbar: React.FC = () => {
             },
           )
           .then((res) => {
-            setUserProfile(res.data);
+            const googleUserProfile = res.data;
+            // Extract base URL and modify the size parameter for higher resolution
+            const highResPicture = googleUserProfile.picture.replace(
+              /s96-c/,
+              "s400-c",
+            );
+            googleUserProfile.picture = highResPicture;
+
+            setUserProfile(googleUserProfile);
+            fetchUserProfile(googleUserProfile.id)
+              .then((snipppProfile) => {
+                if (snipppProfile) {
+                  const updatedProfile = { ...googleUserProfile };
+                  if (
+                    snipppProfile.name &&
+                    snipppProfile.name !== googleUserProfile.name
+                  ) {
+                    updatedProfile.name = snipppProfile.name;
+                  }
+                  if (
+                    snipppProfile.profile_picture &&
+                    snipppProfile.profile_picture !== googleUserProfile.picture
+                  ) {
+                    updatedProfile.picture = snipppProfile.profile_picture;
+                  }
+                  setUserProfile(updatedProfile);
+                }
+              })
+              .catch((error) =>
+                console.error("Error fetching user profile:", error),
+              );
           })
           .catch((err) => console.log(err));
       }
@@ -102,7 +132,6 @@ export const Navbar: React.FC = () => {
   }, [isShortcutsPopupOpen]);
 
   const isBuilderPage = window.location.pathname.includes("builder");
-
   return (
     <>
       <div className="absolute left-0 right-0 top-0 w-full p-2 lg:px-10">

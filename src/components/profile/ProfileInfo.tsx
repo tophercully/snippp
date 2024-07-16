@@ -91,11 +91,14 @@ export const ProfileInfo = ({
 
   return (
     <div className="flex w-full flex-col gap-4 rounded-sm bg-base-50 p-4 shadow-md lg:w-2/3 lg:flex-row lg:gap-10 dark:bg-base-950 dark:text-base-50">
-      <img
-        src={profile_picture}
-        className={`aspect-square w-full rounded-sm border-4 lg:w-96 ${isOnline ? "animate-online" : "border-transparent"}`}
-        alt="Profile"
-      />
+      <div className="relative aspect-square w-full lg:w-96">
+        <img
+          src={profile_picture}
+          className={`h-full w-full rounded-sm border-4 object-contain ${isOnline ? "animate-online" : "border-transparent"}`}
+          alt="Profile"
+          style={{ objectPosition: "top" }}
+        />
+      </div>
       <div
         id="allInfo"
         className="flex h-full flex-1 flex-col justify-between gap-4"

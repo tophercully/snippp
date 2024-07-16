@@ -3,6 +3,11 @@ import { track } from "@vercel/analytics";
 
 export const newUser = async (userProfile: GoogleUser): Promise<boolean> => {
   track("New User");
+
+  // Extract base URL and modify the size parameter for higher resolution
+  const highResPicture = userProfile.picture.replace(/s96-c/, "s400-c");
+  userProfile.picture = highResPicture;
+
   try {
     const response = await fetch("/api/user/new-user", {
       method: "POST",

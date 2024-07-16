@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { StatCard } from "../statsTools/StatCard";
+import { StatCardSmall } from "../statsTools/StatCard";
 import { simplifyNumber } from "../../utils/simplifyNumber";
 import { UserStats, fetchUserStats } from "../../backend/user/userFunctions";
 import { LoadingSpinner } from "../LoadingSpinner";
 import { useParams } from "react-router-dom";
 import Distribution from "../statsTools/Distribution";
 
-export const ProfileStats = (userID: string) => {
+export const ProfileStats = () => {
   const { userid } = useParams();
   const [stats, setStats] = useState<UserStats | null>();
   const [isLoading, setIsLoading] = useState(true);
-  console.log(userID);
   useEffect(() => {
     const getStats = async () => {
       setIsLoading(true);
@@ -27,15 +26,15 @@ export const ProfileStats = (userID: string) => {
       {!isLoading && (
         <>
           <div className="grid h-fit w-full grid-cols-2 gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-            <StatCard
+            <StatCardSmall
               name="Snippets"
               value={stats?.totalSnippets || "null"}
             />
-            <StatCard
+            <StatCardSmall
               name="Copies Received"
               value={simplifyNumber(stats?.totalSnippetCopies)}
             />
-            <StatCard
+            <StatCardSmall
               name="Likes Received"
               value={simplifyNumber(stats?.totalFavorites)}
             />
@@ -43,12 +42,14 @@ export const ProfileStats = (userID: string) => {
           <div>
             {Object.keys(stats?.languageDistribution as any).length != 0 && (
               <Distribution
+                small={true}
                 data={stats?.languageDistribution as { [key: string]: number }}
                 title="Language Distribution"
               />
             )}
             {Object.keys(stats?.frameworkDistribution as any).length != 0 && (
               <Distribution
+                small={true}
                 data={stats?.frameworkDistribution as { [key: string]: number }}
                 title="Framework Distribution"
               />

@@ -3,6 +3,7 @@ import { useState } from "react";
 interface DistributionProps {
   data: { [key: string]: number };
   title: string;
+  small?: boolean;
 }
 
 const categoryMeta = {
@@ -17,7 +18,7 @@ const categoryMeta = {
   glsl: { displayName: "GLSL", color: "#5686a5" },
 };
 
-const Distribution: React.FC<DistributionProps> = ({ data, title }) => {
+const Distribution: React.FC<DistributionProps> = ({ data, title, small }) => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const total = Object.values(data).reduce((sum, value) => sum + value, 0);
@@ -26,11 +27,15 @@ const Distribution: React.FC<DistributionProps> = ({ data, title }) => {
     .filter(([, value]) => value > 0);
 
   return (
-    <div className="mb-6">
-      <h3 className="mb-2 text-lg font-semibold text-base-950 dark:text-base-50">
+    <div className={`mb-6 ${small ? "text-xs" : ""}`}>
+      <h3
+        className={`mb-2 font-semibold text-base-950 dark:text-base-50 ${small ? "text-base" : "text-lg"}`}
+      >
         {title}
       </h3>
-      <div className="flex h-5 overflow-hidden rounded-sm">
+      <div
+        className={`flex overflow-hidden rounded-sm ${small ? "h-3" : "h-5"}`}
+      >
         {sortedItems.map(([key, value]) => {
           const percentage = (value / total) * 100;
           return (
@@ -61,17 +66,19 @@ const Distribution: React.FC<DistributionProps> = ({ data, title }) => {
         {sortedItems.map(([key, value]) => (
           <div
             key={key}
-            className="mb-2 mr-4 flex items-center"
+            className={`mb-2 flex items-center ${small ? "mr-2" : "mr-4"}`}
           >
             <div
-              className="mr-1 h-3 w-3 rounded-sm"
+              className={`mr-1 rounded-sm ${small ? "h-2 w-2" : "h-3 w-3"}`}
               style={{
                 backgroundColor:
                   categoryMeta[key as keyof typeof categoryMeta]?.color ||
                   "#ccc",
               }}
             ></div>
-            <span className="font-base-950 text-sm dark:text-base-50">
+            <span
+              className={`font-base-950 text-sm dark:text-base-50 ${small ? "text-xs" : ""}`}
+            >
               {categoryMeta[key as keyof typeof categoryMeta]?.displayName ||
                 key}
               : {value} ({((value / total) * 100).toFixed(1)}%)
