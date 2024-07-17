@@ -91,7 +91,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         className="aspect-square h-full cursor-pointer p-3 dark:invert"
       />
       {isOpen && (
-        <div className="absolute right-1/2 top-full z-50 flex w-52 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500 dark:shadow-lg dark:invert">
+        <div className="absolute right-0 top-full z-50 flex w-52 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500 dark:border dark:border-black dark:shadow-lg dark:invert">
           <div className="flex w-full flex-col gap-2">
             <h1>SORT BY </h1>
             <div className="grid grid-cols-1 gap-2">
