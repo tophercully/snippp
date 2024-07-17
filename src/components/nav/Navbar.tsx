@@ -189,7 +189,7 @@ export const Navbar: React.FC = () => {
                       Languages
                     </div>
                     {Object.entries(categories)
-                      .filter(([, info]) => info.kind === "language")
+                      .filter(([, info]) => info.type === "language")
                       .map(([key, info]) => (
                         <button
                           key={key}
@@ -207,7 +207,7 @@ export const Navbar: React.FC = () => {
                       Frameworks/Libraries
                     </div>
                     {Object.entries(categories)
-                      .filter(([, info]) => info.kind === "framework/library")
+                      .filter(([, info]) => info.type === "framework")
                       .map(([key, info]) => (
                         <button
                           key={key}
