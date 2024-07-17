@@ -6,7 +6,7 @@ export const loadUserSnippets = async (
 ): Promise<Snippet[]> => {
   try {
     const response = await fetch(
-      `/api/loader/load-user-snippets?userID=${userID}&userSignedIn=${signedInID}`,
+      `/api/loader/load-user-snippets?userID=${userID}&userSignedIn=${signedInID ? signedInID : "0"}`,
     );
 
     if (!response.ok) {

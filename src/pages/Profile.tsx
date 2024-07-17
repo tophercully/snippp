@@ -316,7 +316,7 @@ export const Profile: React.FC = () => {
       }
       setSnippetsLoading(false);
     }
-  }, [list]);
+  }, [list, userProfile?.id]);
 
   useEffect(() => {
     fetchSnippets();
