@@ -366,7 +366,7 @@ export const Display = ({
           <div className="relative mt-4">
             <p
               className={`overflow-hidden font-thin transition-all duration-75 ${
-                isDescriptionExpanded ? "max-h-none" : "max-h-[3em]"
+                isDescriptionExpanded ? "max-h-none" : "max-h-[6em]"
               }`}
               dangerouslySetInnerHTML={{
                 __html: formatDescription(description),

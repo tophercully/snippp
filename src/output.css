@@ -1001,6 +1001,14 @@ video {
   max-height: 5rem;
 }
 
+.max-h-\[6em\] {
+  max-height: 6em;
+}
+
+.max-h-\[10rem\] {
+  max-height: 10rem;
+}
+
 .min-h-52 {
   min-height: 13rem;
 }
