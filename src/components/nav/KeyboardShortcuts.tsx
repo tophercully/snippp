@@ -54,12 +54,6 @@ export const KeyboardShortcuts = () => {
         </li>
         <li className="flex items-center gap-3">
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
-            \
-          </span>
-          <span>Add/Remove Favorite</span>
-        </li>
-        <li className="flex items-center gap-3">
-          <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
             ⏎
           </span>
           <span>Copy Snippet</span>
