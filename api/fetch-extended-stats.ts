@@ -25,6 +25,21 @@ const categories = {
     tags: ["react", "reactnative"],
     type: "framework",
   },
+  svelte: {
+    name: "Svelte",
+    tags: ["svelte", "sveltekit"],
+    type: "framework",
+  },
+  vue: {
+    name: "Vue",
+    tags: ["vue", "vuejs"],
+    type: "framework",
+  },
+  Angular: {
+    name: "Angular",
+    tags: ["ang", "angular"],
+    type: "framework",
+  },
   p5: {
     name: "p5.js",
     tags: ["p5", "p5js", "p5.js"],

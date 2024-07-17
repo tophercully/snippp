@@ -176,7 +176,7 @@ export const Builder = () => {
                 public: snippet.public,
               });
               showNotif("Snippet updated successfully", "success", 10000);
-              navigate(`/snippet/${snippetId}`);
+              navigate(-1);
             } else {
               const result = await newSnippet({
                 ...snippet,
@@ -254,7 +254,7 @@ export const Builder = () => {
                       className="group relative flex h-8 items-center rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
                     >
                       {category.autoDetected &&
-                        category.kind === "language" && (
+                        category.type === "language" && (
                           <img
                             src="/auto-sparkle.svg"
                             className="mr-1 dark:invert"
@@ -262,7 +262,7 @@ export const Builder = () => {
                         )}
                       {category.name}
                       {category.autoDetected &&
-                        category.kind === "language" && (
+                        category.type === "language" && (
                           <span className="invisible absolute left-1/2 right-1/2 top-full mx-auto mt-2 w-max max-w-xs -translate-x-1/2 transform rounded-sm bg-base-950 p-3 text-xs text-base-50 group-hover:visible dark:invert">
                             Language autodetected, you can overwrite this by
                             entering the correct language into the tags

@@ -189,11 +189,11 @@ export const Navbar: React.FC = () => {
                       Languages
                     </div>
                     {Object.entries(categories)
-                      .filter(([, info]) => info.kind === "language")
+                      .filter(([, info]) => info.type === "language")
                       .map(([key, info]) => (
                         <button
                           key={key}
-                          className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                          className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                           onClick={() => {
                             setIsCategoryDropdownOpen(false);
                             track(`Category ${categories[key]} Browsed`);
@@ -207,11 +207,11 @@ export const Navbar: React.FC = () => {
                       Frameworks/Libraries
                     </div>
                     {Object.entries(categories)
-                      .filter(([, info]) => info.kind === "framework/library")
+                      .filter(([, info]) => info.type === "framework")
                       .map(([key, info]) => (
                         <button
                           key={key}
-                          className="block px-4 py-2 text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                          className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                           onClick={() => {
                             setIsCategoryDropdownOpen(false);
                             track(`Category ${categories[key]} Browsed`);
