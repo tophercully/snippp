@@ -176,7 +176,7 @@ export const Builder = () => {
                 public: snippet.public,
               });
               showNotif("Snippet updated successfully", "success", 10000);
-              navigate(`/snippet/${snippetId}`);
+              navigate(-1);
             } else {
               const result = await newSnippet({
                 ...snippet,
