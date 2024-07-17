@@ -1,7 +1,8 @@
 export const KeyboardShortcuts = () => {
+  const isBrowser = window.location.pathname.includes("browse");
   return (
     <div className="fixed bottom-8 right-8 z-50 rounded-sm bg-base-950 p-4 text-base-50 shadow-lg">
-      <h3 className="mb-2 font-bold">Keyboard Shortcuts</h3>
+      <h3 className="mb-2 font-bold">{`Keyboard Shortcuts - ${isBrowser ? "Browser" : "Dashboard/Profile"}`}</h3>
       <ul className="flex max-h-52 flex-col flex-wrap gap-x-8 gap-y-2">
         <li className="row-span-2 flex items-center gap-3">
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
@@ -29,8 +30,8 @@ export const KeyboardShortcuts = () => {
         </li>
         <li className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
-              ⇧
+            <span className="flex w-fit items-center justify-center rounded-sm border-2 px-2 py-0">
+              shift
             </span>
 
             <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
@@ -41,8 +42,8 @@ export const KeyboardShortcuts = () => {
         </li>
         <li className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
-              ⇧
+            <span className="flex w-fit items-center justify-center rounded-sm border-2 px-2 py-0">
+              shift
             </span>
 
             <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
@@ -67,14 +68,20 @@ export const KeyboardShortcuts = () => {
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
             →
           </span>
-          <span>Select List OR Add/Remove Favorite</span>
-        </li>
-        <li className="flex items-center gap-3">
-          <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
-            ←
+          <span>
+            {isBrowser ?
+              "Add/Remove Favorite"
+            : "Select List OR Add/Remove Favorite"}
           </span>
-          <span>Back to Lists</span>
         </li>
+        {!isBrowser && (
+          <li className="flex items-center gap-3">
+            <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+              ←
+            </span>
+            <span>Back to Lists</span>
+          </li>
+        )}
         {/* <li className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
