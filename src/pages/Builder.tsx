@@ -23,6 +23,7 @@ export const Builder = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryInfo[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisallowed, setIsDisallowed] = useState(false);
 
   const { snippetId } = useParams();
   if (snippetId) {
@@ -76,7 +77,11 @@ export const Builder = () => {
         setIsLoading(true);
         try {
           const fetchedSnippet = await loadSnippetById(Number(snippetId));
-          setSnippet(fetchedSnippet as Snippet);
+          if (fetchedSnippet.authorID == userProfile?.id) {
+            setSnippet(fetchedSnippet as Snippet);
+          } else {
+            setIsDisallowed(true);
+          }
         } catch (error) {
           console.error("Error loading snippet:", error);
           showNotif("Error loading snippet", "error");
@@ -198,7 +203,7 @@ export const Builder = () => {
   return (
     <div className="flex h-fit min-h-svh w-full flex-col bg-base-100 p-10 pt-24 xl:h-svh dark:bg-base-900">
       <Navbar />
-      {userProfile && (
+      {userProfile && !isDisallowed && (
         <div className="mb-8 flex h-full w-full flex-col-reverse gap-3 xl:flex-row">
           {isLoading ?
             <div className="flex h-full w-full items-center justify-center">
@@ -349,6 +354,20 @@ export const Builder = () => {
               </div>
             </>
           }
+        </div>
+      )}
+      {isDisallowed && (
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+          <h1 className="flex gap-4 bg-red-600 p-4 text-base-50">
+            SNIPPET NOT AVAILABLE
+            <img src="/lock.svg" />
+          </h1>
+          <a
+            href="/"
+            className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 dark:bg-base-50 dark:text-base-950"
+          >
+            Return to Home
+          </a>
         </div>
       )}
       {!userProfile && (
