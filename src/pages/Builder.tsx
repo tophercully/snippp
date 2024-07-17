@@ -360,12 +360,12 @@ export const Builder = () => {
             YOU ARE NOT THE AUTHOR
             <img src="/lock.svg" />
           </h1>
-          <a
-            href="/"
+          <button
+            onClick={() => navigate(-1)}
             className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 dark:bg-base-50 dark:text-base-950"
           >
-            Return to Home
-          </a>
+            Go Back
+          </button>
         </div>
       )}
       {/* {!userProfile && (
