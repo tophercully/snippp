@@ -10,10 +10,15 @@ export default async function handler(req: any, res: any) {
   }
 
   const userID = req.query.userID;
-  const isSignedIn = req.query.isSignedIn === "true";
+  const userSignedIn = req.query.userSignedIn;
+  const isSignedIn = userSignedIn === userID;
 
   if (!userID) {
     return res.status(400).json({ error: "userID is required" });
+  }
+
+  if (!userSignedIn) {
+    return res.status(400).json({ error: "userSignedIn is required" });
   }
 
   try {
@@ -26,7 +31,7 @@ export default async function handler(req: any, res: any) {
       UserFavorites AS (
           SELECT snippetID
           FROM favorites
-          WHERE userID = ${userID}
+          WHERE userID = ${userSignedIn}
       )
       SELECT 
           s.snippetID, 
