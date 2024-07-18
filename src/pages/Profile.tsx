@@ -343,7 +343,7 @@ export const Profile: React.FC = () => {
           const tags = a.tags ? a.tags.toLowerCase() : "";
           const name = a.name ? a.name.toLowerCase() : "";
           const description = a.description ? a.description.toLowerCase() : "";
-          // const code = a.code ? a.code.toLowerCase() : "";
+          const code = a.code ? a.code.toLowerCase() : "";
           const author = a.author ? a.author.toLowerCase() : "";
 
           // Perform the filtering
@@ -351,7 +351,7 @@ export const Profile: React.FC = () => {
             tags.includes(query.toLowerCase()) ||
             name.includes(query.toLowerCase()) ||
             description.includes(query.toLowerCase()) ||
-            // code.includes(query.toLowerCase()) ||
+            code.includes(query.toLowerCase()) ||
             author.includes(query.toLowerCase())
           );
         });
