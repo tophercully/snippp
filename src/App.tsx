@@ -3,9 +3,11 @@ import { Footer } from "./components/nav/Footer";
 import { Navbar } from "./components/nav/Navbar";
 import { fetchStats } from "./backend/fetchStats";
 import "./output.css";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   document.title = `Snippp - Snippet Organizer`;
+  const navigate = useNavigate();
   const [stats, setStats] = useState<{
     snippetCount: number;
     userCount: number;
@@ -55,6 +57,12 @@ const Home = () => {
           className="relative ml-3 h-14 dark:invert dark:group-hover:invert-0"
         />
       </a>
+      <button
+        className="mt-4 text-sm text-base-500"
+        onClick={() => navigate("/stats")}
+      >
+        more stats
+      </button>
 
       <div className="absolute bottom-0 w-full p-2">
         <Footer />
