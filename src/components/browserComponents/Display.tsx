@@ -309,11 +309,11 @@ export const Display = ({
                   track("User Profile Visited");
                   navigate(`/user/${authorID}`);
                 }}
-                className="text-xl font-thin"
+                className="text-xl font-light"
               >
                 {author}
               </button>
-              <h1 className="text-sm font-thin">
+              <h1 className="text-sm font-light">
                 {createdAt ? formatPostgresDate(createdAt.toString()) : ""}
               </h1>
             </div>
@@ -365,7 +365,7 @@ export const Display = ({
         {worthExpanding && (
           <div className="relative mt-4">
             <p
-              className={`overflow-hidden font-thin transition-all duration-75 ${
+              className={`overflow-hidden font-light transition-all duration-75 ${
                 isDescriptionExpanded ? "max-h-none" : "max-h-[6em]"
               }`}
               dangerouslySetInnerHTML={{
