@@ -5,6 +5,7 @@ import { StatCard } from "../components/statsTools/StatCard";
 import { fetchExtendedStats } from "../backend/fetchStats";
 import { simplifyNumber } from "../utils/simplifyNumber";
 import Distribution from "../components/statsTools/Distribution";
+import { AnalyticsInfo, fetchAnalytics } from "../backend/fetchAnalytics";
 
 interface CategoryCount {
   [key: string]: number;
@@ -24,13 +25,22 @@ interface ExtendedHomepageInfo {
 export const Stats = () => {
   document.title = `Stats - Snippp`;
   const [stats, setStats] = useState<ExtendedHomepageInfo | null>(null);
-
+  const [analyticsReport, setAnalyticsReport] = useState<AnalyticsInfo | null>(
+    null,
+  );
+  console.log(analyticsReport);
   useEffect(() => {
     const getStats = async () => {
       const result = await fetchExtendedStats();
       setStats(result);
     };
+    const getAnalytics = async () => {
+      const result = await fetchAnalytics();
+      console.log(result);
+      setAnalyticsReport(result);
+    };
     getStats();
+    getAnalytics();
   }, []);
   return (
     <div className="flex h-fit min-h-screen w-full flex-col gap-8 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
