@@ -21,6 +21,7 @@ export default async function handler(req: any, res: any) {
       String.fromCharCode(13) + String.fromCharCode(10),
     );
 
+    console.log(linePreservedCode.length);
     // get the author's name from the users table
     const { rows: userRows } = await pool.sql`
       SELECT name FROM users WHERE userID = ${params.authorID};
