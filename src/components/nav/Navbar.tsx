@@ -8,6 +8,7 @@ import { GoogleUser } from "../../typeInterfaces";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import { useNavigate } from "react-router-dom";
 import { track } from "@vercel/analytics";
+import OnboardingPopup from "../popups/OnboardingPopup";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,10 @@ export const Navbar: React.FC = () => {
   const [userProfile, setUserProfile] = useLocalStorage<GoogleUser | null>(
     "userProfile",
     null,
+  );
+  const [isWelcomePopupDismissed] = useLocalStorage(
+    "isWelcomePopupDismissed",
+    false,
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
@@ -139,6 +144,9 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
   return (
     <>
+      {!isWelcomePopupDismissed && (
+        <OnboardingPopup handleSignIn={handleSignIn} />
+      )}
       {!userProfile}
       <div className="absolute left-0 right-0 top-0 w-full p-2 lg:px-10">
         <div className="flex h-fit w-full items-center justify-start gap-5">
