@@ -8,7 +8,7 @@ import { removeSnippetFromFavorites } from "../../backend/favorite/removeFavorit
 import { addSnippetToFavorites } from "../../backend/favorite/addFavorite";
 
 import { detectLanguage } from "../../utils/detectLanguage";
-import categories from "../../utils/categories";
+import { categories } from "../../utils/categories";
 import { useNotif } from "../../hooks/Notif";
 import { addCopy } from "../../backend/snippet/addCopy";
 import { simplifyNumber } from "../../utils/simplifyNumber";
@@ -96,7 +96,7 @@ export const Display = ({
     const now = Date.now();
     if (now - lastCopyTime >= 2000) {
       navigator.clipboard.writeText(code);
-      showNotif("COPIED TO CLIPBOARD", "info", 3000);
+      showNotif("COPIED TO CLIPBOARD", "info", 1000, false);
       addCopy(selection.snippetID);
       updateSnippetMod(snippetID, {
         copyCount: (snippetMod.copyCount || 0) + 1,

@@ -8,7 +8,7 @@ export interface CategoryInfo {
 
 export type Categories = Record<string, Omit<CategoryInfo, "urlPath">>;
 
-const categories: Categories = {
+export const categories: Categories = {
   js: {
     name: "JavaScript",
     tags: ["js", "javascript"],
@@ -39,7 +39,7 @@ const categories: Categories = {
     tags: ["vue", "vuejs"],
     type: "framework",
   },
-  Angular: {
+  angular: {
     name: "Angular",
     tags: ["ang", "angular"],
     type: "framework",
@@ -70,5 +70,3 @@ const categories: Categories = {
     type: "language",
   },
 };
-
-export default categories;

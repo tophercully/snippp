@@ -35,7 +35,7 @@ const categories = {
     tags: ["vue", "vuejs"],
     type: "framework",
   },
-  Angular: {
+  angular: {
     name: "Angular",
     tags: ["ang", "angular"],
     type: "framework",

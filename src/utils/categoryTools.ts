@@ -1,4 +1,4 @@
-import categories from "./categories";
+import { categories } from "./categories";
 import { CategoryInfo } from "./categories";
 
 export const getCategoriesFromTags = (tagsString: string): string[] => {

@@ -3,7 +3,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { fetchUserProfile, newUser } from "../../backend/user/userFunctions";
-import categories from "../../utils/categories";
+import { categories } from "../../utils/categories";
 import { GoogleUser } from "../../typeInterfaces";
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import { useNavigate } from "react-router-dom";

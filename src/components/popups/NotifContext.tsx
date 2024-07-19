@@ -9,7 +9,12 @@ import React, {
 export type NotifType = "success" | "error" | "info";
 
 export interface NotifContextType {
-  showNotif: (message: string, type: NotifType, timeout?: number) => void;
+  showNotif: (
+    message: string,
+    type: NotifType,
+    timeout?: number,
+    showCountdown?: boolean,
+  ) => void;
   hideNotif: () => void;
 }
 
@@ -25,12 +30,19 @@ export const NotifProvider: React.FC<React.PropsWithChildren> = ({
   const [notifTimeout, setNotifTimeout] = useState<number | undefined>(
     undefined,
   );
+  const [notifShowCountdown, setNotifShowCountdown] = useState<boolean>(true);
 
   const showNotif = useCallback(
-    (message: string, type: NotifType, timeout?: number) => {
+    (
+      message: string,
+      type: NotifType,
+      timeout?: number,
+      showCountdown: boolean = true,
+    ) => {
       setNotifMessage(message);
       setNotifType(type);
       setNotifTimeout(timeout);
+      setNotifShowCountdown(showCountdown);
     },
     [],
   );
@@ -39,6 +51,7 @@ export const NotifProvider: React.FC<React.PropsWithChildren> = ({
     setNotifMessage(null);
     setNotifType("info");
     setNotifTimeout(undefined);
+    setNotifShowCountdown(true);
   }, []);
 
   return (
@@ -50,6 +63,7 @@ export const NotifProvider: React.FC<React.PropsWithChildren> = ({
           type={notifType}
           onClose={hideNotif}
           timeout={notifTimeout}
+          showCountdown={notifShowCountdown}
         />
       )}
     </NotifContext.Provider>
@@ -61,9 +75,16 @@ interface NotifProps {
   type: "success" | "error" | "info";
   onClose: () => void;
   timeout?: number;
+  showCountdown?: boolean;
 }
 
-const Notif: React.FC<NotifProps> = ({ message, type, onClose, timeout }) => {
+const Notif: React.FC<NotifProps> = ({
+  message,
+  type,
+  onClose,
+  timeout,
+  showCountdown = true,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(100);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -91,7 +112,14 @@ const Notif: React.FC<NotifProps> = ({ message, type, onClose, timeout }) => {
         }
       };
 
-      timerRef.current = setTimeout(tick, 16);
+      if (showCountdown) {
+        timerRef.current = setTimeout(tick, 16);
+      } else {
+        timerRef.current = setTimeout(
+          () => setTimeout(handleClose, timeout),
+          timeout,
+        );
+      }
     }
 
     return () => {
@@ -99,7 +127,7 @@ const Notif: React.FC<NotifProps> = ({ message, type, onClose, timeout }) => {
         clearTimeout(timerRef.current);
       }
     };
-  }, [timeout, handleClose]);
+  }, [timeout, handleClose, showCountdown]);
 
   const backgroundColor =
     type === "success" ? "bg-green-600"
@@ -126,7 +154,7 @@ const Notif: React.FC<NotifProps> = ({ message, type, onClose, timeout }) => {
             ✕
           </button>
         </div>
-        {timeout && (
+        {timeout && showCountdown && (
           <div className="mt-2 h-1 w-full bg-white bg-opacity-30">
             <div
               className="h-full bg-white transition-all duration-100 ease-linear"
