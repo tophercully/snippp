@@ -48,11 +48,11 @@ export const Stats = () => {
       {stats ?
         <div className="grid h-full w-full grid-cols-2 gap-8 p-2 text-base-950 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 dark:text-base-50">
           <StatCard
-            name="Users:"
+            name="Signups:"
             value={stats.totalUsers}
           />
           <StatCard
-            name="Active Users:"
+            name="Users with Creations:"
             value={stats.activeUsers}
           />
           <StatCard

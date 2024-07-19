@@ -6,7 +6,7 @@ import { Navbar } from "../components/nav/Navbar";
 import { ListSnippets } from "../components/browserComponents/ListSnippets";
 import { Footer } from "../components/nav/Footer";
 import { Display } from "../components/browserComponents/Display";
-import categories from "../utils/categories";
+import { categories } from "../utils/categories";
 import { useParams } from "react-router-dom";
 import { setPageTitle } from "../utils/setPageTitle";
 import { LoadingSpinner } from "../components/LoadingSpinner";

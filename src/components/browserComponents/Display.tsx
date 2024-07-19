@@ -8,7 +8,7 @@ import { removeSnippetFromFavorites } from "../../backend/favorite/removeFavorit
 import { addSnippetToFavorites } from "../../backend/favorite/addFavorite";
 
 import { detectLanguage } from "../../utils/detectLanguage";
-import categories from "../../utils/categories";
+import { categories } from "../../utils/categories";
 import { useNotif } from "../../hooks/Notif";
 import { addCopy } from "../../backend/snippet/addCopy";
 import { simplifyNumber } from "../../utils/simplifyNumber";

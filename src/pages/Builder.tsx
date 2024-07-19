@@ -13,10 +13,11 @@ import {
   categorizeLanguage,
   determineCategories,
 } from "../utils/categoryTools";
-import { CategoryInfo } from "../utils/categories";
+import { CategoryInfo, categories as allCategories } from "../utils/categories";
 import { detectLanguage } from "../utils/detectLanguage";
 import { track } from "@vercel/analytics";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { detectFrameworks } from "../utils/detectFramework";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -24,6 +25,7 @@ export const Builder = () => {
   const [categories, setCategories] = useState<CategoryInfo[] | undefined>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDisallowed, setIsDisallowed] = useState(false);
+  const [suggestedFrameworks, setSuggestedFrameworks] = useState<string[]>([]);
 
   const { snippetId } = useParams();
   if (snippetId) {
@@ -50,13 +52,13 @@ export const Builder = () => {
     window.matchMedia &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   ) {
-    // dark mode
     darkMode = true;
   }
   const [selectedStyle, setSelectedStyle] = useState(
     darkMode ? "vs-dark" : "vs-light",
   );
 
+  // Check to see if the current user is the author, for privacy reasons
   const isCreator =
     isEditing ?
       userProfile ?
@@ -71,6 +73,7 @@ export const Builder = () => {
       setSelectedStyle(event.matches ? "vs-dark" : "vs-light");
     });
 
+  // Load snippet if in editor mode, leave blank if in creation mode
   useEffect(() => {
     if (isEditing && snippetId) {
       const loadSnippet = async () => {
@@ -93,7 +96,11 @@ export const Builder = () => {
     }
   }, [isEditing, snippetId]);
 
+  // Detect language and framework on code change
+  // Check tags for explicitly defined languages
+  // Don't detect language if there is an existing language
   useEffect(() => {
+    // Detect Language
     const langCategory = categorizeLanguage(
       detectLanguage(snippet.code) as string,
     );
@@ -101,6 +108,16 @@ export const Builder = () => {
     if (finalCategories.length > 0) {
       setCategories(finalCategories);
     }
+
+    // Detect frameworks
+    const detectedFrameworks: string[] = detectFrameworks(snippet.code);
+    const filteredDetectedFrameworks: string[] = [];
+    detectedFrameworks.map((framework) => {
+      if (!snippet.tags.includes(framework)) {
+        filteredDetectedFrameworks.push(framework);
+      }
+    });
+    setSuggestedFrameworks(detectFrameworks(snippet.code));
   }, [snippet.tags, snippet.code]);
 
   const handleChange = (
@@ -126,10 +143,23 @@ export const Builder = () => {
     }));
   };
 
+  // Handle snippet privacy when user clicks the checkbox
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSnippet((prevSnippet) => ({
       ...prevSnippet,
       public: e.target.checked,
+    }));
+  };
+
+  // When a user clicks a suggested category tag, add the category key to snippet.tags
+  const addSuggestedFramework = (
+    framework: string,
+    event: React.MouseEvent,
+  ) => {
+    event.preventDefault();
+    setSnippet((prev) => ({
+      ...prev,
+      tags: prev.tags ? `${prev.tags}, ${framework}` : framework,
     }));
   };
 
@@ -263,7 +293,7 @@ export const Builder = () => {
                       {category.name}
                       {category.autoDetected &&
                         category.type === "language" && (
-                          <span className="invisible absolute left-1/2 right-1/2 top-full mx-auto mt-2 w-max max-w-xs -translate-x-1/2 transform rounded-sm bg-base-950 p-3 text-xs text-base-50 group-hover:visible dark:invert">
+                          <span className="absolute bottom-full left-0 z-50 mb-2 w-max max-w-xs transform rounded-sm p-3 text-xs text-white opacity-0 shadow-lg transition-opacity duration-75 group-hover:opacity-100 dark:bg-base-150 dark:text-black">
                             Language autodetected, you can overwrite this by
                             entering the correct language into the tags
                           </span>
@@ -271,6 +301,44 @@ export const Builder = () => {
                     </span>
                   ))}
                 </div>
+              )}
+
+              {suggestedFrameworks.length > 0 && (
+                <>
+                  <p className="mt-4 text-sm text-base-300 dark:text-base-50">
+                    SUGGESTED FRAMEWORKS:
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {suggestedFrameworks.map(
+                      (framework) =>
+                        allCategories[framework] && (
+                          <div
+                            key={framework}
+                            className="group relative"
+                          >
+                            <button
+                              onClick={(e) =>
+                                addSuggestedFramework(framework, e)
+                              }
+                              className="flex h-8 items-center rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 hover:bg-base-800 dark:bg-base-50 dark:text-base-950 dark:hover:bg-base-200"
+                            >
+                              <img
+                                src="/auto-sparkle.svg"
+                                className="mr-1 dark:invert"
+                              />
+                              {allCategories[framework].name}
+                            </button>
+                            <div className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-max max-w-xs transform opacity-0 transition-opacity duration-75 group-hover:opacity-100">
+                              <div className="relative rounded-sm bg-base-800 px-2 py-1 text-xs text-white shadow-lg dark:bg-base-150 dark:text-black">
+                                Click to add {allCategories[framework].name} to
+                                tags
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                    )}
+                  </div>
+                </>
               )}
             </div>
             <div className="mt-auto flex w-full items-center justify-end gap-4">
@@ -368,14 +436,6 @@ export const Builder = () => {
           </button>
         </div>
       )}
-      {/* {!userProfile && (
-        <div className="mb-8 flex h-full w-full flex-col items-center justify-center gap-3">
-          <h1 className="bg-red-600 p-4 text-2xl text-base-50">{`Please sign in to ${
-            isEditing ? "edit" : "create"
-          }`}</h1>
-        </div>
-      )} */}
-
       <div className={userProfile ? "mt-auto" : "justify-self-end"}>
         <Footer />
       </div>
