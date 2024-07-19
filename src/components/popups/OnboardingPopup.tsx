@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
 import React, { useState, useEffect } from "react";
 import { formatDescription } from "../../utils/formatDescription";
+import { track } from "@vercel/analytics";
 
 interface OnboardingPopupProps {
   handleSignIn: () => void;
@@ -60,10 +61,12 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
   const handleSkip = () => {
     setIsVisible(false);
     setisWelcomePopupDismissed(true);
+    track("Skip Welcome Popup");
   };
 
   const handleSignInWithGoogle = () => {
     handleSignIn();
+    track("User Sign In from Welcome Popup");
     setIsVisible(false);
     setisWelcomePopupDismissed(true);
   };
@@ -71,6 +74,7 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
   const handleClose = () => {
     setIsVisible(false);
     setisWelcomePopupDismissed(true);
+    track("Close Welcome Popup");
   };
 
   const handleDotClick = (index: number) => {
