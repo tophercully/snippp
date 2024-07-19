@@ -96,7 +96,7 @@ export const Display = ({
     const now = Date.now();
     if (now - lastCopyTime >= 2000) {
       navigator.clipboard.writeText(code);
-      showNotif("COPIED TO CLIPBOARD", "info", 3000);
+      showNotif("COPIED TO CLIPBOARD", "info", 1000, false);
       addCopy(selection.snippetID);
       updateSnippetMod(snippetID, {
         copyCount: (snippetMod.copyCount || 0) + 1,

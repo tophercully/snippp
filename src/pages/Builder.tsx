@@ -205,7 +205,7 @@ export const Builder = () => {
                 tags: updatedTags,
                 public: snippet.public,
               });
-              showNotif("Snippet updated successfully", "success", 10000);
+              showNotif("Snippet updated successfully", "success", 5000);
               navigate(-1);
             } else {
               const result = await newSnippet({
@@ -214,7 +214,7 @@ export const Builder = () => {
                 authorID: userProfile.id,
                 tags: updatedTags,
               });
-              showNotif("Snippet created successfully", "success", 10000);
+              showNotif("Snippet created successfully", "success", 5000);
               navigate(`/snippet/${result.snippetID}`);
             }
           } catch (error) {
