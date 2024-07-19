@@ -44,12 +44,14 @@ export const Navbar: React.FC = () => {
 
   const handleSignIn = () => {
     if (userToken || userProfile) {
+      track("User Sign Out");
       googleLogout();
       setUserToken(null);
       setUserProfile(null);
       setIsDropdownOpen(false);
       setIsUserCreated(false);
     } else {
+      track("User Sign In");
       login();
     }
   };
@@ -155,7 +157,6 @@ export const Navbar: React.FC = () => {
           <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
             <button
               onClick={() => {
-                track(`Open Browser`);
                 navigate(`/browse`);
               }}
               className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
@@ -196,7 +197,6 @@ export const Navbar: React.FC = () => {
                           className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                           onClick={() => {
                             setIsCategoryDropdownOpen(false);
-                            track(`Category ${categories[key]} Browsed`);
                             navigate(`/browse/${key}`);
                           }}
                         >
@@ -214,7 +214,6 @@ export const Navbar: React.FC = () => {
                           className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                           onClick={() => {
                             setIsCategoryDropdownOpen(false);
-                            track(`Category ${categories[key]} Browsed`);
                             navigate(`/browse/${key}`);
                           }}
                         >
@@ -280,7 +279,6 @@ export const Navbar: React.FC = () => {
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={() => {
-                      track("Open Dashboard");
                       navigate("/dashboard");
                     }}
                   >
@@ -289,7 +287,6 @@ export const Navbar: React.FC = () => {
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={() => {
-                      track("Open Profile");
                       navigate(`/user/${userProfile.id}`);
                     }}
                   >

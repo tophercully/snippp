@@ -1,5 +1,8 @@
+import { track } from "@vercel/analytics";
+
 export const addCopy = async (snippetID: number): Promise<void> => {
   try {
+    track("Snippet Copy Event");
     const response = await fetch("/api/snippet/add-copy", {
       method: "POST",
       headers: {

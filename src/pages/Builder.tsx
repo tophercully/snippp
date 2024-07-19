@@ -322,7 +322,7 @@ export const Builder = () => {
               {suggestedFrameworks.length > 0 && (
                 <>
                   <p className="mt-4 text-sm text-base-300 dark:text-base-50">
-                    SUGGESTED FRAMEWORKS:
+                    SUGGESTED CATEGORIES:
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {suggestedFrameworks.map(
