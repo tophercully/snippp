@@ -117,7 +117,7 @@ export const Builder = () => {
         filteredDetectedFrameworks.push(framework);
       }
     });
-    setSuggestedFrameworks(detectFrameworks(snippet.code));
+    setSuggestedFrameworks(filteredDetectedFrameworks);
   }, [snippet.tags, snippet.code]);
 
   const handleChange = (
