@@ -436,6 +436,19 @@ export const Builder = () => {
           </button>
         </div>
       )}
+      {!userProfile && (
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+          <h1 className="flex gap-4 bg-blue-600 p-4 text-base-50">
+            PLEASE SIGN IN TO CREATE A SNIPPET
+          </h1>
+          <button
+            onClick={() => navigate(-1)}
+            className="text-semibold bg-base-950 p-2 text-sm text-base-50 underline decoration-dashed underline-offset-4 dark:bg-base-50 dark:text-base-950"
+          >
+            Go Back
+          </button>
+        </div>
+      )}
       <div className={userProfile ? "mt-auto" : "justify-self-end"}>
         <Footer />
       </div>
