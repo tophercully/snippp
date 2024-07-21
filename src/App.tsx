@@ -34,7 +34,8 @@ const Home = () => {
         id="hero"
         className="box-content flex items-center justify-center border-2 border-dashed border-base-150 p-10 text-blue-600 transition-all dark:border-base-800 dark:text-blue-700"
       >
-        <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1>
+        {/* <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1> */}
+        <img src="/snippp.svg" />
       </div>
       <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
 

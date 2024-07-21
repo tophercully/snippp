@@ -20,7 +20,7 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
       title: "Hello Builders! ",
       content: `Snippp is here for you to get in, get out, get back to creating. 
         Let's get you started!`,
-      imageUrl: "/landing.png",
+      imageUrl: "/snippp.svg",
     },
     {
       title: "Create and organize tools",
@@ -111,7 +111,7 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
                     <img
                       src={page.imageUrl}
                       alt="Page visual"
-                      className="max-h-full max-w-full object-contain"
+                      className="max-h-full max-w-full object-contain shadow-lg"
                     />
                   </div>
                   <div className="w-full">
