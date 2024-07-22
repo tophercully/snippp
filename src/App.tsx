@@ -27,21 +27,52 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="flex h-fit min-h-[100svh] w-screen flex-col items-center justify-center bg-base-50 p-2 pt-24 font-satoshi md:p-10 dark:bg-base-950">
+    <div className="relative flex h-fit min-h-[100svh] w-[99svw] flex-col items-center justify-center bg-base-50 p-2 pb-32 pt-32 font-satoshi md:p-10 dark:bg-base-950">
       <Navbar />
 
-      <div
-        id="hero"
-        className="box-content flex items-center justify-center border-2 border-dashed border-base-150 p-10 text-blue-600 transition-all dark:border-base-800 dark:text-blue-700"
-      >
-        {/* <h1 className="text-7xl font-extrabold md:text-9xl">SNIPPP</h1> */}
-        <img src="/snippp.svg" />
-      </div>
-      <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
+      <div className="flex w-full flex-col items-center justify-around gap-8 lg:mt-24">
+        <div
+          id="hero"
+          className="box-content flex h-fit items-center justify-center self-center border-2 border-dashed border-base-150 p-10 text-blue-600 transition-all dark:border-base-800 dark:text-blue-700"
+        >
+          <img src="/snippp.svg" />
+        </div>
+        <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
 
-      <h3 className="mt-12 w-full max-w-96 text-center text-xl text-base-500 md:mt-24 md:text-2xl dark:text-base-400">
+        <div className="flex w-fit max-w-[80ch] flex-col gap-4 text-left text-sm md:mt-24 md:text-2xl dark:text-base-400">
+          <h2 className="max-w-[80ch] text-2xl font-bold text-base-950 dark:text-base-50">
+            Get in, Get Out, Get Back to Coding{" "}
+          </h2>
+
+          {/* <p>Create. Organize. Share. Discover.</p> */}
+          <p className="underline">Streamline your workflow with:</p>
+
+          <ul className="flex flex-col gap-2 text-base font-light text-base-950 dark:text-base-50">
+            <li>
+              <span className="mr-2 font-medium">
+                Lightning-fast Navigation:
+              </span>
+              Quickly find and use the code you need.
+            </li>
+            <li>
+              <span className="mr-2 font-medium">Intuitive Organization:</span>
+              Effortlessly categorize and manage your snippets.
+            </li>
+            <li>
+              <span className="mr-2 font-medium">Easy Sharing:</span>
+              Collaborate with your team or the community.
+            </li>
+            <li>
+              <span className="mr-2 font-medium">Endless Discovery: </span>
+              Explore a vast library of snippets shared by other developers.
+            </li>
+            {/* Get started with Snippp.io and supercharge your productivity! */}
+          </ul>
+        </div>
+      </div>
+      {/* <h3 className="mt-12 w-full max-w-96 text-center text-xl text-base-500 md:mt-24 md:text-2xl dark:text-base-400">
         UNINTERRUPTED CREATIVITY FOR CREATIVE CODERS – YOUR SNIPPET ORGANIZER
-      </h3>
+      </h3> */}
       <a
         href="/browse"
         className={`${stats ? "opacity-100" : "opacity-0"} group relative mt-12 flex items-center justify-center overflow-hidden rounded-sm bg-base-950 px-4 text-base-50 shadow-md duration-75 md:mt-24 dark:bg-base-50 dark:text-base-950 dark:shadow-sm dark:shadow-base-600`}
@@ -59,13 +90,13 @@ const Home = () => {
         />
       </a>
       <button
-        className="mt-4 text-sm text-base-500"
+        className="my-4 mb-24 text-sm text-base-500"
         onClick={() => navigate("/stats")}
       >
         more stats
       </button>
 
-      <div className="absolute bottom-0 w-full p-2">
+      <div className="absolute bottom-0 w-[95%] p-2">
         <Footer />
       </div>
     </div>
