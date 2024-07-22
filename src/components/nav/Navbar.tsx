@@ -28,6 +28,8 @@ export const Navbar: React.FC = () => {
     "isWelcomePopupDismissed",
     false,
   );
+  const isBrowseOrHome =
+    window.location.pathname == "/" || window.location.pathname == "/browse";
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
     useState<boolean>(false);
@@ -144,7 +146,7 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
   return (
     <>
-      {!isWelcomePopupDismissed && (
+      {!isWelcomePopupDismissed && isBrowseOrHome && (
         <OnboardingPopup handleSignIn={handleSignIn} />
       )}
       {!userProfile}
@@ -152,14 +154,14 @@ export const Navbar: React.FC = () => {
         <div className="flex h-fit w-full items-center justify-start gap-5">
           <a
             href="/"
-            className="group flex items-center gap-1 rounded-sm bg-base-950 p-3 text-base-50 dark:bg-base-50 dark:text-base-950"
+            className="group flex items-center gap-1 rounded-sm bg-base-950 p-1 text-base-50 dark:bg-base-50 dark:text-base-950"
           >
             <img
-              src="/scissors.svg"
-              className="h-6 w-6 brightness-0 invert dark:invert-0"
+              src="/snippp1x1.svg"
+              className="h-10 w-10 brightness-0 invert dark:invert-0"
             />
             <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:px-3">
-              SNIPPP
+              {"Snippp"}
             </span>
           </a>
           <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">

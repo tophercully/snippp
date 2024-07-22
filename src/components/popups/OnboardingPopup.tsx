@@ -1,6 +1,7 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
 import React, { useState, useEffect } from "react";
 import { formatDescription } from "../../utils/formatDescription";
+import { track } from "@vercel/analytics";
 
 interface OnboardingPopupProps {
   handleSignIn: () => void;
@@ -19,7 +20,7 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
       title: "Hello Builders! ",
       content: `Snippp is here for you to get in, get out, get back to creating. 
         Let's get you started!`,
-      imageUrl: "/landing.png",
+      imageUrl: "/snippp.svg",
     },
     {
       title: "Create and organize tools",
@@ -60,10 +61,12 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
   const handleSkip = () => {
     setIsVisible(false);
     setisWelcomePopupDismissed(true);
+    track("Skip Welcome Popup");
   };
 
   const handleSignInWithGoogle = () => {
     handleSignIn();
+    track("User Sign In from Welcome Popup");
     setIsVisible(false);
     setisWelcomePopupDismissed(true);
   };
@@ -71,6 +74,7 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
   const handleClose = () => {
     setIsVisible(false);
     setisWelcomePopupDismissed(true);
+    track("Close Welcome Popup");
   };
 
   const handleDotClick = (index: number) => {
@@ -107,7 +111,7 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
                     <img
                       src={page.imageUrl}
                       alt="Page visual"
-                      className="max-h-full max-w-full object-contain"
+                      className="max-h-full max-w-full object-contain shadow-lg"
                     />
                   </div>
                   <div className="w-full">
