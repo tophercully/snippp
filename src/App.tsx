@@ -39,15 +39,26 @@ const Home = () => {
         </div>
         <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
 
-        <div className="flex w-fit max-w-[80ch] flex-col gap-4 text-left text-sm md:mt-24 md:text-2xl dark:text-base-400">
-          <h2 className="max-w-[80ch] text-2xl font-bold text-base-950 dark:text-base-50">
-            Get in, Get Out, Get Back to Coding{" "}
+        <div className="flex w-fit max-w-[60ch] flex-col gap-4 text-left text-sm md:mt-24 md:text-2xl dark:text-base-400">
+          <h2 className="max-w-[40ch] text-lg font-medium text-base-950 dark:text-base-50">
+            Your Ultimate Code Snippet Solution
           </h2>
+          <p className="text-base">
+            Maximize your coding efficiency with Snippp.io. Quickly create,
+            organize, and share code snippets with ease.
+          </p>
+          <p className="text-base">
+            Our lightweight tool ensures you spend less time searching and more
+            time coding.
+          </p>
+          {/* <h2 className="max-w-[80ch] text-2xl font-bold text-base-950 dark:text-base-50">
+            Get in, Get Out, Get Back to Coding{" "}
+          </h2> */}
 
           {/* <p>Create. Organize. Share. Discover.</p> */}
-          <p className="underline">Streamline your workflow with:</p>
+          {/* <p className="">Streamline your workflow with:</p> */}
 
-          <ul className="flex flex-col gap-2 text-base font-light text-base-950 dark:text-base-50">
+          {/* <ul className="flex flex-col gap-2 text-base font-light text-base-950 dark:text-base-50">
             <li>
               <span className="mr-2 font-medium">
                 Lightning-fast Navigation:
@@ -66,8 +77,7 @@ const Home = () => {
               <span className="mr-2 font-medium">Endless Discovery: </span>
               Explore a vast library of snippets shared by other developers.
             </li>
-            {/* Get started with Snippp.io and supercharge your productivity! */}
-          </ul>
+          </ul> */}
         </div>
       </div>
       {/* <h3 className="mt-12 w-full max-w-96 text-center text-xl text-base-500 md:mt-24 md:text-2xl dark:text-base-400">

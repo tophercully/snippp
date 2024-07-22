@@ -1116,6 +1116,14 @@ video {
   max-width: 80ch;
 }
 
+.max-w-\[40ch\] {
+  max-width: 40ch;
+}
+
+.max-w-\[60ch\] {
+  max-width: 60ch;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
