@@ -29,7 +29,7 @@ export const formatDescription = (text: string): string => {
   };
 
   const formatCodeBlocks = (content: string): string => {
-    return content.replace(codeBlockRegex, (match, lang, code) => {
+    return content.replace(codeBlockRegex, (lang, code) => {
       const languageTitle = lang ? getLanguageTitle(lang) : "Code";
       const trimmedCode = code
         .trim()
