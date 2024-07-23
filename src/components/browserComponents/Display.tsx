@@ -302,7 +302,12 @@ export const Display = ({
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
         <div className="flex h-fit w-fit flex-wrap gap-4">
           <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
-            <h1 className="text-3xl font-bold">{name}</h1>
+            <a
+              href={`/snippet/${snippetID}`}
+              className="text-3xl font-bold"
+            >
+              {name}
+            </a>
             <div className="flex items-end justify-between gap-10">
               <button
                 onClick={() => {
