@@ -16,6 +16,7 @@ import { simplifyNumber } from "../../utils/simplifyNumber";
 import {
   ListWithSnippetStatus,
   addSnippetToList,
+  createList,
   getListsWithSnippetStatus,
   removeSnippetFromList,
 } from "../../backend/list/listFunctions";
@@ -63,6 +64,10 @@ export const Display = ({
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
+  const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
+  const [newListName, setNewListName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
   const [isEditing] = useSessionStorage("isEditingList", false);
@@ -233,6 +238,37 @@ export const Display = ({
       console.error("Failed to update snippet in list:", error);
       showNotif("Failed to update list" + error, "error", 2000);
     }
+  };
+
+  const handleSaveList = async () => {
+    if (userProfile) {
+      setIsSaving(true);
+
+      try {
+        await createList({
+          userID: userProfile.id,
+          listName: newListName,
+          description: newDescription,
+        });
+
+        showNotif("List Created", "success", 5000);
+      } catch (error) {
+        showNotif("Error Saving List", "error", 5000);
+      } finally {
+        // Reset form and hide it
+        setNewListName("");
+        setNewDescription("");
+        setIsAdding(false);
+        setIsSaving(false);
+        fetchUserLists();
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsAdding(false);
+    setNewListName("");
+    setNewDescription("");
   };
 
   const handleShare = async () => {
@@ -572,7 +608,7 @@ export const Display = ({
             </div>
           </div>
         )}
-        {showListPopup && (
+        {showListPopup && !isAdding && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="w-full max-w-md rounded-sm bg-white p-6 dark:bg-base-850">
               <div className="mb-4 flex items-center justify-between">
@@ -617,8 +653,63 @@ export const Display = ({
                       </button>
                     ))
                   : <p className="dark:text-base-200">No lists available.</p>}
+                  <p
+                    onClick={() => {
+                      setIsAdding(true);
+                    }}
+                    className="flex justify-center bg-black p-2 hover:cursor-pointer hover:bg-base-500 dark:bg-white"
+                  >
+                    <img
+                      src="/add.svg"
+                      className="h-full dark:invert"
+                    />
+                  </p>
                 </div>
               }
+            </div>
+          </div>
+        )}
+        {isAdding && (
+          <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
+            <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
+              <h2 className="mb-4 text-center text-2xl dark:text-white">
+                Add New List
+              </h2>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-base-700 dark:text-base-200">
+                  List Name
+                </label>
+                <input
+                  type="text"
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                  className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-base-700 dark:text-base-200">
+                  Description
+                </label>
+                <textarea
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <SnipppButton
+                  onClick={handleCancel}
+                  colorType="delete"
+                >
+                  CANCEL
+                </SnipppButton>
+                <SnipppButton
+                  onClick={handleSaveList}
+                  disabled={isSaving}
+                >
+                  SAVE
+                </SnipppButton>
+              </div>
             </div>
           </div>
         )}
