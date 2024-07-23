@@ -41,7 +41,7 @@ const Home = () => {
 
         <div className="flex w-fit max-w-[60ch] flex-col gap-4 text-left text-sm md:mt-24 md:text-2xl dark:text-base-400">
           <h2 className="max-w-[40ch] text-lg font-medium text-base-950 dark:text-base-50">
-            Your Ultimate Code Snippet Solution
+            Simplify Your Tool Management
           </h2>
           <p className="text-base">
             Maximize your coding efficiency with Snippp.io. Quickly create,

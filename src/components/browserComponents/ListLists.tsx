@@ -21,6 +21,7 @@ interface UserListsProps {
   lists: ListData[];
   addDisabled: boolean;
   onSelectList: (list: ListData) => void;
+  onAddList: () => void;
 }
 
 export const ListLists: React.FC<UserListsProps> = ({
@@ -28,6 +29,7 @@ export const ListLists: React.FC<UserListsProps> = ({
   lists,
   addDisabled,
   onSelectList,
+  onAddList,
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
@@ -119,6 +121,7 @@ export const ListLists: React.FC<UserListsProps> = ({
         setNewDescription("");
         setIsAdding(false);
         setIsSaving(false);
+        onAddList();
       }
     }
   };

@@ -485,6 +485,7 @@ export const Profile: React.FC = () => {
                   lists={lists}
                   addDisabled={userProfile ? !(userProfile.id == userid) : true}
                   onSelectList={handleSelectList}
+                  onAddList={fetchAndSetLists}
                 />
 
                 {listsLoading && (

@@ -16,6 +16,7 @@ import { simplifyNumber } from "../../utils/simplifyNumber";
 import {
   ListWithSnippetStatus,
   addSnippetToList,
+  createList,
   getListsWithSnippetStatus,
   removeSnippetFromList,
 } from "../../backend/list/listFunctions";
@@ -63,6 +64,10 @@ export const Display = ({
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [lastCopyTime, setLastCopyTime] = useState(0);
   const [showListPopup, setShowListPopup] = useState(false);
+  const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
+  const [newListName, setNewListName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
   const [isEditing] = useSessionStorage("isEditingList", false);
@@ -207,32 +212,72 @@ export const Display = ({
   };
 
   const handleAddOrRemoveFromList = async (list: ListWithSnippetStatus) => {
+    // Optimistically update the UI
+    setUserLists((prevLists) =>
+      prevLists.map((l) =>
+        l.listid === list.listid ? { ...l, has_snippet: !l.has_snippet } : l,
+      ),
+    );
+
     try {
-      if (list.has_snippet) {
-        await removeSnippetFromList(list.listid, snippetID);
-        showNotif(
-          `Removed ${selection.name} from ${list.listname}`,
-          "success",
-          2000,
-        );
-      } else {
+      if (!list.has_snippet) {
         await addSnippetToList(list.listid, snippetID);
-        showNotif(
-          `Added ${selection.name} to ${list.listname}`,
-          "success",
-          2000,
-        );
+        // showNotif(
+        //   `Added ${selection.name} to ${list.listname}`,
+        //   "success",
+        //   2000,
+        // );
+      } else {
+        await removeSnippetFromList(list.listid, snippetID);
+        // showNotif(
+        //   `Removed ${selection.name} from ${list.listname}`,
+        //   "success",
+        //   2000,
+        // );
       }
-      // Update the list status locally
+    } catch (error) {
+      // Revert the optimistic update if the operation fails
       setUserLists((prevLists) =>
         prevLists.map((l) =>
-          l.listid === list.listid ? { ...l, has_snippet: !l.has_snippet } : l,
+          l.listid === list.listid ?
+            { ...l, has_snippet: list.has_snippet }
+          : l,
         ),
       );
-    } catch (error) {
       console.error("Failed to update snippet in list:", error);
-      showNotif("Failed to update list" + error, "error", 2000);
+      showNotif("Failed to update list: " + error, "error", 2000);
     }
+  };
+
+  const handleSaveList = async () => {
+    if (userProfile) {
+      setIsSaving(true);
+
+      try {
+        await createList({
+          userID: userProfile.id,
+          listName: newListName,
+          description: newDescription,
+        });
+
+        showNotif("List Created", "success", 5000);
+      } catch (error) {
+        showNotif("Error Saving List", "error", 5000);
+      } finally {
+        // Reset form and hide it
+        setNewListName("");
+        setNewDescription("");
+        setIsAdding(false);
+        setIsSaving(false);
+        fetchUserLists();
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsAdding(false);
+    setNewListName("");
+    setNewDescription("");
   };
 
   const handleShare = async () => {
@@ -302,7 +347,12 @@ export const Display = ({
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
         <div className="flex h-fit w-fit flex-wrap gap-4">
           <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
-            <h1 className="text-3xl font-bold">{name}</h1>
+            <a
+              href={`/snippet/${snippetID}`}
+              className="text-3xl font-bold"
+            >
+              {name}
+            </a>
             <div className="flex items-end justify-between gap-10">
               <button
                 onClick={() => {
@@ -567,7 +617,7 @@ export const Display = ({
             </div>
           </div>
         )}
-        {showListPopup && (
+        {showListPopup && !isAdding && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="w-full max-w-md rounded-sm bg-white p-6 dark:bg-base-850">
               <div className="mb-4 flex items-center justify-between">
@@ -586,34 +636,107 @@ export const Display = ({
               </div>
               {isLoadingLists ?
                 <p className="mb-4 dark:text-base-200">Loading lists...</p>
-              : <div className="mb-4 max-h-[40svh]">
+              : <div className="mb-4 flex max-h-[40svh] flex-col gap-2">
                   {userLists.length > 0 ?
                     userLists.map((list) => (
-                      <button
-                        key={list.listid}
-                        onClick={() => handleAddOrRemoveFromList(list)}
-                        className={`mb-2 flex w-full items-center justify-between rounded-sm p-2 text-left ${
-                          list.has_snippet ?
-                            "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
-                          : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
-                        }`}
-                      >
-                        <span>{list.listname}</span>
-                        {list.has_snippet ?
+                      <div className="flex gap-2">
+                        <button
+                          key={list.listid}
+                          onClick={() => handleAddOrRemoveFromList(list)}
+                          className={`flex w-full items-center justify-between rounded-sm p-2 text-left shadow-md ${
+                            list.has_snippet ?
+                              "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
+                            : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                          }`}
+                        >
+                          <span>{list.listname}</span>
+                          {list.has_snippet ?
+                            <img
+                              src="/x.svg"
+                              className="h-5 w-5 invert dark:invert-0"
+                            />
+                          : <img
+                              src="/add.svg"
+                              className="h-5 w-5 invert dark:invert-0"
+                            />
+                          }
+                        </button>
+                        <SnipppButton
+                          size="md"
+                          tooltip="View List in New Tab"
+                          colorType="neutral"
+                          onClick={() =>
+                            window.open(
+                              `${window.location.origin}/list/${list.listid}`,
+                            )
+                          }
+                        >
                           <img
-                            src="/x.svg"
-                            className="h-5 w-5 invert dark:invert-0"
+                            src="/opennew.svg"
+                            className="invert group-hover:invert-0 dark:invert-0"
                           />
-                        : <img
-                            src="/add.svg"
-                            className="h-5 w-5 invert dark:invert-0"
-                          />
-                        }
-                      </button>
+                        </SnipppButton>
+                      </div>
                     ))
                   : <p className="dark:text-base-200">No lists available.</p>}
+                  <p
+                    onClick={() => {
+                      setIsAdding(true);
+                    }}
+                    className="mt-4 flex items-center justify-center bg-black p-2 text-lg text-white hover:cursor-pointer hover:bg-base-500 dark:bg-white dark:text-black"
+                  >
+                    NEW LIST
+                    <img
+                      src="/add.svg"
+                      className="ml-1 h-full dark:invert"
+                    />
+                  </p>
                 </div>
               }
+            </div>
+          </div>
+        )}
+        {isAdding && (
+          <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
+            <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
+              <h2 className="mb-4 text-center text-2xl dark:text-white">
+                Add New List
+              </h2>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-base-700 dark:text-base-200">
+                  List Name
+                </label>
+                <input
+                  type="text"
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                  className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-base-700 dark:text-base-200">
+                  Description
+                </label>
+                <textarea
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
+                />
+              </div>
+              <div className="flex justify-end gap-4">
+                <SnipppButton
+                  onClick={handleCancel}
+                  colorType="delete"
+                >
+                  CANCEL
+                </SnipppButton>
+                <SnipppButton
+                  onClick={handleSaveList}
+                  disabled={isSaving}
+                >
+                  SAVE
+                </SnipppButton>
+              </div>
             </div>
           </div>
         )}

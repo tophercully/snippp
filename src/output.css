@@ -691,6 +691,10 @@ video {
   margin: -6px;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .my-44 {
   margin-top: 11rem;
   margin-bottom: 11rem;
@@ -803,6 +807,10 @@ video {
 
 .mt-24 {
   margin-top: 6rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
 }
 
 .box-content {
@@ -2084,6 +2092,11 @@ video {
   background-color: rgb(153 27 27 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-base-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(118 118 118 / var(--tw-bg-opacity));
+}
+
 .hover\:py-1:hover {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -2488,6 +2501,11 @@ video {
   .dark\:bg-green-800 {
     --tw-bg-opacity: 1;
     background-color: rgb(22 101 52 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-white {
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   }
 
   .dark\:bg-opacity-75 {
