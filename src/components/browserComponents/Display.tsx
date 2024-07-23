@@ -636,37 +636,54 @@ export const Display = ({
               </div>
               {isLoadingLists ?
                 <p className="mb-4 dark:text-base-200">Loading lists...</p>
-              : <div className="mb-4 max-h-[40svh]">
+              : <div className="mb-4 flex max-h-[40svh] flex-col gap-2">
                   {userLists.length > 0 ?
                     userLists.map((list) => (
-                      <button
-                        key={list.listid}
-                        onClick={() => handleAddOrRemoveFromList(list)}
-                        className={`mb-2 flex w-full items-center justify-between rounded-sm p-2 text-left ${
-                          list.has_snippet ?
-                            "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
-                          : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
-                        }`}
-                      >
-                        <span>{list.listname}</span>
-                        {list.has_snippet ?
+                      <div className="flex gap-2">
+                        <button
+                          key={list.listid}
+                          onClick={() => handleAddOrRemoveFromList(list)}
+                          className={`flex w-full items-center justify-between rounded-sm p-2 text-left shadow-md ${
+                            list.has_snippet ?
+                              "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
+                            : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                          }`}
+                        >
+                          <span>{list.listname}</span>
+                          {list.has_snippet ?
+                            <img
+                              src="/x.svg"
+                              className="h-5 w-5 invert dark:invert-0"
+                            />
+                          : <img
+                              src="/add.svg"
+                              className="h-5 w-5 invert dark:invert-0"
+                            />
+                          }
+                        </button>
+                        <SnipppButton
+                          size="md"
+                          tooltip="View List in New Tab"
+                          colorType="neutral"
+                          onClick={() =>
+                            window.open(
+                              `${window.location.origin}/list/${list.listid}`,
+                            )
+                          }
+                        >
                           <img
-                            src="/x.svg"
-                            className="h-5 w-5 invert dark:invert-0"
+                            src="/opennew.svg"
+                            className="invert group-hover:invert-0 dark:invert-0"
                           />
-                        : <img
-                            src="/add.svg"
-                            className="h-5 w-5 invert dark:invert-0"
-                          />
-                        }
-                      </button>
+                        </SnipppButton>
+                      </div>
                     ))
                   : <p className="dark:text-base-200">No lists available.</p>}
                   <p
                     onClick={() => {
                       setIsAdding(true);
                     }}
-                    className="flex items-center justify-center bg-black p-2 text-lg text-white hover:cursor-pointer hover:bg-base-500 dark:bg-white dark:text-black"
+                    className="mt-4 flex items-center justify-center bg-black p-2 text-lg text-white hover:cursor-pointer hover:bg-base-500 dark:bg-white dark:text-black"
                   >
                     NEW LIST
                     <img
@@ -680,7 +697,7 @@ export const Display = ({
           </div>
         )}
         {isAdding && (
-          <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
+          <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
             <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
               <h2 className="mb-4 text-center text-2xl dark:text-white">
                 Add New List
