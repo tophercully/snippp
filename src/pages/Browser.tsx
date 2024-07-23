@@ -63,7 +63,7 @@ export const Browser: React.FC = () => {
     setPageTitle("All Snippets");
   }
   const [sortMethod, setSortMethod] =
-    useState<SortableSnippetKeys>("favoriteCount");
+    useState<SortableSnippetKeys>("copyCount");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);

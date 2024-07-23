@@ -91,10 +91,10 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         className="aspect-square h-full cursor-pointer p-3 dark:invert"
       />
       {isOpen && (
-        <div className="absolute right-0 top-full z-50 flex w-52 flex-col items-center gap-3 bg-base-50 p-6 shadow-lg shadow-base-500 dark:border dark:border-black dark:shadow-lg dark:invert">
+        <div className="absolute right-0 top-full z-50 flex w-52 flex-col items-center gap-3 bg-base-50 p-2 shadow-lg shadow-base-500 dark:border dark:border-black dark:shadow-lg dark:invert">
           <div className="flex w-full flex-col gap-2">
-            <h1>SORT BY </h1>
-            <div className="grid grid-cols-1 gap-2">
+            <h1 className="p-3 font-bold">SORT BY </h1>
+            <div className="grid grid-cols-1">
               <button
                 className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "name" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("name")}
@@ -121,6 +121,16 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
               >
                 Popularity
                 <img src="/heart-full.svg" />
+              </button>
+              <button
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                onClick={() => setSortMethod("copyCount")}
+              >
+                Most Copied
+                <img
+                  src="/copy.svg"
+                  className={`invert`}
+                />
               </button>
             </div>
           </div>
