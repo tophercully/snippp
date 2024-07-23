@@ -123,7 +123,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 <img src="/heart-full.svg" />
               </button>
               <button
-                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "copyCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("copyCount")}
               >
                 Most Copied
