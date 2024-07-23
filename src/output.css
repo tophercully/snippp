@@ -994,6 +994,14 @@ video {
   max-height: 16rem;
 }
 
+.max-h-\[50vh\] {
+  max-height: 50vh;
+}
+
+.max-h-\[40vh\] {
+  max-height: 40vh;
+}
+
 .min-h-52 {
   min-height: 13rem;
 }

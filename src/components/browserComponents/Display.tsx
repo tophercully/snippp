@@ -417,7 +417,7 @@ export const Display = ({
             <p
               className={`overflow-hidden font-light transition-all duration-75 ${
                 isDescriptionExpanded ?
-                  "max-h-64 overflow-y-auto"
+                  `${window.location.pathname.includes("/snippet") ? "max-h-none" : "max-h-[40vh] overflow-y-auto"}`
                 : "max-h-[6em]"
               }`}
               dangerouslySetInnerHTML={{
