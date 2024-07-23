@@ -412,6 +412,7 @@ export const Dashboard: React.FC = () => {
               lists={lists}
               addDisabled={false}
               onSelectList={handleSelectList}
+              onAddList={fetchAndSetLists}
             />
 
             {listsLoading && (
