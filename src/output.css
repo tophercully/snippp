@@ -809,6 +809,10 @@ video {
   margin-top: 6rem;
 }
 
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
 .box-content {
   box-sizing: content-box;
 }

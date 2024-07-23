@@ -212,31 +212,40 @@ export const Display = ({
   };
 
   const handleAddOrRemoveFromList = async (list: ListWithSnippetStatus) => {
+    // Optimistically update the UI
+    setUserLists((prevLists) =>
+      prevLists.map((l) =>
+        l.listid === list.listid ? { ...l, has_snippet: !l.has_snippet } : l,
+      ),
+    );
+
     try {
-      if (list.has_snippet) {
-        await removeSnippetFromList(list.listid, snippetID);
-        showNotif(
-          `Removed ${selection.name} from ${list.listname}`,
-          "success",
-          2000,
-        );
-      } else {
+      if (!list.has_snippet) {
         await addSnippetToList(list.listid, snippetID);
-        showNotif(
-          `Added ${selection.name} to ${list.listname}`,
-          "success",
-          2000,
-        );
+        // showNotif(
+        //   `Added ${selection.name} to ${list.listname}`,
+        //   "success",
+        //   2000,
+        // );
+      } else {
+        await removeSnippetFromList(list.listid, snippetID);
+        // showNotif(
+        //   `Removed ${selection.name} from ${list.listname}`,
+        //   "success",
+        //   2000,
+        // );
       }
-      // Update the list status locally
+    } catch (error) {
+      // Revert the optimistic update if the operation fails
       setUserLists((prevLists) =>
         prevLists.map((l) =>
-          l.listid === list.listid ? { ...l, has_snippet: !l.has_snippet } : l,
+          l.listid === list.listid ?
+            { ...l, has_snippet: list.has_snippet }
+          : l,
         ),
       );
-    } catch (error) {
       console.error("Failed to update snippet in list:", error);
-      showNotif("Failed to update list" + error, "error", 2000);
+      showNotif("Failed to update list: " + error, "error", 2000);
     }
   };
 
@@ -657,11 +666,12 @@ export const Display = ({
                     onClick={() => {
                       setIsAdding(true);
                     }}
-                    className="flex justify-center bg-black p-2 hover:cursor-pointer hover:bg-base-500 dark:bg-white"
+                    className="flex items-center justify-center bg-black p-2 text-lg text-white hover:cursor-pointer hover:bg-base-500 dark:bg-white dark:text-black"
                   >
+                    NEW LIST
                     <img
                       src="/add.svg"
-                      className="h-full dark:invert"
+                      className="ml-1 h-full dark:invert"
                     />
                   </p>
                 </div>
