@@ -23,7 +23,6 @@ export const formatDescription = (text: string): string => {
       cs: "C#",
       go: "Go",
       rust: "Rust",
-      // Add more mappings as needed
     };
     return languageMap[lang.toLowerCase()] || "Code";
   };
