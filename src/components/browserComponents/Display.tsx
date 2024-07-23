@@ -416,7 +416,9 @@ export const Display = ({
           <div className="relative mt-4">
             <p
               className={`overflow-hidden font-light transition-all duration-75 ${
-                isDescriptionExpanded ? "max-h-none" : "max-h-[6em]"
+                isDescriptionExpanded ?
+                  `${window.location.pathname.includes("/snippet") ? "max-h-none" : "max-h-[40vh] overflow-y-auto"}`
+                : "max-h-[6em]"
               }`}
               dangerouslySetInnerHTML={{
                 __html: formatDescription(description),
