@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useEffect } from "react";
 import { Snippet } from "../../typeInterfaces";
 import SortDropdown from "./SortDropdown";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
-import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
+import { useSessionStorage } from "@uidotdev/usehooks";
 
 type SortOrder = "asc" | "desc";
 interface SearchBarProps {
@@ -27,6 +27,7 @@ export const SearchBar = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isAdding] = useSessionStorage("isAddingList", false);
   const [isEditing] = useSessionStorage("isEditingList", false);
+  const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
   const [isFocused, setIsFocused] = useSessionStorage("searchFocused", false);
 
   const handleChange = useCallback(
@@ -54,7 +55,8 @@ export const SearchBar = ({
       if (
         document.activeElement !== inputRef.current &&
         !isEditing &&
-        !isAdding
+        !isAdding &&
+        !isEditingProfile
       ) {
         event.preventDefault();
         inputRef.current?.focus();

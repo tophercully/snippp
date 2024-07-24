@@ -71,6 +71,8 @@ export const Display = ({
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
   const [isEditing] = useSessionStorage("isEditingList", false);
+  const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
+  console.log(isEditing, isAdding, isEditingProfile);
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
   const snippetMod = snippetMods[snippetID] || {};
@@ -173,7 +175,7 @@ export const Display = ({
   };
 
   const keyboardControlOptions =
-    !isEditing ?
+    !isEditing && !isAdding && !isEditingProfile ?
       {
         enter: (event) => {
           event.preventDefault();

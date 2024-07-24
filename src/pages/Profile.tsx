@@ -147,6 +147,7 @@ export const Profile: React.FC = () => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isAdding] = useSessionStorage("isAddingList", false);
   const [isEditing, setIsEditing] = useSessionStorage("isEditingList", false);
+  const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
   const [isSaving, setIsSaving] = useState(false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
@@ -187,7 +188,7 @@ export const Profile: React.FC = () => {
   }, [listid, lists]);
 
   const keyboardControlOptions =
-    list && !isEditing && !isAdding ?
+    list && !isEditing && !isAdding && !isEditingProfile ?
       {
         arrowLeft: async () => {
           setList(null);

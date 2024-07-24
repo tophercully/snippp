@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { GoogleUser, SnipppProfile } from "../../typeInterfaces";
 import SnipppButton from "../SnipppButton";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,10 @@ export const ProfileInfo = ({
   const { userid } = useParams();
   const { name, bio, profile_picture, last_login } = snipppUser;
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useSessionStorage(
+    "isEditingProfile",
+    false,
+  );
   const [newProfile, setNewProfile] = useState({
     name: name,
     bio: bio,

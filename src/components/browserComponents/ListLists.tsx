@@ -33,6 +33,8 @@ export const ListLists: React.FC<UserListsProps> = ({
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
+  const [isEditing] = useSessionStorage("isEditingList", false);
+  const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
   const [newListName, setNewListName] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -59,7 +61,7 @@ export const ListLists: React.FC<UserListsProps> = ({
   }, [selectedIndex]);
 
   const keyboardControlOptions =
-    !isAdding ?
+    !isAdding && !isEditing && !isEditingProfile ?
       {
         arrowUp: (event: KeyboardEvent) => {
           if (!event.ctrlKey && !event.metaKey) {
