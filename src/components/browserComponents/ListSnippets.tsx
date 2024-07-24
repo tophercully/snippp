@@ -31,6 +31,8 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
   const [isEditing] = useSessionStorage("isEditingList", false);
+  const [isAdding] = useSessionStorage("isAddingList", false);
+  const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
 
   const handleClick = (input: Snippet, index: number) => {
     if (input !== selection) {
@@ -53,7 +55,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   }, [selectedIndex]);
 
   const keyboardControlOptions =
-    !isEditing ?
+    !isEditing && !isAdding && !isEditingProfile ?
       {
         arrowUp: (event) => {
           if (!event.ctrlKey && !event.metaKey) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { fetchUserProfile, newUser } from "../../backend/user/userFunctions";
@@ -28,6 +28,9 @@ export const Navbar: React.FC = () => {
     "isWelcomePopupDismissed",
     false,
   );
+  const [isAdding] = useSessionStorage("isAddingList", false);
+  const [isEditing] = useSessionStorage("isEditingProfile", false);
+  const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
   const isBrowseOrHome =
     window.location.pathname == "/" || window.location.pathname == "/browse";
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -136,8 +139,9 @@ export const Navbar: React.FC = () => {
       }
     };
 
-    window.addEventListener("keydown", handleKeyPress);
-
+    if (!isEditing && !isEditingProfile && !isAdding) {
+      window.addEventListener("keydown", handleKeyPress);
+    }
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };

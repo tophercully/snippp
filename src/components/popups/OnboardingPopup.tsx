@@ -83,14 +83,14 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
 
   return isVisible && !isWelcomePopupDismissed ?
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-950 bg-opacity-50">
-        <div className="relative flex w-11/12 max-w-md flex-col items-center overflow-hidden rounded-sm bg-base-50 shadow-md md:aspect-[4/5] md:max-w-xl">
+        <div className="relative flex w-11/12 max-w-md flex-col items-center overflow-hidden rounded-sm bg-base-50 shadow-md md:aspect-[4/5] md:max-w-xl dark:bg-base-850">
           <button
             className="absolute right-4 top-4 z-10 border border-dashed border-base-500 p-1 px-1 text-2xl leading-none text-base-900 hover:bg-base-150 hover:text-base-700"
             onClick={handleClose}
           >
             <img
               src="/x.svg"
-              className="invert"
+              className="invert dark:invert-0"
             />
           </button>
 
@@ -115,11 +115,11 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
                     />
                   </div>
                   <div className="w-full">
-                    <h2 className="mb-2 text-3xl font-semibold text-base-900">
+                    <h2 className="mb-2 text-3xl font-semibold text-base-900 dark:text-base-100">
                       {page.title}
                     </h2>
                     <p
-                      className="text-base text-base-700"
+                      className="text-base text-base-700 dark:text-base-200"
                       dangerouslySetInnerHTML={{
                         __html: formatDescription(page.content),
                       }}

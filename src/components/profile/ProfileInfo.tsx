@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { GoogleUser, SnipppProfile } from "../../typeInterfaces";
 import SnipppButton from "../SnipppButton";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,10 @@ export const ProfileInfo = ({
   const { userid } = useParams();
   const { name, bio, profile_picture, last_login } = snipppUser;
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useSessionStorage(
+    "isEditingProfile",
+    false,
+  );
   const [newProfile, setNewProfile] = useState({
     name: name,
     bio: bio,
@@ -112,13 +115,13 @@ export const ProfileInfo = ({
               name="name"
               value={newProfile.name}
               onChange={handleChange}
-              className="w-full border p-2 text-3xl font-semibold"
+              className="w-full rounded-sm border p-2 text-3xl font-semibold dark:bg-base-900 dark:text-base-100"
             />
             <textarea
               name="bio"
               value={newProfile.bio}
               onChange={handleChange}
-              className="min-h-52 w-full flex-grow resize-none border p-2"
+              className="min-h-52 w-full flex-grow resize-none rounded-sm border p-2 dark:bg-base-900 dark:text-base-100"
             />
           </div>
         : <div className="flex h-full w-full flex-1 flex-grow flex-col gap-4">
@@ -147,23 +150,24 @@ export const ProfileInfo = ({
         {isEditing && (
           <div
             id="Save-Cancel"
-            className="ml-auto flex gap-4"
+            className="ml-auto flex items-center gap-4"
           >
             <SnipppButton
               size="sm"
               onClick={handleCancel}
               colorType="delete"
+              tooltip="Cancel"
             >
               <img
                 src="/x.svg"
-                className="invert group-hover:invert-0 dark:invert-0"
+                className="h-6 invert group-hover:invert-0 dark:invert-0"
               />
             </SnipppButton>
             <SnipppButton
               size="sm"
               onClick={handleSaveProfile}
             >
-              SAVE
+              <span className="text-sm">SAVE</span>
             </SnipppButton>
           </div>
         )}

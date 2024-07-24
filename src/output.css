@@ -1919,6 +1919,11 @@ video {
   color: rgb(41 41 41 / var(--tw-text-opacity));
 }
 
+.text-base-100 {
+  --tw-text-opacity: 1;
+  color: rgb(250 250 250 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -2661,6 +2666,11 @@ video {
   .dark\:text-gray-200 {
     --tw-text-opacity: 1;
     color: rgb(229 231 235 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-base-100 {
+    --tw-text-opacity: 1;
+    color: rgb(250 250 250 / var(--tw-text-opacity));
   }
 
   .dark\:shadow-lg {
