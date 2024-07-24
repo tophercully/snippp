@@ -59,7 +59,7 @@ export const useKeyboardControls = (keyHandlers: KeyHandlers) => {
           break;
         case "/":
           if (keyHandlers.slash) {
-            event.preventDefault();
+            // event.preventDefault();
             keyHandlers.slash(event);
           }
           break;
