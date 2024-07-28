@@ -513,7 +513,12 @@ export const Dashboard: React.FC = () => {
                       </div>
                     )}
                 </div>
-
+                <p
+                  className="hover:cursor-pointer"
+                  onClick={() => navigate(`/user/${userProfile?.id}`)}
+                >
+                  {userProfile?.name}
+                </p>
                 {list?.description && (
                   <div className="mt-4">
                     <p

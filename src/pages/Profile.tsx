@@ -590,6 +590,12 @@ export const Profile: React.FC = () => {
                           </div>
                         )}
                     </div>
+                    <p
+                      className="hover:cursor-pointer"
+                      onClick={() => navigate(`/user/${profile?.userId}`)}
+                    >
+                      {profile?.name}
+                    </p>
 
                     {list?.description && (
                       <div className="mt-4">
