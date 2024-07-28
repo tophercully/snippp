@@ -2381,6 +2381,10 @@ video {
     padding: 6rem;
   }
 
+  .md\:p-0 {
+    padding: 0px;
+  }
+
   .md\:pt-32 {
     padding-top: 8rem;
   }
