@@ -60,6 +60,7 @@ export const Display = ({
     description,
     forkedFrom,
     forkedFromName,
+    forkCount,
   } = selection;
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -381,7 +382,7 @@ export const Display = ({
               </h1>
             </div>
           </div>
-          <div className="mr-8 flex h-fit flex-col justify-between gap-3">
+          <div className="mr-8 flex h-fit justify-between gap-3 md:flex-col">
             {snippetCategories.length > 0 && (
               <div className="flex flex-nowrap gap-1 self-end">
                 {snippetCategories.map((category, index) => (
@@ -423,6 +424,21 @@ export const Display = ({
                 <span>{simplifiedAndModdedCount}</span>
               </span>
             </span>
+            {forkCount && forkCount > 0 && (
+              <span className="relative flex h-fit w-fit items-center gap-2">
+                <span className="group flex gap-1">
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white opacity-0 transition-opacity duration-100 group-hover:opacity-100 dark:bg-base-100 dark:text-black">
+                    Times this snippet has been forked
+                    <div className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-base-800 dark:border-t-base-100"></div>
+                  </div>
+                  <img
+                    src="/fork.svg"
+                    className="invert dark:invert-0"
+                  />
+                  <span>{forkCount}</span>
+                </span>
+              </span>
+            )}
           </div>
         </div>
         {worthExpanding && (
@@ -487,106 +503,113 @@ export const Display = ({
         {selection && (
           <div
             id="controls"
-            className="mb-3 flex items-center justify-start gap-5 p-2 lg:mb-0 lg:p-0"
+            className="mb-3 flex flex-wrap items-center justify-start gap-5 p-2 lg:mb-0 lg:p-0"
           >
-            <SnipppButton
-              onClick={copySnippet}
-              size="md"
-              tooltip="Copy Snippet"
+            <div
+              id="non-owner-controls"
+              className="flex flex-1 items-center justify-around gap-3 md:justify-start"
             >
-              <img
-                src="/copy.svg"
-                className="h-5 invert group-hover:invert-0 lg:mx-10 dark:invert-0"
-              />
-            </SnipppButton>
-
-            {userProfile && !favoriteStatus && (
               <SnipppButton
-                onClick={handleAddFavorite}
-                disabled={isLoading}
-                colorType="add"
-                fit={true}
+                onClick={copySnippet}
                 size="md"
-                tooltip="Add/Remove Favorite"
+                tooltip="Copy Snippet"
               >
-                <span className="flex items-center">
-                  <img
-                    src="/heart-empty.svg"
-                    className="h-5 group-hover:invert dark:invert"
-                  />
-                  <span className="hidden text-sm font-normal sm:inline">
-                    {isLoading ? "ADDING..." : ""}
-                  </span>
-                </span>
+                <img
+                  src="/copy.svg"
+                  className="h-5 invert group-hover:invert-0 lg:mx-10 dark:invert-0"
+                />
               </SnipppButton>
-            )}
-            {userProfile && favoriteStatus && (
-              <SnipppButton
-                onClick={handleRemoveFavorite}
-                disabled={isLoading}
-                colorType="delete"
-                fit={true}
-                size="md"
-                tooltip="Add/Remove Favorite"
-              >
-                <span className="flex items-center">
-                  <img
-                    src="/heart-full.svg"
-                    className="h-5 group-hover:invert dark:invert"
-                  />
-                  <span className="hidden text-sm font-normal sm:inline">
-                    {isLoading ? "REMOVING..." : ""}
-                  </span>
-                </span>
-              </SnipppButton>
-            )}
 
-            {userProfile && (
-              <>
+              {userProfile && !favoriteStatus && (
                 <SnipppButton
-                  onClick={() => {
-                    setShowListPopup(true);
-                    fetchUserLists();
-                  }}
-                  colorType="neutral"
-                  size="md"
-                  tooltip="Add to List"
-                >
-                  <img
-                    src="/folder.svg"
-                    className="h-5 invert group-hover:invert-0 dark:invert-0"
-                  />
-                </SnipppButton>
-                <SnipppButton
-                  onClick={() => {
-                    navigate(`/builder/${snippetID}/fork`);
-                  }}
+                  onClick={handleAddFavorite}
+                  disabled={isLoading}
                   colorType="add"
+                  fit={true}
                   size="md"
-                  tooltip="Fork this Snippet"
+                  tooltip="Add/Remove Favorite"
                 >
-                  <img
-                    src="/fork.svg"
-                    className="h-5 invert group-hover:invert-0 dark:invert-0"
-                  />
+                  <span className="flex items-center">
+                    <img
+                      src="/heart-empty.svg"
+                      className="h-5 group-hover:invert dark:invert"
+                    />
+                    <span className="hidden text-sm font-normal sm:inline">
+                      {isLoading ? "ADDING..." : ""}
+                    </span>
+                  </span>
                 </SnipppButton>
-              </>
-            )}
-            <SnipppButton
-              onClick={handleShare}
-              colorType="neutral"
-              size="md"
-              tooltip="Share snippet"
-            >
-              <img
-                src="/share.svg"
-                className="h-5 invert group-hover:invert-0 dark:invert-0"
-              />
-            </SnipppButton>
+              )}
+              {userProfile && favoriteStatus && (
+                <SnipppButton
+                  onClick={handleRemoveFavorite}
+                  disabled={isLoading}
+                  colorType="delete"
+                  fit={true}
+                  size="md"
+                  tooltip="Add/Remove Favorite"
+                >
+                  <span className="flex items-center">
+                    <img
+                      src="/heart-full.svg"
+                      className="h-5 group-hover:invert dark:invert"
+                    />
+                    <span className="hidden text-sm font-normal sm:inline">
+                      {isLoading ? "REMOVING..." : ""}
+                    </span>
+                  </span>
+                </SnipppButton>
+              )}
 
-            <div className="mr-auto"></div>
+              {userProfile && (
+                <>
+                  <SnipppButton
+                    onClick={() => {
+                      setShowListPopup(true);
+                      fetchUserLists();
+                    }}
+                    colorType="neutral"
+                    size="md"
+                    tooltip="Add to List"
+                  >
+                    <img
+                      src="/folder.svg"
+                      className="h-5 invert group-hover:invert-0 dark:invert-0"
+                    />
+                  </SnipppButton>
+                  <SnipppButton
+                    onClick={() => {
+                      navigate(`/builder/${snippetID}/fork`);
+                    }}
+                    colorType="add"
+                    size="md"
+                    tooltip="Fork your own copy of this Snippet"
+                  >
+                    <img
+                      src="/fork.svg"
+                      className="h-5 invert group-hover:invert-0 dark:invert-0"
+                    />
+                  </SnipppButton>
+                </>
+              )}
+              <SnipppButton
+                onClick={handleShare}
+                colorType="neutral"
+                size="md"
+                tooltip="Share snippet"
+              >
+                <img
+                  src="/share.svg"
+                  className="h-5 invert group-hover:invert-0 dark:invert-0"
+                />
+              </SnipppButton>
+            </div>
+
             {userProfile && userProfile.id === authorID && (
-              <>
+              <div
+                id="over-controls"
+                className="ml-auto flex w-full gap-3 lg:w-fit"
+              >
                 <SnipppButton
                   onClick={() => {
                     track("Open Editor");
@@ -594,32 +617,37 @@ export const Display = ({
                   }}
                   colorType="neutral"
                   size="md"
-                  className="ml-auto"
+                  fit={false}
                   tooltip="Edit Snippet"
                 >
-                  <span className="flex items-center gap-3">
+                  <span className="flex items-center justify-center gap-3">
                     <img
                       src="/edit.svg"
                       className="h-5 group-hover:invert dark:invert"
                     />
-                    <span className="hidden 2xl:inline">EDIT</span>
+                    <span className="font-sm flex text-lg md:hidden 2xl:flex">
+                      EDIT
+                    </span>
                   </span>
                 </SnipppButton>
                 <SnipppButton
                   onClick={() => setShowDeleteConfirm(true)}
                   colorType="delete"
                   size="md"
+                  fit={false}
                   tooltip="Delete Snippet"
                 >
-                  <span className="flex items-center gap-3">
+                  <span className="flex items-center justify-center gap-3">
                     <img
                       src="/trash.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
-                    <span className="hidden 2xl:inline">DELETE</span>
+                    <span className="font-sm flex text-lg md:hidden 2xl:flex">
+                      DELETE
+                    </span>
                   </span>
                 </SnipppButton>
-              </>
+              </div>
             )}
           </div>
         )}

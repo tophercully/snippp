@@ -27,6 +27,12 @@ export default async function handler(req: any, res: any) {
           SELECT 1 AS is_favorite
           FROM favorites
           WHERE snippetID = ${snippetID} AND userID = ${userID}
+      ),
+      ForkCounts AS (
+          SELECT forkedFrom, COUNT(*) AS forkCount
+          FROM snippets
+          WHERE forkedFrom IS NOT NULL
+          GROUP BY forkedFrom
       )
       SELECT 
           s.snippetID, 
@@ -44,12 +50,14 @@ export default async function handler(req: any, res: any) {
           s.forkedFrom,
           fs.name AS forkedFromName,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount,
-          COALESCE(uf.is_favorite, 0) AS isFavorite
+          COALESCE(uf.is_favorite, 0) AS isFavorite,
+          COALESCE(forkc.forkCount, 0) AS forkCount
       FROM snippets s
       JOIN users u ON s.authorID = u.userID
       LEFT JOIN snippets fs ON s.forkedFrom = fs.snippetID
       LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
       LEFT JOIN UserFavorite uf ON 1=1
+      LEFT JOIN ForkCounts forkc ON s.snippetID = forkc.forkedFrom
       WHERE s.snippetID = ${snippetID};
     `;
 
@@ -79,6 +87,7 @@ export default async function handler(req: any, res: any) {
       description: snippet.description,
       forkedFrom: snippet.forkedfrom,
       forkedFromName: snippet.forkedfromname,
+      forkCount: parseInt(snippet.forkcount),
     };
 
     res.status(200).json(formattedSnippet);
