@@ -72,7 +72,6 @@ export const Display = ({
   const [isLoadingLists, setIsLoadingLists] = useState(false);
   const [isEditing] = useSessionStorage("isEditingList", false);
   const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
-  console.log(isEditing, isAdding, isEditingProfile);
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
 
   const snippetMod = snippetMods[snippetID] || {};

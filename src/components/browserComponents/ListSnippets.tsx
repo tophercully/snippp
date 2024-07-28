@@ -1,4 +1,3 @@
-// In SelectionsList.tsx
 import React, { useRef, useEffect, useState } from "react";
 import { Snippet } from "../../typeInterfaces";
 import { useSessionStorage, useWindowSize } from "@uidotdev/usehooks";
