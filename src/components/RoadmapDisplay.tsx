@@ -47,7 +47,7 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
   const lastCompletedRelease = getLastCompletedRelease();
 
   return (
-    <div className="bg-base-50 p-6 text-base-950 dark:bg-base-950 dark:text-base-50">
+    <div className="max-w-[80ch] self-center bg-base-50 p-6 text-base-950 dark:bg-base-950 dark:text-base-50">
       {/* Navigation menu */}
       <div className="mb-8 flex flex-col items-start gap-2">
         {releases.map((release) => {
@@ -147,7 +147,7 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
                       </div>
                       <div className="flex items-center">
                         <span
-                          className={`rounded-sm px-2 py-1 text-xs font-semibold ${statusClass}`}
+                          className={`ml-5 text-nowrap rounded-sm px-2 py-1 text-xs font-semibold ${statusClass}`}
                         >
                           {statusText}
                         </span>
