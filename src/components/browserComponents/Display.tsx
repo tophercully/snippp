@@ -542,20 +542,35 @@ export const Display = ({
             )}
 
             {userProfile && (
-              <SnipppButton
-                onClick={() => {
-                  setShowListPopup(true);
-                  fetchUserLists();
-                }}
-                colorType="neutral"
-                size="md"
-                tooltip="Add to List"
-              >
-                <img
-                  src="/folder.svg"
-                  className="h-5 invert group-hover:invert-0 dark:invert-0"
-                />
-              </SnipppButton>
+              <>
+                <SnipppButton
+                  onClick={() => {
+                    setShowListPopup(true);
+                    fetchUserLists();
+                  }}
+                  colorType="neutral"
+                  size="md"
+                  tooltip="Add to List"
+                >
+                  <img
+                    src="/folder.svg"
+                    className="h-5 invert group-hover:invert-0 dark:invert-0"
+                  />
+                </SnipppButton>
+                <SnipppButton
+                  onClick={() => {
+                    navigate(`/builder/${snippetID}/fork`);
+                  }}
+                  colorType="add"
+                  size="md"
+                  tooltip="Fork this Snippet"
+                >
+                  <img
+                    src="/fork.svg"
+                    className="h-5 invert group-hover:invert-0 dark:invert-0"
+                  />
+                </SnipppButton>
+              </>
             )}
             <SnipppButton
               onClick={handleShare}

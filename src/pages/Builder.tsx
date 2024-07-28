@@ -86,7 +86,10 @@ export const Builder = () => {
         try {
           const fetchedSnippet = await loadSnippetById(Number(snippetId));
           if (fetchedSnippet.authorID == userProfile?.id) {
-            setSnippet(fetchedSnippet as Snippet);
+            setSnippet({
+              ...fetchedSnippet,
+              name: `${userProfile.name}'s ${fetchedSnippet.name}`,
+            } as Snippet);
           } else {
             setIsDisallowed(true);
           }
