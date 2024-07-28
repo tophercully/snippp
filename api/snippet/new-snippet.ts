@@ -37,9 +37,9 @@ export default async function handler(req: any, res: any) {
 
     //insert the new snippet
     const { rows } = await pool.sql`
-      INSERT INTO snippets(name, code, description, tags, author, authorID, public)
-      VALUES (${params.name}, ${linePreservedCode}, ${params.description}, ${params.tags}, ${params.author}, ${params.authorID}, ${params.public})
-      RETURNING snippetID, name, code, tags, authorID, public, createdat, lastcopied, lastedit, copycount;
+      INSERT INTO snippets(name, code, description, tags, author, authorID, public, forkedFrom)
+      VALUES (${params.name}, ${linePreservedCode}, ${params.description}, ${params.tags}, ${params.author}, ${params.authorID}, ${params.public}, ${params.forkedFrom || null})
+      RETURNING snippetID, name, code, tags, authorID, public, createdat, lastcopied, lastedit, copycount, forkedFrom;
     `;
 
     console.log("Snippet created with ID:", rows[0].snippetid);
@@ -59,6 +59,7 @@ export default async function handler(req: any, res: any) {
       copyCount: rows[0].copycount,
       favoriteCount: 0,
       isFavorite: false,
+      forkedFrom: rows[0].forkedfrom,
     };
 
     res.status(200).json(newSnippet);

@@ -39,23 +39,26 @@ const Home = () => {
         </div>
         <div className="absolute inset-0 -z-10 m-[-6px] border-8 border-transparent" />
 
-        <div className="flex w-fit max-w-[60ch] flex-col gap-4 text-left text-sm md:mt-24 md:text-2xl dark:text-base-400">
-          <h2 className="max-w-[40ch] text-lg font-medium text-base-950 dark:text-base-50">
-            Simplify Your Tool Management
+        <div className="flex w-fit max-w-[60ch] flex-col gap-4 p-4 text-left text-sm md:mt-24 md:p-0 md:text-2xl dark:text-base-400">
+          {/* <h2 className="max-w-[40ch] text-lg font-medium text-base-950 dark:text-base-50">
+            Get in, Get out, Get back to building
+          </h2> */}
+          <h2 className="max-w-[40ch] text-xl font-medium text-base-950 dark:text-base-50">
+            Sort Smarter, Build Faster
           </h2>
-          <p className="text-base">
-            Maximize your coding efficiency with Snippp.io. Quickly create,
-            organize, and share code snippets with ease.
-          </p>
-          <p className="text-base">
+          <p className="text-base">Your toolkit, amplified.</p>
+          {/* <p className="text-base">
             Our lightweight tool ensures you spend less time searching and more
             time coding.
-          </p>
+          </p> */}
           {/* <h2 className="max-w-[80ch] text-2xl font-bold text-base-950 dark:text-base-50">
             Get in, Get Out, Get Back to Coding{" "}
           </h2> */}
 
-          {/* <p>Create. Organize. Share. Discover.</p> */}
+          <p className="text-base">
+            Organize, share, and discover code snippets FAST, so you can get
+            back to coding.
+          </p>
           {/* <p className="">Streamline your workflow with:</p> */}
 
           {/* <ul className="flex flex-col gap-2 text-base font-light text-base-950 dark:text-base-50">

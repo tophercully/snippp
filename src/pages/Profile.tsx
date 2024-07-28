@@ -243,9 +243,12 @@ export const Profile: React.FC = () => {
 
       try {
         await updateList(list?.listid as number, newListName, newDescription);
+        fetchAndSetLists();
         showNotif("List Updated", "success", 5000);
+        setIsSaving(false);
       } catch (error) {
         showNotif("Error Updating List", "error", 5000);
+        setIsSaving(false);
       }
     }
   };
@@ -587,6 +590,12 @@ export const Profile: React.FC = () => {
                           </div>
                         )}
                     </div>
+                    <p
+                      className="hover:cursor-pointer"
+                      onClick={() => navigate(`/user/${profile?.userId}`)}
+                    >
+                      {profile?.name}
+                    </p>
 
                     {list?.description && (
                       <div className="mt-4">

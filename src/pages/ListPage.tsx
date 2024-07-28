@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SearchBar } from "../components/browserComponents/SearchBar";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/nav/Navbar";
@@ -59,42 +59,9 @@ function sortByProperty<T>(
   }
 }
 
-// const formatDescription = (text: string) => {
-//   if (!text) return "";
-//   console.log(text);
-//   // Regular expression to match URLs
-//   const urlRegex = /(https?:\/\/[^\s]+)/g;
-
-//   const convertLinksToAnchors = (line: string) => {
-//     const parts = line.split(urlRegex);
-//     return parts.map((part, index) => {
-//       if (part.match(urlRegex)) {
-//         return (
-//           <a
-//             key={index}
-//             href={part}
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             style={{ textDecoration: "underline" }}
-//           >
-//             {part}
-//           </a>
-//         );
-//       }
-//       return part;
-//     });
-//   };
-
-//   return text.split("\n").map((line, index) => (
-//     <React.Fragment key={index}>
-//       {convertLinksToAnchors(line)}
-//       <br />
-//     </React.Fragment>
-//   ));
-// };
-
 export const ListPage: React.FC = () => {
   const { listId } = useParams<{ listId: string }>();
+  const navigate = useNavigate();
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
@@ -309,6 +276,12 @@ export const ListPage: React.FC = () => {
                     </div>
                   )}
               </div>
+              <p
+                className="hover:cursor-pointer"
+                onClick={() => navigate(`/user/${listData.userid}`)}
+              >
+                {listData.username}
+              </p>
               {listData?.description && (
                 <div className="mt-4">
                   <p

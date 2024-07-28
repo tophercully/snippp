@@ -71,7 +71,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
           className={`absolute inset-0 -translate-x-[101%] transform ${getColorClass()} transition-transform duration-75 ease-in-out group-hover:translate-x-0`}
           aria-hidden="true"
         />
-        <span className="relative text-xl font-bold">{children}</span>
+        <span className="relative">{children}</span>
       </button>
     </div>
   );

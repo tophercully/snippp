@@ -183,7 +183,8 @@ export const Navbar: React.FC = () => {
                   onClick={toggleCategoryDropdown}
                   className="flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
                 >
-                  CATEGORIES
+                  <span className="hidden md:flex">CATEGORIES</span>
+                  <span className="flex md:hidden">MENU</span>
                   <svg
                     className={`ml-1 h-4 w-4 transition-transform duration-100 ${
                       isCategoryDropdownOpen ? "rotate-180" : ""
@@ -199,7 +200,13 @@ export const Navbar: React.FC = () => {
                   </svg>
                 </button>
                 {isCategoryDropdownOpen && (
-                  <div className="absolute left-0 z-20 mt-2 w-48 rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
+                  <div className="absolute left-0 z-20 mt-2 w-64 overflow-y-auto rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
+                    <div className="flex flex-col items-start gap-6 px-4 py-6 text-sm md:hidden">
+                      <button onClick={() => navigate("/browse")}>
+                        BROWSE
+                      </button>
+                      <button onClick={() => navigate("/about")}>ABOUT</button>
+                    </div>
                     <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
                       Languages
                     </div>
