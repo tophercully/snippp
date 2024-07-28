@@ -251,7 +251,7 @@ export const Builder = () => {
         </div>
       )}
       {userProfile && !isDisallowed && !isLoading && (
-        <div className="mb-8 flex h-full w-full flex-col-reverse gap-3 xl:flex-row">
+        <div className="mb-8 flex h-full w-full flex-col-reverse gap-3 xl:flex-row-reverse">
           <form className="flex h-full flex-col gap-5 rounded-sm xl:w-1/3">
             <div className="flex flex-col">
               <p className="w-fit border-b border-dashed border-base-300 bg-base-50 p-1 px-4 text-sm text-base-300 shadow-md dark:border-base-500 dark:bg-base-800 dark:text-base-400">

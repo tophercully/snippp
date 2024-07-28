@@ -2518,6 +2518,10 @@ video {
     flex-direction: row;
   }
 
+  .xl\:flex-row-reverse {
+    flex-direction: row-reverse;
+  }
+
   .xl\:px-12 {
     padding-left: 3rem;
     padding-right: 3rem;
