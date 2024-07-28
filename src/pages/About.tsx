@@ -1,8 +1,11 @@
+import RoadmapDisplay from "../components/browserComponents/roadmap/RoadmapDisplay";
 import { Footer } from "../components/nav/Footer";
 import { Navbar } from "../components/nav/Navbar";
+import { releases } from "./Roadmap";
 
 export const About = () => {
   document.title = `Snippp - About`;
+
   return (
     <div className="flex h-fit min-h-[100vh] w-full flex-col gap-5 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-950">
       <Navbar />
@@ -65,9 +68,9 @@ export const About = () => {
           </div>
         </div>
       </div>
-      {/* <div className="fixed bottom-0 left-0 w-full p-2"> */}
+      <RoadmapDisplay releases={releases} />
+
       <Footer />
-      {/* </div> */}
     </div>
   );
 };
