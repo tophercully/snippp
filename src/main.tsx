@@ -14,6 +14,7 @@ import { SnippetPage } from "./pages/SnippetPage.tsx";
 import { ListPage } from "./pages/ListPage.tsx";
 import { Profile } from "./pages/Profile.tsx";
 import { Stats } from "./pages/Stats.tsx";
+import { Roadmap } from "./pages/Roadmap.tsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/about",
     element: <About />,
+  },
+  {
+    path: "/roadmap",
+    element: <Roadmap />,
   },
   {
     path: "/list/:listId",
