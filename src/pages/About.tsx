@@ -1,4 +1,4 @@
-import RoadmapDisplay from "../components/browserComponents/roadmap/RoadmapDisplay";
+import RoadmapDisplay from "../components/RoadmapDisplay";
 import { Footer } from "../components/nav/Footer";
 import { Navbar } from "../components/nav/Navbar";
 import { releases } from "./Roadmap";
