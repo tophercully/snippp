@@ -41,10 +41,13 @@ export default async function handler(req: any, res: any) {
           s.lastEdit,
           s.copyCount,
           s.description,
+          s.forkedFrom,
+          fs.name AS forkedFromName,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount,
           COALESCE(uf.is_favorite, 0) AS isFavorite
       FROM snippets s
       JOIN users u ON s.authorID = u.userID
+      LEFT JOIN snippets fs ON s.forkedFrom = fs.snippetID
       LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
       LEFT JOIN UserFavorite uf ON 1=1
       WHERE s.snippetID = ${snippetID};
@@ -57,6 +60,8 @@ export default async function handler(req: any, res: any) {
     }
 
     const snippet = rows[0];
+    console.log("Raw snippet data:", snippet);
+
     const formattedSnippet = {
       snippetID: snippet.snippetid,
       name: snippet.name,
@@ -72,6 +77,8 @@ export default async function handler(req: any, res: any) {
       favoriteCount: parseInt(snippet.favoritecount),
       isFavorite: Boolean(snippet.isfavorite),
       description: snippet.description,
+      forkedFrom: snippet.forkedfrom,
+      forkedFromName: snippet.forkedfromname,
     };
 
     res.status(200).json(formattedSnippet);

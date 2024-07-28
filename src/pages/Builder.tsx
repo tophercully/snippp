@@ -29,13 +29,16 @@ export const Builder = () => {
   const [isDisallowed, setIsDisallowed] = useState(false);
   const [suggestedFrameworks, setSuggestedFrameworks] = useState<string[]>([]);
 
-  const { snippetId } = useParams();
+  const { snippetId, forking } = useParams();
+
   if (snippetId) {
     document.title = `Editor - Snippp`;
   } else {
     document.title = `Builder - Snippp`;
   }
   const isEditing = Boolean(snippetId);
+  const isForking = Boolean(forking);
+  console.log(isForking);
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
 
   const [snippet, setSnippet] = useState<SnippetInBuilder | Snippet>({
@@ -202,7 +205,7 @@ export const Builder = () => {
                 track("Language Auto-Detected");
               }
 
-              if (isEditing) {
+              if (isEditing && !isForking) {
                 await updateSnippet(Number(snippetId), {
                   name: snippet.name,
                   code: snippet.code,
@@ -213,12 +216,18 @@ export const Builder = () => {
                 showNotif("Snippet updated successfully", "success", 5000);
                 navigate(-1);
               } else {
-                const result = await newSnippet({
+                const newSnippetData = {
                   ...snippet,
                   author: userProfile.name,
                   authorID: userProfile.id,
                   tags: updatedTags,
-                });
+                };
+
+                if (isForking) {
+                  newSnippetData.forkedFrom = Number(snippetId);
+                }
+
+                const result = await newSnippet(newSnippetData);
                 showNotif("Snippet created successfully", "success", 5000);
                 navigate(`/snippet/${result.snippetID}`);
               }
@@ -413,6 +422,8 @@ export const Builder = () => {
                     isCreator ?
                       "SAVE"
                     : "YOU ARE NOT THE AUTHOR"
+                  : isForking ?
+                    "FORK"
                   : "CREATE"}
                 </span>
               </button>

@@ -26,6 +26,8 @@ export interface Snippet {
   copyCount: number;
   favoriteCount: number;
   isFavorite: boolean;
+  forkedFrom?: number | null;
+  forkedFromName?: string | null;
 }
 export interface SnippetInBuilder {
   authorID: string;
@@ -35,6 +37,8 @@ export interface SnippetInBuilder {
   description: string;
   tags: string;
   public: boolean;
+  forkedFrom?: number | null;
+  forkedFromName?: string | null;
 }
 
 export interface SnippetList {

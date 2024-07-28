@@ -58,6 +58,8 @@ export const Display = ({
     isFavorite,
     copyCount,
     description,
+    forkedFrom,
+    forkedFromName,
   } = selection;
   const [isLoading, setIsLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -70,6 +72,7 @@ export const Display = ({
   const [isSaving, setIsSaving] = useState(false);
   const [userLists, setUserLists] = useState<ListWithSnippetStatus[]>([]);
   const [isLoadingLists, setIsLoadingLists] = useState(false);
+  const isForked = Boolean(forkedFrom != null);
   const [isEditing] = useSessionStorage("isEditingList", false);
   const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
   const codeFontSize = window.innerWidth < 500 ? "5" : "10";
@@ -354,6 +357,15 @@ export const Display = ({
             >
               {name}
             </a>
+            {isForked && (
+              <span className="-mt-2 mb-2 text-xs">
+                <span>forked from </span>
+                <a
+                  className="h-fit max-w-[20ch] truncate underline"
+                  href={forkedFromName ? `/snippet/${forkedFrom}` : ""}
+                >{`${forkedFromName ? forkedFromName : "Deleted Snippet"}`}</a>
+              </span>
+            )}
             <div className="flex items-end justify-between gap-10">
               <button
                 onClick={() => {

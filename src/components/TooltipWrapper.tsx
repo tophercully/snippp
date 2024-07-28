@@ -13,7 +13,7 @@ const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
 
   return (
     <div
-      className="relative inline-block"
+      className="relative flex h-fit"
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >

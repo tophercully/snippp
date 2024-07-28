@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     element: <Dashboard />,
   },
   {
-    path: "/builder/:snippetId?",
+    path: "/builder/:snippetId?/:forking?",
     element: <Builder />,
   },
   {

@@ -70,7 +70,6 @@ export const ListPage: React.FC = () => {
   >([]);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [listData, setListData] = useState<any>(null);
-  console.log(listData);
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
