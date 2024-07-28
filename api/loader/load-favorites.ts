@@ -35,9 +35,12 @@ export default async function handler(req: any, res: any) {
           s.lastEdit,
           s.copyCount,
           s.description,
+          s.forkedFrom,
+          fs.name AS forkedFromName,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount
       FROM snippets s
       JOIN users u ON s.authorID = u.userID
+      LEFT JOIN snippets fs ON s.forkedFrom = fs.snippetID
       LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
       WHERE s.snippetID IN (
           SELECT snippetID
@@ -60,7 +63,8 @@ export default async function handler(req: any, res: any) {
       copyCount: row.copycount,
       favoriteCount: row.favoritecount,
       description: row.description,
-
+      forkedFrom: row.forkedfrom,
+      forkedFromName: row.forkedfromname,
       isFavorite: true, // These are favorites, so isFavorite is always true
     }));
 

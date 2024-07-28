@@ -36,10 +36,13 @@ export default async function handler(req: any, res: any) {
           s.lastEdit,
           s.copyCount,
           s.description,
+          s.forkedFrom,
+          fs.name AS forkedFromName,
           COALESCE(fc.favoriteCount, 0) AS favoriteCount,
           CASE WHEN uf.snippetID IS NOT NULL THEN true ELSE false END AS isFavorite
       FROM snippets s
       JOIN users u ON s.authorID = u.userID
+      LEFT JOIN snippets fs ON s.forkedFrom = fs.snippetID
       LEFT JOIN FavoriteCounts fc ON s.snippetID = fc.snippetID
       LEFT JOIN UserFavorites uf ON s.snippetID = uf.snippetID
       WHERE s.public = true OR s.authorID = ${userID};
@@ -60,6 +63,8 @@ export default async function handler(req: any, res: any) {
       favoriteCount: row.favoritecount,
       isFavorite: row.isfavorite,
       description: row.description,
+      forkedFrom: row.forkedfrom,
+      forkedFromName: row.forkedfromname,
     }));
 
     res.status(200).json(snippets);
