@@ -5,6 +5,7 @@ import { GoogleUser, SnipppProfile } from "../../typeInterfaces";
 import { useNotif } from "../../hooks/Notif";
 import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
+import TooltipWrapper from "../TooltipWrapper";
 
 export interface ListData {
   listid: string | number;
@@ -239,15 +240,17 @@ export const ListLists: React.FC<UserListsProps> = ({
         ))}
       </div>
       {!addDisabled && (
-        <button
-          className="flex h-16 w-full items-center justify-center bg-base-950 p-2 hover:bg-base-700 dark:invert"
-          onClick={handleAddList}
-        >
-          <img
-            src="/add.svg"
-            className="h-full"
-          />
-        </button>
+        <TooltipWrapper tooltip={"Add New List"}>
+          <button
+            className="flex h-16 w-full items-center justify-center bg-base-950 p-2 hover:bg-base-700 dark:invert"
+            onClick={handleAddList}
+          >
+            <img
+              src="/add.svg"
+              className="h-full"
+            />
+          </button>
+        </TooltipWrapper>
       )}
     </div>
   );
