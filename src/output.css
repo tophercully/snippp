@@ -1124,6 +1124,10 @@ video {
   width: 99svw;
 }
 
+.w-64 {
+  width: 16rem;
+}
+
 .max-w-0 {
   max-width: 0px;
 }
@@ -1317,6 +1321,10 @@ video {
 
 .gap-8 {
   gap: 2rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
 }
 
 .gap-x-8 {
@@ -1681,6 +1689,11 @@ video {
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .pb-12 {
@@ -2302,6 +2315,10 @@ video {
     display: flex;
   }
 
+  .md\:hidden {
+    display: none;
+  }
+
   .md\:aspect-\[4\/5\] {
     aspect-ratio: 4/5;
   }
@@ -2390,6 +2407,10 @@ video {
 
   .lg\:flex {
     display: flex;
+  }
+
+  .lg\:hidden {
+    display: none;
   }
 
   .lg\:h-\[96\%\] {
