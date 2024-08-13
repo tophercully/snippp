@@ -88,7 +88,10 @@ export const Builder = () => {
           if (fetchedSnippet.authorID == userProfile?.id) {
             setSnippet({
               ...fetchedSnippet,
-              name: `${userProfile.name}'s ${fetchedSnippet.name}`,
+              name:
+                isForking ?
+                  `${userProfile.name}'s ${fetchedSnippet.name}`
+                : fetchedSnippet.name,
             } as Snippet);
           } else {
             setIsDisallowed(true);
