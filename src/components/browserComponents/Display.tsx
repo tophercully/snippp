@@ -625,7 +625,7 @@ export const Display = ({
                       src="/edit.svg"
                       className="h-5 group-hover:invert dark:invert"
                     />
-                    <span className="font-sm flex text-lg md:hidden 2xl:flex">
+                    <span className="flex text-sm md:hidden 2xl:flex">
                       EDIT
                     </span>
                   </span>
@@ -642,7 +642,7 @@ export const Display = ({
                       src="/trash.svg"
                       className="h-5 invert group-hover:invert-0 dark:invert-0"
                     />
-                    <span className="font-sm flex text-lg md:hidden 2xl:flex">
+                    <span className="flex text-sm md:hidden 2xl:flex">
                       DELETE
                     </span>
                   </span>
