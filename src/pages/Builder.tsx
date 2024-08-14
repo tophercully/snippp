@@ -285,6 +285,7 @@ export const Builder = () => {
               <textarea
                 className="h-[30svh] w-full resize-none rounded-sm bg-base-50 p-4 shadow-md focus:outline-none dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
                 name="description"
+                placeholder={"```code``` for a code block"}
                 value={snippet.description}
                 onChange={handleChange}
               />
