@@ -492,6 +492,7 @@ export const Display = ({
           <SyntaxHighlighter
             style={selectedStyle}
             language={detectedLanguage || "javascript"}
+            wrapLongLines={true}
             customStyle={{
               background: "transparent",
               fontSize: codeFontSize,
