@@ -143,7 +143,7 @@ export const releases = [
     ],
   },
   {
-    version: "v0.3.0 - Working out the kinks",
+    version: "v0.3.0 - Quality of Life Improvements",
     date: "Aug 15, 2024",
     items: [
       {
@@ -159,16 +159,16 @@ export const releases = [
         completed: true,
       },
       {
-        title: "Word wrap for display",
-        description:
-          "Very long snippets should wrap to the next line, not just run off the screen",
-        completed: true,
-      },
-      {
         title: "Popup rework",
         description:
           "Popups should close when you click outside of them, closing a popup should not take accuracy skillchecks",
-        completed: false,
+        completed: true,
+      },
+      {
+        title: "Word wrap for display",
+        description:
+          "Small detail, but very long snippets should wrap to the next line, not just run off the screen. If prettier can do it, so can we.",
+        completed: true,
       },
     ],
   },
