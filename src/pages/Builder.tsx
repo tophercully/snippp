@@ -38,7 +38,6 @@ export const Builder = () => {
   }
   const isEditing = Boolean(snippetId);
   const isForking = Boolean(forking);
-  console.log(isForking);
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
 
   const [snippet, setSnippet] = useState<SnippetInBuilder | Snippet>({
