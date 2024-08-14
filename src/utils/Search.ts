@@ -15,7 +15,7 @@ function searchAndScoreSnippets(query: string, snippets: Snippet[]): Snippet[] {
         code: 1,
       };
 
-      // Search in name (formerly title)
+      // Search in name
       if (snippet.name) {
         searchTerms.forEach((term) => {
           if (snippet.name.toLowerCase().includes(term)) {
@@ -59,10 +59,10 @@ function searchAndScoreSnippets(query: string, snippets: Snippet[]): Snippet[] {
 
       // Boost score based on copy and favorite counts
       if (typeof snippet.copyCount === "number") {
-        score += Math.log(snippet.copyCount + 1) * 0.5;
+        // score += Math.log(snippet.copyCount + 1) * 0.1;
       }
       if (typeof snippet.favoriteCount === "number") {
-        score += Math.log(snippet.favoriteCount + 1) * 0.75;
+        // score += Math.log(snippet.favoriteCount + 1) * 0.25;
       }
 
       return { ...snippet, score };
