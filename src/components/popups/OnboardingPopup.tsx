@@ -1,7 +1,8 @@
 import { useLocalStorage } from "@uidotdev/usehooks";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { formatDescription } from "../../utils/formatDescription";
 import { track } from "@vercel/analytics";
+import { useNavigate } from "react-router-dom";
 
 interface OnboardingPopupProps {
   handleSignIn: () => void;
@@ -9,11 +10,14 @@ interface OnboardingPopupProps {
 
 const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [userProfile] = useLocalStorage("userProfile", null);
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isWelcomePopupDismissed, setisWelcomePopupDismissed] = useLocalStorage(
     "isWelcomePopupDismissed",
     false,
   );
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const pages = [
     {
@@ -48,8 +52,21 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
   ];
 
   useEffect(() => {
-    // Automatically open popup when the component mounts
     setIsVisible(true);
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleNextPage = () => {
@@ -83,7 +100,10 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
 
   return isVisible && !isWelcomePopupDismissed ?
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-950 bg-opacity-50">
-        <div className="relative flex w-11/12 max-w-md flex-col items-center overflow-hidden rounded-sm bg-base-50 shadow-md md:aspect-[4/5] md:max-w-xl dark:bg-base-850">
+        <div
+          ref={popupRef}
+          className="relative flex w-11/12 max-w-md flex-col items-center overflow-hidden rounded-sm bg-base-50 shadow-md md:aspect-[4/5] md:max-w-xl dark:bg-base-850"
+        >
           <button
             className="absolute right-4 top-4 z-10 border border-dashed border-base-500 p-1 px-1 text-2xl leading-none text-base-900 hover:bg-base-150 hover:text-base-700"
             onClick={handleClose}
@@ -157,11 +177,21 @@ const OnboardingPopup: React.FC<OnboardingPopupProps> = ({ handleSignIn }) => {
                 >
                   Next
                 </button>
-              : <button
+              : !userProfile ?
+                <button
                   className="rounded-sm bg-red-500 px-4 py-2 text-lg font-bold text-base-50 hover:bg-red-600"
                   onClick={handleSignInWithGoogle}
                 >
                   Sign in with Google
+                </button>
+              : <button
+                  className="rounded-sm bg-red-500 px-4 py-2 text-lg font-bold text-base-50 hover:bg-red-600"
+                  onClick={() => {
+                    handleClose();
+                    navigate("/dashboard");
+                  }}
+                >
+                  Go to Dashboard
                 </button>
               }
             </div>
