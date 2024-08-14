@@ -963,6 +963,10 @@ video {
   height: 25%;
 }
 
+.h-24 {
+  height: 6rem;
+}
+
 .max-h-12 {
   max-height: 3rem;
 }
@@ -1306,6 +1310,10 @@ video {
 
 .justify-around {
   justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
 }
 
 .gap-1 {
@@ -2843,6 +2851,11 @@ video {
 
   .group:hover .dark\:group-hover\:invert-0 {
     --tw-invert: invert(0);
+    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+  }
+
+  .group:hover .dark\:group-hover\:invert {
+    --tw-invert: invert(100%);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
   }
 }
