@@ -3,9 +3,9 @@ import { createList } from "../../backend/list/listFunctions";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { GoogleUser, SnipppProfile } from "../../typeInterfaces";
 import { useNotif } from "../../hooks/Notif";
-import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import TooltipWrapper from "../TooltipWrapper";
+import AddListPopup from "../popups/AddListPopup";
 
 export interface ListData {
   listid: string | number;
@@ -142,50 +142,16 @@ export const ListLists: React.FC<UserListsProps> = ({
         ref={containerRef}
         className="relative h-full w-full overflow-y-auto"
       >
-        {isAdding && (
-          <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
-            <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
-              <h2 className="mb-4 text-center text-2xl dark:text-white">
-                Add New List
-              </h2>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-base-700 dark:text-base-200">
-                  List Name
-                </label>
-                <input
-                  type="text"
-                  value={newListName}
-                  onChange={(e) => setNewListName(e.target.value)}
-                  className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-base-700 dark:text-base-200">
-                  Description
-                </label>
-                <textarea
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
-                />
-              </div>
-              <div className="flex justify-end gap-4">
-                <SnipppButton
-                  onClick={handleCancel}
-                  colorType="delete"
-                >
-                  CANCEL
-                </SnipppButton>
-                <SnipppButton
-                  onClick={handleSaveList}
-                  disabled={isSaving}
-                >
-                  SAVE
-                </SnipppButton>
-              </div>
-            </div>
-          </div>
-        )}
+        <AddListPopup
+          isAdding={isAdding}
+          newListName={newListName}
+          setNewListName={setNewListName}
+          newDescription={newDescription}
+          setNewDescription={setNewDescription}
+          handleCancel={handleCancel}
+          handleSaveList={handleSaveList}
+          isSaving={isSaving}
+        />
         {lists.map((list, index) => (
           <div
             key={list.listid}

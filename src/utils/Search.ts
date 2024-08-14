@@ -3,9 +3,9 @@ import { Snippet } from "../typeInterfaces";
 function searchAndScoreSnippets(query: string, snippets: Snippet[]): Snippet[] {
   const searchTerms = query.toLowerCase().split(" ");
 
-  return snippets
+  const scoredSnippets = snippets
     .map((snippet) => {
-      let score = 0;
+      let relevanceScore = 0;
 
       // Apply weights to different fields
       const weights = {
@@ -13,62 +13,67 @@ function searchAndScoreSnippets(query: string, snippets: Snippet[]): Snippet[] {
         tags: 3,
         description: 2,
         code: 1,
+        author: 3,
       };
 
-      // Search in name (formerly title)
-      if (snippet.name) {
+      // Helper function to calculate field score
+      const calculateFieldScore = (content: string, weight: number) => {
+        let fieldScore = 0;
         searchTerms.forEach((term) => {
-          if (snippet.name.toLowerCase().includes(term)) {
-            score += weights.name;
+          if (content.toLowerCase().includes(term)) {
+            fieldScore += weight;
           }
         });
+        // Cap the field score at 2 times the weight
+        return Math.min(fieldScore, weight * 2);
+      };
+
+      // Search in name
+      if (snippet.name) {
+        relevanceScore += calculateFieldScore(snippet.name, weights.name);
       }
 
-      // Search in tags (now a comma-separated string)
+      // Search in author
+      if (snippet.author) {
+        relevanceScore += calculateFieldScore(snippet.author, weights.author);
+      }
+
+      // Search in tags
       if (snippet.tags) {
-        const tagArray = snippet.tags
-          .toLowerCase()
-          .split(",")
-          .map((tag) => tag.trim());
-        tagArray.forEach((tag) => {
-          searchTerms.forEach((term) => {
-            if (tag.includes(term)) {
-              score += weights.tags;
-            }
-          });
-        });
+        const tagString = snippet.tags.toLowerCase();
+        relevanceScore += calculateFieldScore(tagString, weights.tags);
       }
 
       // Search in description
       if (snippet.description) {
-        searchTerms.forEach((term) => {
-          if (snippet.description.toLowerCase().includes(term)) {
-            score += weights.description;
-          }
-        });
+        relevanceScore += calculateFieldScore(
+          snippet.description,
+          weights.description,
+        );
       }
 
       // Search in code
       if (snippet.code) {
-        searchTerms.forEach((term) => {
-          if (snippet.code.toLowerCase().includes(term)) {
-            score += weights.code;
-          }
-        });
+        relevanceScore += calculateFieldScore(snippet.code, weights.code);
       }
 
-      // Boost score based on copy and favorite counts
-      if (typeof snippet.copyCount === "number") {
-        score += Math.log(snippet.copyCount + 1) * 0.5;
-      }
-      if (typeof snippet.favoriteCount === "number") {
-        score += Math.log(snippet.favoriteCount + 1) * 0.75;
-      }
+      // Calculate popularity score
+      const copyCount = snippet.copyCount || 0;
+      const favoriteCount = snippet.favoriteCount || 0;
+      const popularityScore = Math.log(copyCount + favoriteCount + 1);
 
-      return { ...snippet, score };
+      // Combine relevance and popularity scores
+      // Adjust these multipliers to fine-tune the balance
+      const combinedScore = relevanceScore * 1.5 + popularityScore;
+
+      return { ...snippet, relevanceScore, popularityScore, combinedScore };
     })
-    .filter((snippet) => snippet.score > 0)
-    .sort((a, b) => b.score - a.score);
+    .filter((snippet) => snippet.relevanceScore > 0);
+
+  // Sort by combined score
+  scoredSnippets.sort((a, b) => b.combinedScore - a.combinedScore);
+
+  return scoredSnippets;
 }
 
 export default searchAndScoreSnippets;

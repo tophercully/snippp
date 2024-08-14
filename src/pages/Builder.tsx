@@ -38,7 +38,6 @@ export const Builder = () => {
   }
   const isEditing = Boolean(snippetId);
   const isForking = Boolean(forking);
-  console.log(isForking);
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
 
   const [snippet, setSnippet] = useState<SnippetInBuilder | Snippet>({
@@ -88,7 +87,10 @@ export const Builder = () => {
           if (fetchedSnippet.authorID == userProfile?.id) {
             setSnippet({
               ...fetchedSnippet,
-              name: `${userProfile.name}'s ${fetchedSnippet.name}`,
+              name:
+                isForking ?
+                  `${userProfile.name}'s ${fetchedSnippet.name}`
+                : fetchedSnippet.name,
             } as Snippet);
           } else {
             setIsDisallowed(true);
@@ -283,6 +285,7 @@ export const Builder = () => {
               <textarea
                 className="h-[30svh] w-full resize-none rounded-sm bg-base-50 p-4 shadow-md focus:outline-none dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
                 name="description"
+                placeholder={"```code``` for a code block"}
                 value={snippet.description}
                 onChange={handleChange}
               />

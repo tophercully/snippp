@@ -17,7 +17,6 @@ import {
 } from "../backend/list/listFunctions";
 import { useNotif } from "../hooks/Notif";
 import SnipppButton from "../components/SnipppButton";
-import DeleteConfirmationPopup from "../components/popups/DeleteConfirmationPopup";
 import { setPageTitle } from "../utils/setPageTitle";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatDescription } from "../utils/formatDescription";
@@ -27,6 +26,8 @@ import { exportAndDownloadUserSnippets } from "../utils/downloadUserSnippets";
 import { useKeyboardControls } from "../hooks/KeyboardControls";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { ProfileStats } from "../components/profile/ProfileStats";
+import ConfirmationPopup from "../components/popups/ConfirmationPopup";
+import EditListPopup from "../components/popups/EditListPopup";
 
 const getHighResGoogleProfilePicture = (pictureUrl: string): string => {
   // Check if the URL is a Google profile picture URL and replace for higher resolution
@@ -622,12 +623,13 @@ export const Profile: React.FC = () => {
                   </div>
                 </div>
                 <SnippetExplorer />
-                <DeleteConfirmationPopup
+                <ConfirmationPopup
                   isOpen={showDeleteConfirmation}
                   onClose={() => setShowDeleteConfirmation(false)}
                   onConfirm={confirmDeleteList}
-                  itemName={list?.listname || ""}
-                  itemType="list"
+                  title={`Delete ${list?.listname}?`}
+                  description="Are you sure you want to delete this list?"
+                  confirmButtonText="Delete"
                 />
               </div>
             )}
@@ -648,50 +650,18 @@ export const Profile: React.FC = () => {
         </div>
       }
       <Footer />
-      {isEditing && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 dark:bg-black dark:bg-opacity-75">
-          <div className="w-full max-w-md rounded-sm bg-white p-4 shadow-lg dark:bg-base-800">
-            <h2 className="mb-4 text-center text-2xl dark:text-white">
-              {`Edit ${list?.listname}`}
-            </h2>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-base-700 dark:text-base-200">
-                List Name
-              </label>
-              <input
-                type="text"
-                value={newListName}
-                onChange={(e) => setNewListName(e.target.value)}
-                className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-base-700 dark:text-base-200">
-                Description
-              </label>
-              <textarea
-                value={newDescription}
-                onChange={(e) => setNewDescription(e.target.value)}
-                className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
-              />
-            </div>
-            <div className="flex justify-end gap-4">
-              <SnipppButton
-                onClick={handleCancel}
-                colorType="delete"
-              >
-                CANCEL
-              </SnipppButton>
-              <SnipppButton
-                onClick={handleSaveList}
-                disabled={isSaving}
-              >
-                SAVE
-              </SnipppButton>
-            </div>
-          </div>
-        </div>
-      )}
+      <EditListPopup
+        isOpen={isEditing}
+        onClose={handleCancel}
+        onSave={handleSaveList}
+        initialName={list?.listname || ""}
+        initialDescription={list?.description || ""}
+        isSaving={isSaving}
+        name={newListName}
+        setName={setNewListName}
+        description={newDescription}
+        setDescription={setNewDescription}
+      />
     </div>
   );
 };

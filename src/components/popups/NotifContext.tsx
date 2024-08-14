@@ -115,10 +115,11 @@ const Notif: React.FC<NotifProps> = ({
       if (showCountdown) {
         timerRef.current = setTimeout(tick, 16);
       } else {
-        timerRef.current = setTimeout(
-          () => setTimeout(handleClose, timeout),
-          timeout,
-        );
+        timerRef.current = setTimeout(tick, 16);
+        // timerRef.current = setTimeout(
+        //   () => setTimeout(handleClose, timeout),
+        //   timeout,
+        // );
       }
     }
 
@@ -129,11 +130,20 @@ const Notif: React.FC<NotifProps> = ({
     };
   }, [timeout, handleClose, showCountdown]);
 
-  const backgroundColor =
+  const borderColor =
+    type === "success" ? "border-green-600"
+    : type === "error" ? "border-red-500"
+    : "border-blue-600";
+
+  const iconColor =
     type === "success" ? "bg-green-600"
     : type === "error" ? "bg-red-500"
-    : "bg-blue-900";
+    : "bg-blue-600";
 
+  const notifIcon =
+    type === "success" ? "/check.svg"
+    : type === "error" ? "/exclamation.svg"
+    : "/info.svg";
   return (
     <div
       className={`fixed bottom-4 right-4 transition-all duration-200 ease-in-out ${
@@ -143,10 +153,14 @@ const Notif: React.FC<NotifProps> = ({
       }`}
     >
       <div
-        className={`${backgroundColor} relative flex flex-col rounded-sm p-4 text-white shadow-lg`}
+        className={`${borderColor} relative flex max-w-[80vw] flex-col rounded-sm border bg-base-50 p-4 text-black shadow-lg dark:bg-base-950 dark:text-white`}
       >
         <div className="flex items-center">
-          <p className="mr-4">{message}</p>
+          <img
+            src={notifIcon}
+            className={`${iconColor} flex aspect-square h-6 items-center justify-center rounded-full p-1`}
+          />
+          <p className="mx-4">{message}</p>
           <button
             onClick={handleClose}
             className="flex h-6 w-6 items-center justify-center rounded-sm bg-white text-gray-800 focus:outline-none"
@@ -157,7 +171,7 @@ const Notif: React.FC<NotifProps> = ({
         {timeout && showCountdown && (
           <div className="mt-2 h-1 w-full bg-white bg-opacity-30">
             <div
-              className="h-full bg-white transition-all duration-100 ease-linear"
+              className={`h-full ${iconColor} transition-all duration-100 ease-linear`}
               style={{ width: `${progress}%`, float: "right" }}
             />
           </div>

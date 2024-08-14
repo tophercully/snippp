@@ -33,7 +33,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
       case "delete":
         return "bg-red-600";
       default:
-        return "bg-blue-700";
+        return "bg-blue-600";
     }
   };
 

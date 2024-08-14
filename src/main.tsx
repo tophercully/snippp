@@ -15,6 +15,7 @@ import { ListPage } from "./pages/ListPage.tsx";
 import { Profile } from "./pages/Profile.tsx";
 import { Stats } from "./pages/Stats.tsx";
 import { Roadmap } from "./pages/Roadmap.tsx";
+import UITester from "./pages/UITester.tsx";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
   {
     path: "/stats",
     element: <Stats />,
+  },
+  {
+    path: "/uitest",
+    element: <UITester />,
   },
 ]);
 

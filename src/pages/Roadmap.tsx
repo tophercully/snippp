@@ -143,7 +143,37 @@ export const releases = [
     ],
   },
   {
-    version: "v0.3.0 - Curation and Moderation",
+    version: "v0.3.0 - Quality of Life Improvements",
+    date: "Aug 15, 2024",
+    items: [
+      {
+        title: "Improved Search",
+        description:
+          "Weighted and scored search to help you find more relevant results",
+        completed: true,
+      },
+      {
+        title: "UI cleanup",
+        description:
+          "Adjust components (notifications, buttons, popups) to be more consistent, improve the look of the app. Cut down on color unless it serves a purpose. Also improves text legibility.",
+        completed: true,
+      },
+      {
+        title: "Popup rework",
+        description:
+          "Popups should close when you click outside of them, closing a popup should not take accuracy skillchecks",
+        completed: true,
+      },
+      {
+        title: "Word wrap for display",
+        description:
+          "Small detail, but very long snippets should wrap to the next line, not just run off the screen. If prettier can do it, so can we.",
+        completed: true,
+      },
+    ],
+  },
+  {
+    version: "v0.4.0 - Curation and Moderation",
     date: "Aug 15, 2024",
     items: [
       {
@@ -155,13 +185,13 @@ export const releases = [
       {
         title: "Backend Moderation Portal",
         description:
-          "Moderation on the rare case action needs to be taken when a bad actor is spamming or attacking",
+          "Moderation for marking snippets and lists as staff picks, and for the rare case action needs to be taken when a bad actor is spamming or attacking",
         completed: false,
       },
       {
         title: "Block Duplicate Snippets",
         description:
-          "Refer users to existing tools when they try to create duplicates",
+          "Refer users to existing tools when they try to create duplicates, or at least warn them",
         completed: false,
       },
     ],
@@ -173,19 +203,13 @@ export const releases = [
       {
         title: "Crash Course",
         description:
-          "Get prompted with a dismissable crash course when you first sign up! Attempts to ensure all user's are aware of useful features.",
+          "Get prompted with a dismissable crash course when you first sign up! Attempts to ensure all users are aware of useful features.",
         completed: false,
       },
       {
-        title: "Improved Search",
+        title: 'Dedicated "Curated" Section',
         description:
-          "Weighted or scored search to help you find more relevant results",
-        completed: false,
-      },
-      {
-        title: "Block Duplicate Snippets",
-        description:
-          "Refer users to existing tools when they try to create duplicates",
+          "Get prompted with a dismissable crash course when you first sign up! Attempts to ensure all users are aware of useful features.",
         completed: false,
       },
     ],
