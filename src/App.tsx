@@ -94,6 +94,7 @@ const Home = () => {
             size="lg"
             colorType="neutral"
             tooltip="Browse tools from our community of developers"
+            tooltipPosition="right"
             pronounced={false}
           >
             <span className="text-md relative z-10 flex flex-nowrap items-center md:text-lg dark:group-hover:text-base-50">
