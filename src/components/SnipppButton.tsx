@@ -12,6 +12,7 @@ interface SnipppButtonProps {
   fit?: boolean;
   size?: SizeType;
   tooltip?: string;
+  pronounced?: boolean;
 }
 
 const SnipppButton: React.FC<SnipppButtonProps> = ({
@@ -23,6 +24,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
   fit = true,
   size = "md",
   tooltip,
+  pronounced = false,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -52,6 +54,12 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
     }
   };
 
+  const getBaseColorClass = (): string => {
+    return pronounced ?
+        "bg-base-950 text-base-50 dark:bg-base-50 dark:text-base-950"
+      : "bg-base-50 text-base-950 dark:bg-base-800 dark:text-base-50";
+  };
+
   return (
     <div className={`relative ${fit ? "inline-block" : "w-full"}`}>
       {tooltip && showTooltip && (
@@ -65,7 +73,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
         disabled={disabled}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm text-base-950 shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600 ${className}`}
+        className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm ${getBaseColorClass()} shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:shadow-sm dark:shadow-base-600 ${className}`}
       >
         <div
           className={`absolute inset-0 -translate-x-[101%] transform ${getColorClass()} transition-transform duration-75 ease-in-out group-hover:translate-x-0`}

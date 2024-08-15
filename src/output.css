@@ -1201,6 +1201,10 @@ video {
   max-width: 35vw;
 }
 
+.max-w-\[70vw\] {
+  max-width: 70vw;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2635,6 +2639,16 @@ video {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
+
+  .md\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -2724,6 +2738,10 @@ video {
 }
 
 @media (min-width: 1280px) {
+  .xl\:flex {
+    display: flex;
+  }
+
   .xl\:h-full {
     height: 100%;
   }
@@ -2742,6 +2760,10 @@ video {
 
   .xl\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .xl\:flex-row {
+    flex-direction: row;
   }
 
   .xl\:flex-row-reverse {
