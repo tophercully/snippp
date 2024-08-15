@@ -147,8 +147,8 @@ const Home = () => {
               contributing has never been easier.
             </p>
             <p className="p-2 text-xl md:text-3xl">
-              Contributors are prized here at Snippp, uplifting new developers
-              and fostering a culture of sharing and learning.
+              At Snippp, contributors are valued, empowering new developers and
+              nurturing a culture of sharing and growth.
             </p>
           </div>
           <img
@@ -162,15 +162,33 @@ const Home = () => {
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 text-black md:gap-16 dark:text-white">
             <h1 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
-              <span className="w-fit bg-special p-1 text-white">Your</span>
-              <span className="w-fit bg-special p-1 text-white">code,</span>
-              <span className="z-10 w-fit bg-special p-1 text-white">your</span>
-              <span className="w-fit bg-special p-1 text-white">control</span>
+              <span className="flex w-fit flex-wrap">
+                <span className="w-fit bg-special p-1 text-white">Your</span>
+                <span className="w-fit bg-special p-1 text-white">code,</span>
+              </span>
+              <span className="flex w-fit flex-wrap">
+                <span className="z-10 w-fit bg-special p-1 text-white">
+                  your
+                </span>
+                <span className="w-fit bg-special p-1 text-white">control</span>
+              </span>
             </h1>
             <p className="p-2 text-xl md:text-3xl">
               We prioritize your privacy. Control who sees your snippets with
               customizable privacy settings, ensuring your code is safe and
               secure.
+            </p>
+            <p className="p-2 text-xl md:text-3xl">
+              Need more security? Keep an ear out for our upcoming desktop app
+              by following us on{" "}
+              <a
+                target="_blank"
+                href="https://twitter.com/snipppio"
+                className="underline"
+              >
+                Twitter
+              </a>
+              . All of the power of Snippp, without sharing your code with us.
             </p>
           </div>
           <div className="flex flex-col gap-4">
