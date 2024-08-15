@@ -80,5 +80,22 @@ export default {
       };
       addUtilities(newUtilities);
     },
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".text-stroke-2": {
+          "-webkit-text-stroke-width": "2px",
+        },
+        ".text-stroke-10": {
+          "-webkit-text-stroke-width": "10px",
+        },
+        ".text-stroke-white": {
+          "-webkit-text-stroke-color": "white",
+        },
+        ".text-stroke-black": {
+          "-webkit-text-stroke-color": "black",
+        },
+      };
+      addUtilities(newUtilities);
+    },
   ],
 };

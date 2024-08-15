@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { setPageTitle } from "../utils/setPageTitle";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import searchAndScoreSnippets from "../utils/Search";
+import searchSuggestions from "../utils/searchSuggestions";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -51,6 +52,9 @@ type SnippetMod = {
 };
 
 type SnippetMods = { [snippetID: number]: SnippetMod };
+
+const shuffledSuggestions = searchSuggestions.sort(() => Math.random() - 0.5);
+const searchAllPlaceholder = `search - try "${shuffledSuggestions[0]}" or "${shuffledSuggestions[1]}"`;
 
 export const Browser: React.FC = () => {
   const [snippets, setSnippets] = useState<Snippet[]>([]);
@@ -116,23 +120,6 @@ export const Browser: React.FC = () => {
     }
 
     if (query) {
-      // filteredSnippets = filteredSnippets.filter((a) => {
-      // Ensure the properties exist and are strings before calling toLowerCase
-      // const tags = a.tags ? a.tags.toLowerCase() : "";
-      // const name = a.name ? a.name.toLowerCase() : "";
-      // const description = a.description ? a.description.toLowerCase() : "";
-      // const code = a.code ? a.code.toLowerCase() : "";
-      // const author = a.author ? a.author.toLowerCase() : "";
-
-      // // Perform the filtering
-      // return (
-      //   tags.includes(query.toLowerCase()) ||
-      //   name.includes(query.toLowerCase()) ||
-      //   description.includes(query.toLowerCase()) ||
-      //   code.includes(query.toLowerCase()) ||
-      //   author.includes(query.toLowerCase())
-      // );
-      // });
       return searchAndScoreSnippets(query, filteredSnippets);
     }
 
@@ -153,7 +140,7 @@ export const Browser: React.FC = () => {
             placeHolder={
               category ?
                 `search ${categories[category].name.toLowerCase()} snipppets`
-              : "search all"
+              : searchAllPlaceholder
             }
             setSortMethod={setSortMethod}
             sortMethod={sortMethod}

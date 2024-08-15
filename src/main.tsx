@@ -16,6 +16,7 @@ import { Profile } from "./pages/Profile.tsx";
 import { Stats } from "./pages/Stats.tsx";
 import { Roadmap } from "./pages/Roadmap.tsx";
 import UITester from "./pages/UITester.tsx";
+import { UserProvider } from "./hooks/UserProfile.tsx";
 
 const router = createBrowserRouter([
   {
@@ -68,7 +69,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId="673717995116-smr2d3etjmkfqt4p0ns5puq7forh2lc8.apps.googleusercontent.com">
     <React.StrictMode>
       <NotifProvider>
-        <RouterProvider router={router} />
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
       </NotifProvider>
       <Analytics />
     </React.StrictMode>

@@ -7,7 +7,7 @@ export const Footer = () => {
       </p>
       <div className="flex gap-3">
         <a
-          href="https://github.com/tophercully/p5-snippets"
+          href="https://github.com/tophercully/snippp"
           target="_blank"
         >
           <img
@@ -16,7 +16,7 @@ export const Footer = () => {
           ></img>
         </a>
         <a
-          href="https://twitter.com/spinkdinky"
+          href="https://twitter.com/snipppio"
           target="_blank"
         >
           <img

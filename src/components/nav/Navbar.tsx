@@ -1,38 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { fetchUserProfile, newUser } from "../../backend/user/userFunctions";
+import { useSessionStorage } from "@uidotdev/usehooks";
+
 import { categories } from "../../utils/categories";
-import { GoogleUser } from "../../typeInterfaces";
+
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
 import { useNavigate } from "react-router-dom";
 import { track } from "@vercel/analytics";
-import OnboardingPopup from "../popups/OnboardingPopup";
+
+import { useUser } from "../../hooks/UserProfile";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const [isUserCreated, setIsUserCreated] = useLocalStorage<boolean>(
-    "isUserCreated",
-    false,
-  );
-  const [userToken, setUserToken] = useLocalStorage<string | null>(
-    "userGoogleToken",
-    null,
-  );
-  const [userProfile, setUserProfile] = useLocalStorage<GoogleUser | null>(
-    "userProfile",
-    null,
-  );
-  const [isWelcomePopupDismissed] = useLocalStorage(
-    "isWelcomePopupDismissed",
-    false,
-  );
+  const { userProfile, login, logout } = useUser(); // Use the new hook
+  // const [isWelcomePopupDismissed] = useLocalStorage(
+  //   "isWelcomePopupDismissed",
+  //   false,
+  // );
   const [isAdding] = useSessionStorage("isAddingList", false);
   const [isEditing] = useSessionStorage("isEditingProfile", false);
   const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
-  const isBrowseOrHome =
-    window.location.pathname == "/" || window.location.pathname == "/browse";
+  // const isBrowseOrHome =
+  //   window.location.pathname == "/" || window.location.pathname == "/browse";
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
     useState<boolean>(false);
@@ -47,90 +35,15 @@ export const Navbar: React.FC = () => {
     setIsCategoryDropdownOpen(!isCategoryDropdownOpen);
   };
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUserToken(codeResponse.access_token),
-    onError: (error) => console.log("Login Failed:", error),
-  });
-
   const handleSignIn = () => {
-    if (userToken || userProfile) {
-      track("User Sign Out");
-      googleLogout();
-      setUserToken(null);
-      setUserProfile(null);
+    if (userProfile) {
+      logout();
       setIsDropdownOpen(false);
-      setIsUserCreated(false);
     } else {
       track("User Sign In");
       login();
     }
   };
-
-  useEffect(() => {
-    const getProfile = () => {
-      if (userToken && !userProfile) {
-        axios
-          .get(
-            `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`,
-            {
-              headers: {
-                Authorization: `Bearer ${userToken}`,
-                Accept: "application/json",
-              },
-            },
-          )
-          .then((res) => {
-            const googleUserProfile = res.data;
-            // Extract base URL and modify the size parameter for higher resolution
-            const highResPicture = googleUserProfile.picture.replace(
-              /s96-c/,
-              "s400-c",
-            );
-            googleUserProfile.picture = highResPicture;
-
-            setUserProfile(googleUserProfile);
-            fetchUserProfile(googleUserProfile.id)
-              .then((snipppProfile) => {
-                if (snipppProfile) {
-                  const updatedProfile = { ...googleUserProfile };
-                  if (
-                    snipppProfile.name &&
-                    snipppProfile.name !== googleUserProfile.name
-                  ) {
-                    updatedProfile.name = snipppProfile.name;
-                  }
-                  if (
-                    snipppProfile.profile_picture &&
-                    snipppProfile.profile_picture !== googleUserProfile.picture
-                  ) {
-                    updatedProfile.picture = snipppProfile.profile_picture;
-                  }
-                  setUserProfile(updatedProfile);
-                }
-              })
-              .catch((error) =>
-                console.error("Error fetching user profile:", error),
-              );
-          })
-          .catch((err) => console.log(err));
-      }
-    };
-
-    getProfile();
-  }, [userToken, userProfile, setUserProfile]);
-
-  useEffect(() => {
-    if (userProfile && !isUserCreated) {
-      newUser(userProfile)
-        .then(() => {
-          setIsUserCreated(true);
-        })
-        .catch((error) => {
-          console.error("Error creating user:", error);
-        });
-      setUserToken(null);
-    }
-  }, [userProfile, isUserCreated, setUserToken, setIsUserCreated]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -150,11 +63,11 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
   return (
     <>
-      {!isWelcomePopupDismissed && isBrowseOrHome && (
+      {/* {!isWelcomePopupDismissed && isBrowseOrHome && (
         <OnboardingPopup handleSignIn={handleSignIn} />
-      )}
+      )} */}
       {!userProfile}
-      <div className="absolute left-0 right-0 top-0 w-full p-2 lg:px-10">
+      <div className="absolute left-0 right-0 top-0 z-50 w-full p-2 lg:px-10">
         <div className="flex h-fit w-full items-center justify-start gap-5">
           <a
             href="/"
