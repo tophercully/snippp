@@ -16,7 +16,7 @@ function searchAndScoreSnippets(query: string, snippets: Snippet[]): Snippet[] {
         author: 3,
       };
 
-      // Helper function to calculate field score
+      // Helper function to calculate some field score
       const calculateFieldScore = (content: string, weight: number) => {
         let fieldScore = 0;
         searchTerms.forEach((term) => {
@@ -63,7 +63,6 @@ function searchAndScoreSnippets(query: string, snippets: Snippet[]): Snippet[] {
       const popularityScore = Math.log(copyCount + favoriteCount + 1);
 
       // Combine relevance and popularity scores
-      // Adjust these multipliers to fine-tune the balance
       const combinedScore = relevanceScore * 1.5 + popularityScore;
 
       return { ...snippet, relevanceScore, popularityScore, combinedScore };

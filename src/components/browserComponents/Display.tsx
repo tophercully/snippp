@@ -424,7 +424,7 @@ export const Display = ({
                 <span>{simplifiedAndModdedCount}</span>
               </span>
             </span>
-            {forkCount && forkCount > 0 && (
+            {forkCount && forkCount != 0 && (
               <span className="relative flex h-fit w-fit items-center gap-2">
                 <span className="group flex gap-1">
                   <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white opacity-0 transition-opacity duration-100 group-hover:opacity-100 dark:bg-base-100 dark:text-black">

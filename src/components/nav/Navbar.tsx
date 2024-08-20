@@ -11,7 +11,7 @@ import { useUser } from "../../hooks/UserProfile";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { userProfile, login, logout } = useUser(); // Use the new hook
+  const { userProfile, login, logout } = useUser(); 
   // const [isWelcomePopupDismissed] = useLocalStorage(
   //   "isWelcomePopupDismissed",
   //   false,
