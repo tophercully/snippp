@@ -1793,6 +1793,10 @@ video {
   padding-top: 8rem;
 }
 
+.pl-10 {
+  padding-left: 2.5rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2080,6 +2084,11 @@ video {
 
 .invert-\[40\%\] {
   --tw-invert: invert(40%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.invert-\[30\%\] {
+  --tw-invert: invert(30%);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 

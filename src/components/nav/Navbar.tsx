@@ -11,7 +11,7 @@ import { useUser } from "../../hooks/UserProfile";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { userProfile, login, logout } = useUser(); 
+  const { userProfile, login, logout } = useUser();
   // const [isWelcomePopupDismissed] = useLocalStorage(
   //   "isWelcomePopupDismissed",
   //   false,
@@ -63,10 +63,6 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
   return (
     <>
-      {/* {!isWelcomePopupDismissed && isBrowseOrHome && (
-        <OnboardingPopup handleSignIn={handleSignIn} />
-      )} */}
-      {!userProfile}
       <div className="absolute left-0 right-0 top-0 z-50 w-full p-2 lg:px-10">
         <div className="flex h-fit w-full items-center justify-start gap-5">
           <a
@@ -86,7 +82,7 @@ export const Navbar: React.FC = () => {
               onClick={() => {
                 navigate(`/browse`);
               }}
-              className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+              className="hidden w-full items-center p-4 pl-10 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               BROWSE
             </button>
@@ -114,11 +110,19 @@ export const Navbar: React.FC = () => {
                 </button>
                 {isCategoryDropdownOpen && (
                   <div className="absolute left-0 z-20 mt-2 w-64 overflow-y-auto rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
-                    <div className="flex flex-col items-start gap-6 px-4 py-6 text-sm md:hidden">
-                      <button onClick={() => navigate("/browse")}>
+                    <div className="flex flex-col items-start text-sm md:hidden">
+                      <button
+                        onClick={() => navigate("/browse")}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      >
                         BROWSE
                       </button>
-                      <button onClick={() => navigate("/about")}>ABOUT</button>
+                      <button
+                        onClick={() => navigate("/about")}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      >
+                        ABOUT
+                      </button>
                     </div>
                     <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
                       Languages
