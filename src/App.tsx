@@ -118,7 +118,7 @@ const Home = () => {
                 build faster
               </span>
             </h1>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="text-xl md:text-3xl">
               Create tailored lists to keep your go-to snippets within reach—
               boost your productivity and never waste time searching again.
             </p>
@@ -152,10 +152,12 @@ const Home = () => {
               nurturing a culture of sharing and growth.
             </p>
           </div>
-          <img
-            src="/profileScreenshot.png"
-            className="md:max-h-2/3 rounded-lg shadow-xl md:max-w-[35vw]"
-          />
+          <div className="w-full p-2 md:p-0">
+            <img
+              src="/profileScreenshot.png"
+              className="md:max-h-2/3 rounded-lg shadow-xl md:max-w-[35vw]"
+            />
+          </div>
         </div>
       </div>
 
@@ -193,14 +195,16 @@ const Home = () => {
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            <img
-              src="/privacyScreenshot.png"
-              className="md:max-h-2/3 rounded-lg shadow-xl md:max-w-[35vw]"
-            />
-            <img
-              src="/privateScreenshot.png"
-              className="md:max-h-2/3 rounded-lg shadow-xl md:max-w-[35vw]"
-            />
+            <div className="flex w-full flex-col gap-4 p-2 md:p-0">
+              <img
+                src="/privacyScreenshot.png"
+                className="md:max-h-2/3 rounded-lg shadow-xl md:max-w-[35vw]"
+              />
+              <img
+                src="/privateScreenshot.png"
+                className="md:max-h-2/3 rounded-lg shadow-xl md:max-w-[35vw]"
+              />
+            </div>
           </div>
         </div>
       </div>
