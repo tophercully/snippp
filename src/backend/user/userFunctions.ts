@@ -128,3 +128,22 @@ export const fetchUserStats = async (userId: string): Promise<UserStats> => {
     throw error;
   }
 };
+
+export const fetchAllUsers = async (): Promise<SnipppProfile[]> => {
+  try {
+    const response = await fetch("/api/user/fetch-all-users");
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `HTTP error! status: ${response.status}`,
+      );
+    }
+
+    const users: SnipppProfile[] = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    throw error;
+  }
+};

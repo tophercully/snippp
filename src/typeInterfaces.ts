@@ -79,6 +79,8 @@ export interface SnipppProfile {
   profile_picture: string;
   bio: string;
   last_login: string;
+  created_at?: string;
+  role?: "user" | "admin" | "moderator" | "banned";
 }
 
 export interface EditableUserFields {
