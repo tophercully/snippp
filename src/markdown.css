@@ -1,0 +1,30 @@
+.markdown pre {
+  display: block;
+  white-space: pre-wrap;
+  margin-block: 2rem;
+  padding-inline: 2rem;
+  padding-block: 1rem;
+  background-color: rgb(239, 239, 239);
+  border-radius: 2px;
+}
+
+.markdown p {
+  margin-block: 1rem;
+}
+
+.markdown a {
+  text-decoration: underline;
+}
+
+/* Dark mode styling with media query*/
+@media (prefers-color-scheme: dark) {
+  .markdown pre {
+    display: block;
+    white-space: pre-wrap;
+    margin-block: 2rem;
+    padding-inline: 2rem;
+    padding-block: 1rem;
+    background-color: rgb(37, 37, 37);
+    border-radius: 2px;
+  }
+}
