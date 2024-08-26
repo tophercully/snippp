@@ -7,14 +7,16 @@ import { useNotif } from "../../hooks/Notif";
 import ConfirmationPopup from "../popups/ConfirmationPopup";
 
 const UserModeration = () => {
-  const [selectedUser, setSelectedUser] = useState<SnipppProfile | null>(null);
+  const [selectedUser, setSelectedUser] = useState<SnipppProfile | undefined>(
+    undefined,
+  );
   const [allUsers, setAllUsers] = useState<SnipppProfile[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showRoleConfirmation, setShowRoleConfirmation] = useState(false);
   const { showNotif } = useNotif();
   const [roleToSet, setRoleToSet] = useState<
-    "user" | "admin" | "moderator" | "banned" | null
-  >(null);
+    "user" | "admin" | "moderator" | "banned" | undefined
+  >(undefined);
 
   // Fetch all users
   useEffect(() => {
@@ -27,7 +29,7 @@ const UserModeration = () => {
   }, []);
 
   useEffect(() => {
-    setRoleToSet(selectedUser?.role || null);
+    setRoleToSet(selectedUser?.role || undefined);
   }, [selectedUser]);
 
   // Filter users based on search term
@@ -56,11 +58,9 @@ const UserModeration = () => {
     }
   };
 
-  console.log(allUsers);
-
   return (
     <>
-      {allUsers.length > 0 ?
+      {allUsers.length > 0 && selectedUser ?
         <div className="w-full">
           <h2 className="font-semibold">{`Select User (total ${allUsers.length})`}</h2>
 
