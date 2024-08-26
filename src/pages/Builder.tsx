@@ -84,14 +84,18 @@ export const Builder = () => {
         setIsLoading(true);
         try {
           const fetchedSnippet = await loadSnippetById(Number(snippetId));
-          if (fetchedSnippet.authorID == userProfile?.id) {
-            setSnippet({
-              ...fetchedSnippet,
-              name:
-                isForking ?
-                  `${userProfile.name}'s ${fetchedSnippet.name}`
-                : fetchedSnippet.name,
-            } as Snippet);
+          if (fetchedSnippet.authorID == userProfile?.id || isForking) {
+            if (fetchedSnippet.public) {
+              setSnippet({
+                ...fetchedSnippet,
+                name:
+                  isForking ?
+                    `${userProfile?.name}'s ${fetchedSnippet.name}`
+                  : fetchedSnippet.name,
+              } as Snippet);
+            } else {
+              setIsDisallowed(true);
+            }
           } else {
             setIsDisallowed(true);
           }
@@ -177,7 +181,7 @@ export const Builder = () => {
     e.preventDefault();
     if (snippet.code && snippet.name) {
       if (userProfile) {
-        if (isCreator) {
+        if (isCreator || isForking) {
           if (countCharacters(snippet.code) < 5000) {
             try {
               // Assign autodetected language tag if not already present
@@ -425,7 +429,7 @@ export const Builder = () => {
                 />
                 <span className="relative z-10 text-xl font-bold">
                   {isEditing ?
-                    isCreator ?
+                    isCreator || isForking ?
                       "SAVE"
                     : "YOU ARE NOT THE AUTHOR"
                   : isForking ?
