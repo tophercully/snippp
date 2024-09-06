@@ -78,10 +78,7 @@ const Home = () => {
             </div>
           </div>
           <div className="hidden h-1/2 w-2/3 flex-col items-center justify-center xl:flex">
-            <img
-              src="dashboardScreenshot.png"
-              className="opacity-100 shadow-xl"
-            />
+            <img src="dashboardMockup2.png" />
           </div>
         </div>
         <div

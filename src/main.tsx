@@ -65,7 +65,7 @@ const router = createBrowserRouter([
     element: <UITester />,
   },
   {
-    path: "/mod",
+    path: "/mod/:panel?",
     element: <ModPortal />,
   },
 ]);

@@ -11,7 +11,7 @@ export default async function fetchUserHandler(req: any, res: any) {
     if (userId) {
       try {
         const { rows } = await pool.sql`
-          SELECT userId, name, email, profile_picture, bio, last_login
+          SELECT userId, name, email, profile_picture, bio, last_login, role
           FROM users
           WHERE userId = ${userId};
         `;

@@ -453,6 +453,7 @@ export const Builder = () => {
               }}
               theme={selectedStyle}
               defaultLanguage="auto"
+              language={detectLanguage(snippet.code) as string}
               onChange={handleCodeChange}
             />
             <p

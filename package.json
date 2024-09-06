@@ -4,7 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run dev:vite\" \"npm run dev:tailwind\" \"npm run dev:vercel\"",
+    "dev:vite": "vite",
+    "dev:tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "dev:vercel": "vercel dev",
+    "start": "vercel dev",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

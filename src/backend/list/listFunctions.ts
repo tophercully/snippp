@@ -1,15 +1,6 @@
 import { track } from "@vercel/analytics";
 import { Snippet } from "../../typeInterfaces";
-
-interface ListData {
-  listid: string;
-  userid: string;
-  listname: string;
-  description: string;
-  createdat: string;
-  lastupdated: string;
-  snippet_count: string;
-}
+import { ListData } from "../../typeInterfaces";
 
 export async function getUserLists(userId: string): Promise<ListData[]> {
   const response = await fetch("/api/list/get-user-lists", {
@@ -256,6 +247,89 @@ export const updateList = async (
     console.log(result.message);
   } catch (error) {
     console.error("Error updating list:", error);
+    throw error;
+  }
+};
+
+export const addListToStaffPicks = async (listID: number): Promise<void> => {
+  try {
+    const response = await fetch(`/api/list/list-pick`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ listID }),
+    });
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to add list to staff picks");
+      } else {
+        const textError = await response.text();
+        console.error("Server returned non-JSON response:", textError);
+        throw new Error(
+          `Server error: ${response.status} ${response.statusText}`,
+        );
+      }
+    }
+
+    const result = await response.json();
+    console.log(result.message);
+  } catch (error) {
+    console.error("Error updating list:", error);
+    throw error;
+  }
+};
+export const removeListFromStaffPicks = async (
+  listID: number,
+): Promise<void> => {
+  try {
+    const response = await fetch(`/api/list/list-pick`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ listID }),
+    });
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || "Failed to remove list from staff pick",
+        );
+      } else {
+        const textError = await response.text();
+        console.error("Server returned non-JSON response:", textError);
+        throw new Error(
+          `Server error: ${response.status} ${response.statusText}`,
+        );
+      }
+    }
+
+    const result = await response.json();
+    console.log(result.message);
+  } catch (error) {
+    console.error("Error updating list:", error);
+    throw error;
+  }
+};
+
+export const getStaffPicks = async (): Promise<ListData[]> => {
+  try {
+    const response = await fetch("/api/list/get-staff-picks");
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to fetch staff picks");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching staff picks:", error);
     throw error;
   }
 };

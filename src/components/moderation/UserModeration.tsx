@@ -51,7 +51,7 @@ const UserModeration = () => {
         showNotif("User role updated successfully!", "success", 5000);
         // Refetch all users
         const result = await fetchAllUsers();
-        setAllUsers(result);
+        setAllUsers(result.reverse());
       } catch (error) {
         showNotif("Failed to update user role", "error", 5000);
       }
@@ -90,10 +90,10 @@ const UserModeration = () => {
               <div className="grid w-full grid-cols-2 gap-4 text-wrap break-words bg-base-100 p-4 shadow-md">
                 <p>
                   Profile Picture:{" "}
-                  <img
+                  {/* <img
                     className="h-fit w-1/2"
                     src={selectedUser.profile_picture}
-                  ></img>
+                  ></img> */}
                 </p>
                 <p>Name: {selectedUser.name}</p>
                 <p>User ID: {selectedUser.userId}</p>
@@ -142,7 +142,7 @@ const UserModeration = () => {
             confirmButtonText="Set Role"
           />
         </div>
-      : <div className="flex w-full flex-col items-center">
+      : <div className="flex h-[65svh] w-full flex-col items-center justify-center">
           <LoadingSpinner />
           <p>Loading users</p>
         </div>

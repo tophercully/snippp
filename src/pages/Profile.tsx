@@ -3,7 +3,8 @@ import { SearchBar } from "../components/browserComponents/SearchBar";
 import { GoogleUser, Snippet, SnipppProfile } from "../typeInterfaces";
 import { Navbar } from "../components/nav/Navbar";
 import { ListSnippets } from "../components/browserComponents/ListSnippets";
-import { ListLists, ListData } from "../components/browserComponents/ListLists";
+import { ListLists } from "../components/browserComponents/ListLists";
+import { ListData } from "../typeInterfaces";
 import { Footer } from "../components/nav/Footer";
 import { Display } from "../components/browserComponents/Display";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
@@ -138,7 +139,10 @@ export const Profile: React.FC = () => {
     [userid],
   );
   const [lists, setLists] = useState<ListData[]>(() => defaultLists);
-  const [list, setList] = useState<ListData | null>(null);
+  const [list, setList] = useSessionStorage<ListData | null>(
+    `${userid}-lists`,
+    null,
+  );
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
@@ -491,6 +495,7 @@ export const Profile: React.FC = () => {
                   addDisabled={userProfile ? !(userProfile.id == userid) : true}
                   onSelectList={handleSelectList}
                   onAddList={fetchAndSetLists}
+                  onRefreshLists={fetchAndSetLists}
                 />
 
                 {listsLoading && (
