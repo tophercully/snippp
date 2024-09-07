@@ -38,6 +38,7 @@ const ExistingStaffPicks = () => {
 
   return (
     <>
+      <h2 className="mt-12">Current Staff Picked Lists:</h2>
       <div className="grid w-full grid-cols-2 gap-4">
         {picks?.map((pick, index) => {
           return (
@@ -57,7 +58,7 @@ const ExistingStaffPicks = () => {
               >
                 <img
                   src="/x.svg"
-                  className={`invert group-hover:invert-0 ${workingPick ? "animate-spin" : ""}`}
+                  className={`invert group-hover:invert-0 ${workingPick == index ? "animate-pulse" : ""}`}
                 />
               </SnipppButton>
             </div>

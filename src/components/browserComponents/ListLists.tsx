@@ -6,7 +6,6 @@ import { useNotif } from "../../hooks/Notif";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import TooltipWrapper from "../TooltipWrapper";
 import AddListPopup from "../popups/AddListPopup";
-import SnipppButton from "../SnipppButton";
 import { ListData } from "../../typeInterfaces";
 
 interface UserListsProps {
@@ -135,7 +134,15 @@ export const ListLists: React.FC<UserListsProps> = ({
         <h1 className="flex items-center justify-between bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">
           {`${profile ? profile.name.toUpperCase() : "User"}'S LISTS`}
 
-          <SnipppButton onClick={onRefreshLists}>refresh</SnipppButton>
+          <button
+            onClick={onRefreshLists}
+            className="flex items-center justify-center p-1 hover:bg-base-200 dark:hover:bg-base-700"
+          >
+            <img
+              src="/refresh.svg"
+              className="contrast-50 invert dark:invert-0"
+            />
+          </button>
         </h1>
       </div>
       <div

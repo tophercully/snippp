@@ -152,11 +152,17 @@ export const Dashboard: React.FC = () => {
       console.log("Using cached lists");
     }
   }, []);
-  const forceFetchAndSetLists = useCallback(async () => {
+
+  useEffect(() => {
+    fetchAndSetLists();
+  }, []);
+
+  const forceFetchAndSetLists = async () => {
     const currentTime = Date.now();
     {
       try {
         setListsLoading(true);
+        setLists(defaultLists);
         document.title = `Dashboard - Snippp`;
 
         if (userProfile) {
@@ -171,7 +177,7 @@ export const Dashboard: React.FC = () => {
         setListsLoading(false);
       }
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchAndSetLists();
@@ -188,7 +194,7 @@ export const Dashboard: React.FC = () => {
         setList(null);
       }
     }
-  }, [listid, lists]);
+  }, []);
 
   const keyboardControlOptions =
     list && !isEditing && !isAdding ?

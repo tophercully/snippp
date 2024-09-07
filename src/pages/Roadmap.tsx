@@ -174,7 +174,7 @@ export const releases = [
   },
   {
     version: "v0.4.0 - Curation and Moderation",
-    date: "Aug 15, 2024",
+    date: "Sep 15, 2024",
     items: [
       {
         title: "Staff Picks",
@@ -198,7 +198,7 @@ export const releases = [
   },
   {
     version: "v1.0.0 - Official Launch!",
-    date: "Sept 1, 2024",
+    date: "Oct 2024",
     items: [
       {
         title: "Crash Course",

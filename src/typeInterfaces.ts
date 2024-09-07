@@ -63,6 +63,7 @@ export interface ListData {
   lastupdated: string;
   snippet_count?: string;
   staffpick?: boolean;
+  listtags?: string[];
 }
 
 export interface ListSnippet {

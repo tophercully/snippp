@@ -84,7 +84,15 @@ export const Navbar: React.FC = () => {
               }}
               className="hidden w-full items-center p-4 pl-10 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
-              BROWSE
+              Browse
+            </button>
+            <button
+              onClick={() => {
+                navigate(`/featured`);
+              }}
+              className="hidden w-full items-center p-4 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+            >
+              Featured
             </button>
             {Object.keys(categories).length > 0 && (
               <div className="relative">
@@ -92,8 +100,8 @@ export const Navbar: React.FC = () => {
                   onClick={toggleCategoryDropdown}
                   className="flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
                 >
-                  <span className="hidden md:flex">CATEGORIES</span>
-                  <span className="flex md:hidden">MENU</span>
+                  <span className="hidden md:flex">Categories</span>
+                  <span className="flex md:hidden">Menu</span>
                   <svg
                     className={`ml-1 h-4 w-4 transition-transform duration-100 ${
                       isCategoryDropdownOpen ? "rotate-180" : ""
@@ -115,13 +123,19 @@ export const Navbar: React.FC = () => {
                         onClick={() => navigate("/browse")}
                         className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                       >
-                        BROWSE
+                        Browse
+                      </button>
+                      <button
+                        onClick={() => navigate("/featured")}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      >
+                        Featured
                       </button>
                       <button
                         onClick={() => navigate("/about")}
                         className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                       >
-                        ABOUT
+                        About
                       </button>
                     </div>
                     <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
@@ -169,7 +183,7 @@ export const Navbar: React.FC = () => {
               }}
               className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
-              ABOUT
+              About
             </button>
           </div>
 
@@ -220,7 +234,7 @@ export const Navbar: React.FC = () => {
                       navigate("/dashboard");
                     }}
                   >
-                    DASHBOARD
+                    Dashboard
                   </button>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
@@ -228,13 +242,13 @@ export const Navbar: React.FC = () => {
                       navigate(`/user/${userProfile.id}`);
                     }}
                   >
-                    PROFILE
+                    Profile
                   </button>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={handleSignIn}
                   >
-                    SIGN OUT
+                    Sign Out
                   </button>
                 </div>
               )}

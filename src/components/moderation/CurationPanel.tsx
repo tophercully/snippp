@@ -53,25 +53,25 @@ const CurationPanel = () => {
         {!isLoading ?
           <div className="flex justify-center gap-8 rounded-sm border border-base-950 p-8 shadow-md">
             {!selectedList && (
-              <div className="flex w-full flex-col gap-4">
-                <h2 className="font-semibold">
+              <div className="flex w-fit flex-col justify-center gap-4">
+                <h2 className="w-fit font-semibold">
                   Input a list ID to manage it's curation
                 </h2>
                 <form
                   onSubmit={getListData}
-                  className="flex flex-col gap-4"
+                  className="flex w-fit flex-col gap-4"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex w-fit items-center gap-4">
                     <label>List ID</label>
                     <input
                       value={listInput}
-                      className="rounded-sm border border-black p-2 shadow-sm"
+                      className="rounded-sm border border-gray-700 p-2 shadow-sm"
                       onChange={(e) => setListInput(e.target.value)}
                     ></input>
+                    <button className="bg-black px-3 py-2 text-white">
+                      Fetch Data
+                    </button>
                   </div>
-                  <button className="bg-black px-3 py-2 text-white">
-                    Fetch Data
-                  </button>
                 </form>
               </div>
             )}

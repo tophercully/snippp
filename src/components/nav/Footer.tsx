@@ -1,6 +1,6 @@
 export const Footer = () => {
   return (
-    <div className="mt-5 flex w-full items-end justify-between">
+    <div className="mt-5 flex w-full items-end justify-between justify-self-end">
       <p className="text-sm dark:text-base-50">© 2024 Chris McCully</p>
       <p className="hidden items-end text-sm text-base-500 lg:flex">
         Press '?' to see keyboard shortcuts

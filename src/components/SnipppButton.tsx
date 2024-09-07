@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 type ColorType = "add" | "delete" | "neutral";
 type SizeType = "xs" | "sm" | "md" | "lg";
