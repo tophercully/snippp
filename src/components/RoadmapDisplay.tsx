@@ -47,13 +47,14 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
   const lastCompletedRelease = getLastCompletedRelease();
 
   return (
-    <div className="max-w-[80ch] self-center bg-base-50 p-6 text-base-950 dark:bg-base-950 dark:text-base-50">
+    <div className="max-w-[80ch] self-center text-base-950 dark:text-base-50">
       {/* Navigation menu */}
       <div className="mb-8 flex flex-col items-start gap-2">
         {releases.map((release) => {
           const isCompleted = release.items.every((item) => item.completed);
           const isCurrentlyWorkedOn = release.version === currentRelease;
-          let buttonStyle = "px-3 py-1 transition-all duration-200 ";
+          let buttonStyle =
+            " border-l border-base-500 hover:bg-base-500 px-3 py-1 transition-all duration-150 hover:text-white ";
 
           if (isCurrentlyWorkedOn) {
             buttonStyle +=

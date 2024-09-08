@@ -51,7 +51,7 @@ const Home = () => {
   };
 
   return (
-    <div className="relative flex h-fit min-h-[100svh] w-[99svw] flex-col items-center justify-center gap-12 bg-base-50 p-2 pb-32 pt-32 font-satoshi md:p-16 dark:bg-base-800">
+    <div className="relative flex h-fit min-h-[100svh] w-[99svw] flex-col items-center justify-center gap-12 bg-base-50 p-2 pb-32 pt-32 font-satoshi md:p-16 dark:bg-base-900">
       <Navbar />
       <div className="relative flex h-[90svh] w-full flex-col justify-center">
         <div
@@ -146,7 +146,7 @@ const Home = () => {
             </p>
             <p className="p-2 text-xl md:text-3xl">
               At Snippp, contributors are valued, empowering new developers and
-              nurturing a culture of sharing and growth.
+              nurturing a culture of collaboration.
             </p>
           </div>
           <div className="w-full p-2 md:p-0">

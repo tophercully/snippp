@@ -180,18 +180,18 @@ export const releases = [
         title: "Staff Picks",
         description:
           "Curated selections of user lists and snippets that are very useful and deserve a bump to the top",
-        completed: false,
+        completed: true,
       },
       {
         title: "Backend Moderation Portal",
         description:
           "Moderation for marking snippets and lists as staff picks, and for the rare case action needs to be taken when a bad actor is spamming or attacking",
-        completed: false,
+        completed: true,
       },
       {
-        title: "Block Duplicate Snippets",
+        title: "List Browser",
         description:
-          "Refer users to existing tools when they try to create duplicates, or at least warn them",
+          "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits, not just being Gist.",
         completed: false,
       },
     ],
