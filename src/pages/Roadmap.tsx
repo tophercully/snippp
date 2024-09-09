@@ -189,10 +189,10 @@ export const releases = [
         completed: true,
       },
       {
-        title: "List Browser",
+        title: 'Dedicated "Curated" Section',
         description:
-          "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits and simple.",
-        completed: false,
+          "A featured section in the navbar for staff-picked lists and snippets",
+        completed: true,
       },
     ],
   },
@@ -207,9 +207,9 @@ export const releases = [
         completed: false,
       },
       {
-        title: 'Dedicated "Curated" Section',
+        title: "List Browser",
         description:
-          "Get prompted with a dismissable crash course when you first sign up! Attempts to ensure all users are aware of useful features.",
+          "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits and simple.",
         completed: false,
       },
     ],
