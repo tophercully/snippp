@@ -54,7 +54,7 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
           const isCompleted = release.items.every((item) => item.completed);
           const isCurrentlyWorkedOn = release.version === currentRelease;
           let buttonStyle =
-            " border-l border-base-500 hover:bg-base-500 px-3 py-1 transition-all duration-150 hover:text-white ";
+            " border-l text-left border-base-500 hover:bg-base-500 px-3 py-1 transition-all duration-150 hover:text-white ";
 
           if (isCurrentlyWorkedOn) {
             buttonStyle +=

@@ -177,9 +177,9 @@ export const releases = [
     date: "Sep 15, 2024",
     items: [
       {
-        title: "Staff Picks",
+        title: "Staff Picked Lists",
         description:
-          "Curated selections of user lists and snippets that are very useful and deserve a bump to the top",
+          "Curated selections of user lists and snippets that are very useful and deserve a bump to the top.",
         completed: true,
       },
       {
@@ -191,7 +191,7 @@ export const releases = [
       {
         title: "List Browser",
         description:
-          "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits, not just being Gist.",
+          "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits and simple.",
         completed: false,
       },
     ],

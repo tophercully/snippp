@@ -5,6 +5,7 @@ import SnipppButton from "./components/SnipppButton";
 import "./output.css";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./hooks/UserProfile";
+import SubtleGridBackground from "./components/global/SubtleGridBackground";
 
 const Home = () => {
   document.title = `Snippp - Snippet Organizer`;
@@ -51,8 +52,9 @@ const Home = () => {
   };
 
   return (
-    <div className="relative flex h-fit min-h-[100svh] w-[99svw] flex-col items-center justify-center gap-12 bg-base-50 p-2 pb-32 pt-32 font-satoshi md:p-16 dark:bg-base-900">
+    <div className="relative flex h-fit min-h-[100svh] w-[100svw] flex-col items-center justify-center gap-12 p-2 pb-32 pt-32 font-satoshi md:p-16">
       <Navbar />
+      <SubtleGridBackground />
       <div className="relative flex h-[90svh] w-full flex-col justify-center">
         <div
           id="hero-spread"
@@ -71,14 +73,22 @@ const Home = () => {
               id="desc"
               className="text-md flex w-fit flex-col text-left text-black md:p-0 md:text-4xl"
             >
-              <p className="mb-6 w-full max-w-[50ch] self-start text-xl md:text-3xl dark:text-white">
-                Organize, share, and discover code snippets FAST, so you can
-                focus on what matters —coding.
+              <p className="mb-6 w-full max-w-[50ch] self-start rounded-md text-xl backdrop-blur-sm md:text-3xl dark:text-white">
+                A community of developers building reusable code snippets and
+                toolkits. Open Source and free to use.
               </p>
+
+              {/* <p className="mb-6 w-full max-w-[50ch] self-start text-xl md:text-3xl dark:text-white">
+                Organize, share, and discover code snippets FAST, so you can
+                focus on what matters —building.
+              </p> */}
             </div>
           </div>
-          <div className="hidden h-1/2 w-2/3 flex-col items-center justify-center xl:flex">
-            <img src="dashboardMockup2.png" />
+          <div className="relative hidden h-1/2 w-2/3 flex-col items-center justify-center xl:flex">
+            <img
+              src="dashboardMockup2.png"
+              className="z-20"
+            />
           </div>
         </div>
         <div
@@ -115,7 +125,7 @@ const Home = () => {
                 build faster
               </span>
             </h1>
-            <p className="text-xl md:text-3xl">
+            <p className="text-xl backdrop-blur-sm md:text-3xl">
               Create tailored lists to keep your go-to snippets within reach—
               boost your productivity and never waste time searching again.
             </p>
@@ -139,12 +149,12 @@ const Home = () => {
               </span>
               <span className="w-fit bg-success p-1 text-white">knowledge</span>
             </h1>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Explore a rich library of snippets from developers around the
               world or share your own with the community. Learning and
               contributing has never been easier.
             </p>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               At Snippp, contributors are valued, empowering new developers and
               nurturing a culture of collaboration.
             </p>
@@ -173,12 +183,12 @@ const Home = () => {
                 <span className="w-fit bg-special p-1 text-white">control</span>
               </span>
             </h1>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               We prioritize your privacy. Control who sees your snippets with
               customizable privacy settings, ensuring your code is safe and
               secure.
             </p>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Need more security? Keep an ear out for our upcoming desktop app
               by following us on{" "}
               <a
@@ -213,14 +223,14 @@ const Home = () => {
               <span className="w-fit bg-info p-1 text-white">for </span>
               <span className="w-fit bg-info p-1 text-white">$free</span>
             </h1>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Sign up now and join a growing community of developers optimizing
               their workflow with our powerful snippet organizer.
             </p>
             <div className="self-center">
               <SecondaryActionButton pronounced={true} />
             </div>
-            <p className="p-2 text-xl md:text-3xl">
+            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Unlock advanced features and unlimited storage with our upcoming
               Pro plan.
             </p>

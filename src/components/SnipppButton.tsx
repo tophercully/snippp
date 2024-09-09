@@ -86,7 +86,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
   };
 
   return (
-    <div className={`relative ${fit ? "inline-block" : "w-full"}`}>
+    <div className={`relative ${fit ? "inline-block" : "w-full"} ${className}`}>
       {tooltip && showTooltip && (
         <div
           className={`absolute bottom-full mb-2 whitespace-nowrap rounded-sm bg-base-800 px-3 py-2 text-sm text-white dark:bg-base-100 dark:text-black ${getTooltipPositionClass()}`}
@@ -102,7 +102,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
         disabled={disabled}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm ${getBaseColorClass()} shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:shadow-sm dark:shadow-base-600 ${className}`}
+        className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm ${getBaseColorClass()} shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:shadow-sm dark:shadow-base-600`}
       >
         <div
           className={`absolute inset-0 -translate-x-[101%] transform ${getColorClass()} transition-transform duration-75 ease-in-out group-hover:translate-x-0`}

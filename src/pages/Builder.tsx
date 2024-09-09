@@ -20,6 +20,7 @@ import { LoadingSpinner } from "../components/LoadingSpinner";
 import { detectFrameworks } from "../utils/detectFramework";
 import { countCharacters } from "../utils/countCharacters";
 import { linePreservedCode } from "../utils/linePreservedCode";
+import SnipppButton from "../components/SnipppButton";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -259,6 +260,28 @@ export const Builder = () => {
       }
     }
   };
+  // Wrapper function to match the expected onClick type
+  const handleClick = () => {
+    // Create a synthetic event object
+    const syntheticEvent = new Event(
+      "submit",
+    ) as unknown as React.FormEvent<HTMLButtonElement>;
+    handleSubmit(syntheticEvent);
+  };
+
+  //Submit button display logic
+  const getButtonText = () => {
+    if (isEditing) {
+      return isCreator || isForking ? "SAVE" : "YOU ARE NOT THE AUTHOR";
+    }
+    return isForking ? "FORK" : "CREATE";
+  };
+
+  const getColorType = (): "add" | "delete" | "neutral" => {
+    if (isCreator) return "add";
+    if (!isCreator && isEditing) return "delete";
+    return "neutral";
+  };
 
   return (
     <div className="flex h-fit min-h-svh w-full flex-col bg-base-100 p-10 pt-24 xl:h-svh dark:bg-base-900">
@@ -376,7 +399,7 @@ export const Builder = () => {
                 </>
               )}
             </div>
-            <div className="mt-auto flex w-full items-center justify-end gap-4">
+            <div className="mt-auto flex w-full items-center justify-end gap-12">
               <div className="flex h-full w-fit items-center self-center">
                 <div className="group relative flex h-full items-center shadow-md">
                   <input
@@ -416,7 +439,7 @@ export const Builder = () => {
                 </div>
               </div>
 
-              <button
+              {/* <button
                 onClick={handleSubmit}
                 disabled={!snippet.name || !snippet.code}
                 className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-75 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
@@ -436,7 +459,23 @@ export const Builder = () => {
                     "FORK"
                   : "CREATE"}
                 </span>
-              </button>
+              </button> */}
+              <SnipppButton
+                onClick={handleClick}
+                disabled={!snippet.name || !snippet.code}
+                colorType={getColorType()}
+                className="w-1/2 self-center text-xl font-bold"
+                size="lg"
+                fit={false}
+                pronounced={true}
+                tooltip={
+                  !isCreator && !isForking && isEditing ?
+                    "You cannot edit this snippet"
+                  : undefined
+                }
+              >
+                {getButtonText()}
+              </SnipppButton>
             </div>
           </form>
           <div className="relative flex h-[70svh] w-full flex-col shadow-md xl:h-full xl:w-2/3">

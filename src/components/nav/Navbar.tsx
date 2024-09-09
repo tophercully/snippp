@@ -63,8 +63,9 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
   return (
     <>
-      <div className="absolute left-0 right-0 top-0 z-50 w-full p-2 lg:px-10">
+      <div className="absolute left-0 right-0 top-0 z-50 w-full rounded-b-2xl bg-opacity-10 p-2 shadow-sm backdrop-blur-sm lg:px-10">
         <div className="flex h-fit w-full items-center justify-start gap-5">
+          {/* Snippp logo */}
           <a
             href="/"
             className="group flex items-center gap-1 rounded-sm bg-base-950 p-1 text-base-50 dark:bg-base-50 dark:text-base-950"
@@ -152,7 +153,7 @@ export const Navbar: React.FC = () => {
                             navigate(`/browse/${key}`);
                           }}
                         >
-                          {info.name.toUpperCase()}
+                          {info.name}
                         </button>
                       ))}
                     <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
@@ -169,7 +170,7 @@ export const Navbar: React.FC = () => {
                             navigate(`/browse/${key}`);
                           }}
                         >
-                          {info.name.toUpperCase()}
+                          {info.name}
                         </button>
                       ))}
                   </div>

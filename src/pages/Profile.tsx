@@ -514,7 +514,7 @@ export const Profile: React.FC = () => {
   };
 
   return (
-    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-50 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
+    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 p-2 pt-24 lg:p-10 lg:pt-24">
       <Navbar />
       {!isLoading ?
         <>

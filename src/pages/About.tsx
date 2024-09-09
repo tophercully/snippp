@@ -1,4 +1,5 @@
 import RoadmapDisplay from "../components/RoadmapDisplay";
+import SubtleGridBackground from "../components/global/SubtleGridBackground";
 import { Footer } from "../components/nav/Footer";
 import { Navbar } from "../components/nav/Navbar";
 import { releases } from "./Roadmap";
@@ -7,9 +8,10 @@ export const About = () => {
   document.title = `Snippp - About`;
 
   return (
-    <div className="flex h-fit min-h-[100vh] w-full max-w-[100vw] flex-col items-center gap-5 bg-base-50 p-2 pt-32 md:p-10 md:pt-32 dark:bg-base-900 dark:text-white">
+    <div className="flex h-fit min-h-[100vh] w-full max-w-[100vw] flex-col items-center gap-5 p-2 pt-32 md:p-10 md:pt-32 dark:text-white">
       <Navbar />
-      <div className="flex flex-col gap-8">
+      <SubtleGridBackground />
+      <div className="flex flex-col gap-8 backdrop-blur-sm lg:p-4">
         <span className="flex w-full flex-wrap p-4 text-7xl font-bold text-white md:p-0">
           <span className="w-fit bg-info p-1">What</span>
           <span className="w-fit bg-info p-1">is</span>
