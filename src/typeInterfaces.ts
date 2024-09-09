@@ -49,6 +49,21 @@ export interface SnippetList {
   description?: string;
   createdAt: Date;
   lastUpdated: Date;
+  author: string;
+  staffPick?: boolean;
+}
+
+export interface ListData {
+  listid: string | number;
+  author?: string;
+  userid: string;
+  listname: string;
+  description: string;
+  createdat: string;
+  lastupdated: string;
+  snippet_count?: string;
+  staffpick?: boolean;
+  listtags?: string[];
 }
 
 export interface ListSnippet {
@@ -79,6 +94,8 @@ export interface SnipppProfile {
   profile_picture: string;
   bio: string;
   last_login: string;
+  created_at?: string;
+  role?: "user" | "admin" | "moderator" | "banned";
 }
 
 export interface EditableUserFields {

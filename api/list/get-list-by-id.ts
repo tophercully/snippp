@@ -17,14 +17,24 @@ export default async function handler(request: any, response: any) {
 
   try {
     const result = await pool.sql`
-      SELECT sl.listid, sl.userid, sl.listname, sl.description, sl.createdat, sl.lastupdated,
-             COUNT(ls.snippetid) AS snippet_count,
-             u.name AS username
-      FROM snippet_lists sl
-      LEFT JOIN list_snippets ls ON sl.listid = ls.listid
-      LEFT JOIN users u ON sl.userid = u.userid
-      WHERE sl.userid = ${userId} AND sl.listid = ${listId}
-      GROUP BY sl.listid, sl.userid, sl.listname, sl.description, sl.createdat, sl.lastupdated, u.name
+     SELECT sl.listid, sl.userid, sl.listname, sl.description, sl.createdat, sl.lastupdated,
+       COUNT(ls.snippetid) AS snippet_count,
+       u.name AS username,
+       author.name AS author,
+       CASE 
+           WHEN EXISTS (
+               SELECT 1 
+               FROM staff_picks sp 
+               WHERE sp.id = sl.listid AND sp.type = 'list'
+           ) THEN true 
+           ELSE false 
+       END AS staffPick
+FROM snippet_lists sl
+LEFT JOIN list_snippets ls ON sl.listid = ls.listid
+LEFT JOIN users u ON sl.userid = u.userid
+LEFT JOIN users author ON sl.userid = author.userid
+WHERE sl.userid = ${userId} AND sl.listid = ${listId}
+GROUP BY sl.listid, sl.userid, sl.listname, sl.description, sl.createdat, sl.lastupdated, u.name, author.name
     `;
 
     if (result.rows.length === 0) {

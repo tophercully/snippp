@@ -3,7 +3,8 @@ import { SearchBar } from "../components/browserComponents/SearchBar";
 import { GoogleUser, Snippet } from "../typeInterfaces";
 import { Navbar } from "../components/nav/Navbar";
 import { ListSnippets } from "../components/browserComponents/ListSnippets";
-import { ListLists, ListData } from "../components/browserComponents/ListLists";
+import { ListLists } from "../components/browserComponents/ListLists";
+import { ListData } from "../typeInterfaces";
 import { Footer } from "../components/nav/Footer";
 import { Display } from "../components/browserComponents/Display";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
@@ -98,8 +99,16 @@ export const Dashboard: React.FC = () => {
     ],
     [userProfile],
   );
-  const [lists, setLists] = useState<ListData[]>(() => defaultLists);
+  const [lists, setLists] = useSessionStorage<ListData[]>(
+    "dashboardCachedLists",
+    defaultLists,
+  );
   const [list, setList] = useState<ListData | null>(null);
+
+  const [lastFetchTime, setLastFetchTime] = useSessionStorage<number>(
+    "lastListsFetchTime",
+    0,
+  );
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
@@ -117,21 +126,58 @@ export const Dashboard: React.FC = () => {
   const { showNotif } = useNotif();
 
   const fetchAndSetLists = useCallback(async () => {
-    try {
-      setListsLoading(true);
-      document.title = `Dashboard - Snippp`;
+    const currentTime = Date.now();
+    const cacheExpiration = 5 * 60 * 1000; // 5 minutes
 
-      if (userProfile) {
-        const result = await getUserLists(userProfile.id);
-        setLists([...defaultLists, ...result]);
+    if (
+      currentTime - lastFetchTime > cacheExpiration ||
+      lists.length === defaultLists.length
+    ) {
+      try {
+        setListsLoading(true);
+        document.title = `Dashboard - Snippp`;
+
+        if (userProfile) {
+          const result = await getUserLists(userProfile.id);
+          setLists([...defaultLists, ...result]);
+          setLastFetchTime(currentTime);
+        }
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        showNotif("Error fetching lists:" + error, "error");
+      } finally {
+        setListsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching lists:", error);
-      showNotif("Error fetching lists:" + error, "error");
-    } finally {
-      setListsLoading(false);
+    } else {
+      console.log("Using cached lists");
     }
   }, []);
+
+  useEffect(() => {
+    fetchAndSetLists();
+  }, []);
+
+  const forceFetchAndSetLists = async () => {
+    const currentTime = Date.now();
+    {
+      try {
+        setListsLoading(true);
+        setLists(defaultLists);
+        document.title = `Dashboard - Snippp`;
+
+        if (userProfile) {
+          const result = await getUserLists(userProfile.id);
+          setLists([...defaultLists, ...result]);
+          setLastFetchTime(currentTime);
+        }
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        showNotif("Error fetching lists:" + error, "error");
+      } finally {
+        setListsLoading(false);
+      }
+    }
+  };
 
   useEffect(() => {
     fetchAndSetLists();
@@ -148,7 +194,7 @@ export const Dashboard: React.FC = () => {
         setList(null);
       }
     }
-  }, [listid, lists]);
+  }, []);
 
   const keyboardControlOptions =
     list && !isEditing && !isAdding ?
@@ -416,7 +462,8 @@ export const Dashboard: React.FC = () => {
               lists={lists}
               addDisabled={false}
               onSelectList={handleSelectList}
-              onAddList={fetchAndSetLists}
+              onAddList={forceFetchAndSetLists}
+              onRefreshLists={forceFetchAndSetLists}
             />
 
             {listsLoading && (

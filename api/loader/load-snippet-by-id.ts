@@ -87,7 +87,7 @@ export default async function handler(req: any, res: any) {
       description: snippet.description,
       forkedFrom: snippet.forkedfrom,
       forkedFromName: snippet.forkedfromname,
-      forkCount: parseInt(snippet.forkcount),
+      forkCount: snippet.forkcount,
     };
 
     res.status(200).json(formattedSnippet);

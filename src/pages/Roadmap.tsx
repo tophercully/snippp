@@ -174,31 +174,31 @@ export const releases = [
   },
   {
     version: "v0.4.0 - Curation and Moderation",
-    date: "Aug 15, 2024",
+    date: "Sep 15, 2024",
     items: [
       {
-        title: "Staff Picks",
+        title: "Staff Picked Lists",
         description:
-          "Curated selections of user lists and snippets that are very useful and deserve a bump to the top",
-        completed: false,
+          "Curated selections of user lists and snippets that are very useful and deserve a bump to the top.",
+        completed: true,
       },
       {
         title: "Backend Moderation Portal",
         description:
           "Moderation for marking snippets and lists as staff picks, and for the rare case action needs to be taken when a bad actor is spamming or attacking",
-        completed: false,
+        completed: true,
       },
       {
-        title: "Block Duplicate Snippets",
+        title: 'Dedicated "Curated" Section',
         description:
-          "Refer users to existing tools when they try to create duplicates, or at least warn them",
-        completed: false,
+          "A featured section in the navbar for staff-picked lists and snippets",
+        completed: true,
       },
     ],
   },
   {
     version: "v1.0.0 - Official Launch!",
-    date: "Sept 1, 2024",
+    date: "Oct 2024",
     items: [
       {
         title: "Crash Course",
@@ -207,9 +207,9 @@ export const releases = [
         completed: false,
       },
       {
-        title: 'Dedicated "Curated" Section',
+        title: "List Browser",
         description:
-          "Get prompted with a dismissable crash course when you first sign up! Attempts to ensure all users are aware of useful features.",
+          "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits and simple.",
         completed: false,
       },
     ],

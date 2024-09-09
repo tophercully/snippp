@@ -22,11 +22,15 @@ import {
 } from "../../backend/list/listFunctions";
 import formatPostgresDate from "../../utils/formatPostgresDate";
 
-import { formatDescription } from "../../utils/formatDescription";
+import "../../markdown.css";
+import ReactMarkdown from "react-markdown";
+
 import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import { track } from "@vercel/analytics";
 import { useNavigate } from "react-router-dom";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -424,7 +428,7 @@ export const Display = ({
                 <span>{simplifiedAndModdedCount}</span>
               </span>
             </span>
-            {forkCount && forkCount > 0 && (
+            {forkCount && forkCount != 0 && (
               <span className="relative flex h-fit w-fit items-center gap-2">
                 <span className="group flex gap-1">
                   <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white opacity-0 transition-opacity duration-100 group-hover:opacity-100 dark:bg-base-100 dark:text-black">
@@ -449,10 +453,18 @@ export const Display = ({
                   `${window.location.pathname.includes("/snippet") ? "max-h-none" : "max-h-[40vh] overflow-y-auto"}`
                 : "max-h-[6em]"
               }`}
-              dangerouslySetInnerHTML={{
-                __html: formatDescription(description),
-              }}
-            ></p>
+              // dangerouslySetInnerHTML={{
+              //   __html: formatDescription(description),
+              // }}
+            >
+              <ReactMarkdown
+                className="markdown"
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+              >
+                {description}
+              </ReactMarkdown>
+            </p>
             {isDescriptionExpanded && tags && (
               <div className="mt-2 flex flex-wrap gap-1">
                 {tags

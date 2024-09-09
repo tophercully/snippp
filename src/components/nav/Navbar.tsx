@@ -11,7 +11,7 @@ import { useUser } from "../../hooks/UserProfile";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { userProfile, login, logout } = useUser(); // Use the new hook
+  const { userProfile, login, logout } = useUser();
   // const [isWelcomePopupDismissed] = useLocalStorage(
   //   "isWelcomePopupDismissed",
   //   false,
@@ -63,12 +63,9 @@ export const Navbar: React.FC = () => {
   const isBuilderPage = window.location.pathname.includes("builder");
   return (
     <>
-      {/* {!isWelcomePopupDismissed && isBrowseOrHome && (
-        <OnboardingPopup handleSignIn={handleSignIn} />
-      )} */}
-      {!userProfile}
-      <div className="absolute left-0 right-0 top-0 z-50 w-full p-2 lg:px-10">
+      <div className="absolute left-0 right-0 top-0 z-50 w-full rounded-b-2xl bg-opacity-10 p-2 shadow-sm backdrop-blur-sm lg:px-10">
         <div className="flex h-fit w-full items-center justify-start gap-5">
+          {/* Snippp logo */}
           <a
             href="/"
             className="group flex items-center gap-1 rounded-sm bg-base-950 p-1 text-base-50 dark:bg-base-50 dark:text-base-950"
@@ -86,9 +83,17 @@ export const Navbar: React.FC = () => {
               onClick={() => {
                 navigate(`/browse`);
               }}
-              className="ml-10 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+              className="hidden w-full items-center p-4 pl-10 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
-              BROWSE
+              Browse
+            </button>
+            <button
+              onClick={() => {
+                navigate(`/featured`);
+              }}
+              className="hidden w-full items-center p-4 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
+            >
+              Featured
             </button>
             {Object.keys(categories).length > 0 && (
               <div className="relative">
@@ -96,8 +101,8 @@ export const Navbar: React.FC = () => {
                   onClick={toggleCategoryDropdown}
                   className="flex items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none dark:text-base-50 dark:hover:text-base-200"
                 >
-                  <span className="hidden md:flex">CATEGORIES</span>
-                  <span className="flex md:hidden">MENU</span>
+                  <span className="hidden md:flex">Categories</span>
+                  <span className="flex md:hidden">Menu</span>
                   <svg
                     className={`ml-1 h-4 w-4 transition-transform duration-100 ${
                       isCategoryDropdownOpen ? "rotate-180" : ""
@@ -114,11 +119,25 @@ export const Navbar: React.FC = () => {
                 </button>
                 {isCategoryDropdownOpen && (
                   <div className="absolute left-0 z-20 mt-2 w-64 overflow-y-auto rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
-                    <div className="flex flex-col items-start gap-6 px-4 py-6 text-sm md:hidden">
-                      <button onClick={() => navigate("/browse")}>
-                        BROWSE
+                    <div className="flex flex-col items-start text-sm md:hidden">
+                      <button
+                        onClick={() => navigate("/browse")}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      >
+                        Browse
                       </button>
-                      <button onClick={() => navigate("/about")}>ABOUT</button>
+                      <button
+                        onClick={() => navigate("/featured")}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      >
+                        Featured
+                      </button>
+                      <button
+                        onClick={() => navigate("/about")}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                      >
+                        About
+                      </button>
                     </div>
                     <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
                       Languages
@@ -134,7 +153,7 @@ export const Navbar: React.FC = () => {
                             navigate(`/browse/${key}`);
                           }}
                         >
-                          {info.name.toUpperCase()}
+                          {info.name}
                         </button>
                       ))}
                     <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
@@ -151,7 +170,7 @@ export const Navbar: React.FC = () => {
                             navigate(`/browse/${key}`);
                           }}
                         >
-                          {info.name.toUpperCase()}
+                          {info.name}
                         </button>
                       ))}
                   </div>
@@ -165,7 +184,7 @@ export const Navbar: React.FC = () => {
               }}
               className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
-              ABOUT
+              About
             </button>
           </div>
 
@@ -216,7 +235,7 @@ export const Navbar: React.FC = () => {
                       navigate("/dashboard");
                     }}
                   >
-                    DASHBOARD
+                    Dashboard
                   </button>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
@@ -224,13 +243,13 @@ export const Navbar: React.FC = () => {
                       navigate(`/user/${userProfile.id}`);
                     }}
                   >
-                    PROFILE
+                    Profile
                   </button>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={handleSignIn}
                   >
-                    SIGN OUT
+                    Sign Out
                   </button>
                 </div>
               )}

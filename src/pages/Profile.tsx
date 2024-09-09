@@ -3,7 +3,8 @@ import { SearchBar } from "../components/browserComponents/SearchBar";
 import { GoogleUser, Snippet, SnipppProfile } from "../typeInterfaces";
 import { Navbar } from "../components/nav/Navbar";
 import { ListSnippets } from "../components/browserComponents/ListSnippets";
-import { ListLists, ListData } from "../components/browserComponents/ListLists";
+import { ListLists } from "../components/browserComponents/ListLists";
+import { ListData } from "../typeInterfaces";
 import { Footer } from "../components/nav/Footer";
 import { Display } from "../components/browserComponents/Display";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
@@ -137,8 +138,16 @@ export const Profile: React.FC = () => {
     ],
     [userid],
   );
-  const [lists, setLists] = useState<ListData[]>(() => defaultLists);
+  const [lists, setLists] = useSessionStorage<ListData[]>(
+    `${userid}CachedLists`,
+    defaultLists,
+  );
   const [list, setList] = useState<ListData | null>(null);
+
+  const [lastFetchTime, setLastFetchTime] = useSessionStorage<number>(
+    "lastListsFetchTime",
+    0,
+  );
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [query, setQuery] = useState<string>("");
   const [sortMethod, setSortMethod] = useState<keyof Snippet>("snippetID");
@@ -156,23 +165,59 @@ export const Profile: React.FC = () => {
 
   const { showNotif } = useNotif();
 
-  const fetchAndSetLists = useCallback(async () => {
-    try {
-      setListsLoading(true);
+  const fetchAndSetLists = async () => {
+    const currentTime = Date.now();
+    console.log(currentTime);
+    const cacheExpiration = 5 * 60 * 1000; // 5 minutes
 
-      const result = await getUserLists(userid as string);
-      setLists([...defaultLists, ...result]);
-    } catch (error) {
-      console.error("Error fetching lists:", error);
-      showNotif("Error fetching lists:" + error, "error");
-    } finally {
-      setListsLoading(false);
+    if (
+      currentTime - lastFetchTime > cacheExpiration ||
+      lists.length === defaultLists.length
+    ) {
+      try {
+        setListsLoading(true);
+        document.title = `Dashboard - Snippp`;
+
+        if (userProfile) {
+          const result = await getUserLists(userid as string);
+          setLists([...defaultLists, ...result]);
+          setLastFetchTime(currentTime);
+        }
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        showNotif("Error fetching lists:" + error, "error");
+      } finally {
+        setListsLoading(false);
+      }
+    } else {
+      console.log("Using cached lists");
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchAndSetLists();
-  }, [fetchAndSetLists]);
+  }, [listid]);
+
+  const forceFetchAndSetLists = async () => {
+    const currentTime = Date.now();
+    {
+      try {
+        setListsLoading(true);
+        setLists(defaultLists);
+
+        if (userProfile) {
+          const result = await getUserLists(userid as string);
+          setLists([...defaultLists, ...result]);
+          setLastFetchTime(currentTime);
+        }
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        showNotif("Error fetching lists:" + error, "error");
+      } finally {
+        setListsLoading(false);
+      }
+    }
+  };
 
   useEffect(() => {
     if (!listsLoading && listid && lists.length > 0) {
@@ -186,7 +231,7 @@ export const Profile: React.FC = () => {
         setList(null);
       }
     }
-  }, [listid, lists]);
+  }, []);
 
   const keyboardControlOptions =
     list && !isEditing && !isAdding && !isEditingProfile ?
@@ -469,7 +514,7 @@ export const Profile: React.FC = () => {
   };
 
   return (
-    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 bg-base-50 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
+    <div className="over flex h-[100svh] max-h-screen w-full flex-col gap-5 p-2 pt-24 lg:p-10 lg:pt-24">
       <Navbar />
       {!isLoading ?
         <>
@@ -490,7 +535,8 @@ export const Profile: React.FC = () => {
                   lists={lists}
                   addDisabled={userProfile ? !(userProfile.id == userid) : true}
                   onSelectList={handleSelectList}
-                  onAddList={fetchAndSetLists}
+                  onAddList={forceFetchAndSetLists}
+                  onRefreshLists={forceFetchAndSetLists}
                 />
 
                 {listsLoading && (

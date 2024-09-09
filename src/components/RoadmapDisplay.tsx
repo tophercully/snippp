@@ -47,13 +47,14 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
   const lastCompletedRelease = getLastCompletedRelease();
 
   return (
-    <div className="max-w-[80ch] self-center bg-base-50 p-6 text-base-950 dark:bg-base-950 dark:text-base-50">
+    <div className="max-w-[80ch] self-center text-base-950 dark:text-base-50">
       {/* Navigation menu */}
       <div className="mb-8 flex flex-col items-start gap-2">
         {releases.map((release) => {
           const isCompleted = release.items.every((item) => item.completed);
           const isCurrentlyWorkedOn = release.version === currentRelease;
-          let buttonStyle = "px-3 py-1 transition-all duration-200 ";
+          let buttonStyle =
+            " border-l text-left border-base-500 hover:bg-base-500 px-3 py-1 transition-all duration-150 hover:text-white ";
 
           if (isCurrentlyWorkedOn) {
             buttonStyle +=
@@ -98,9 +99,9 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
               {/* Release version and date */}
               <div className="mb-4 flex items-center">
                 <div
-                  className={`z-10 flex h-12 w-12 items-center justify-center rounded-full ${
-                    isCurrentlyWorkedOn ? "bg-blue-500"
-                    : isCompleted ? "bg-green-200 dark:bg-green-700"
+                  className={`z-10 flex h-12 w-12 items-center justify-center rounded-full shadow-lg ${
+                    isCurrentlyWorkedOn ? "bg-info"
+                    : isCompleted ? "bg-success dark:bg-green-700"
                     : "bg-base-300 dark:bg-base-700"
                   }`}
                 ></div>
@@ -119,16 +120,14 @@ const RoadmapDisplay: React.FC<RoadmapDisplayProps> = ({ releases }) => {
                 {release.items.map((item, itemIndex) => {
                   let statusClass, statusText;
                   if (item.completed) {
-                    statusClass =
-                      "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+                    statusClass = "bg-success text-white ";
                     statusText = "Completed";
                   } else if (isCurrentlyWorkedOn) {
-                    statusClass =
-                      "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
+                    statusClass = "bg-special text-white  ";
                     statusText = "In Progress";
                   } else {
                     statusClass =
-                      "bg-base-200 text-base-800 dark:bg-base-700 dark:text-base-200";
+                      "bg-base-200 text-base-800 dark:bg-base-700 dark:text-base-200 ";
                     statusText = "Planned";
                   }
 

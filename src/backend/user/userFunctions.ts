@@ -128,3 +128,51 @@ export const fetchUserStats = async (userId: string): Promise<UserStats> => {
     throw error;
   }
 };
+
+export const fetchAllUsers = async (): Promise<SnipppProfile[]> => {
+  try {
+    const response = await fetch("/api/user/fetch-all-users");
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `HTTP error! status: ${response.status}`,
+      );
+    }
+
+    const users: SnipppProfile[] = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    throw error;
+  }
+};
+
+export const setUserRole = async (user: {
+  userId: string;
+  newRole: "user" | "admin" | "moderator" | "banned";
+}): Promise<boolean> => {
+  try {
+    const response = await fetch("/api/user/set-user-role", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.userId,
+        newRole: user.newRole,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update user");
+    }
+
+    const data = await response.json();
+    console.log(data.message);
+    return true;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};

@@ -6,16 +6,7 @@ import { useNotif } from "../../hooks/Notif";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import TooltipWrapper from "../TooltipWrapper";
 import AddListPopup from "../popups/AddListPopup";
-
-export interface ListData {
-  listid: string | number;
-  userid: string;
-  listname: string;
-  description: string;
-  createdat: string;
-  lastupdated: string;
-  snippet_count?: string;
-}
+import { ListData } from "../../typeInterfaces";
 
 interface UserListsProps {
   profile: GoogleUser | SnipppProfile;
@@ -23,6 +14,7 @@ interface UserListsProps {
   addDisabled: boolean;
   onSelectList: (list: ListData) => void;
   onAddList: () => void;
+  onRefreshLists: () => void;
 }
 
 export const ListLists: React.FC<UserListsProps> = ({
@@ -31,6 +23,7 @@ export const ListLists: React.FC<UserListsProps> = ({
   addDisabled,
   onSelectList,
   onAddList,
+  onRefreshLists,
 }) => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
   const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
@@ -137,7 +130,21 @@ export const ListLists: React.FC<UserListsProps> = ({
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-      <h1 className="bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">{`${profile ? profile.name.toUpperCase() : "User"}'S LISTS`}</h1>
+      <div>
+        <h1 className="flex items-center justify-between bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">
+          {`${profile ? profile.name.toUpperCase() : "User"}'S LISTS`}
+
+          <button
+            onClick={onRefreshLists}
+            className="flex items-center justify-center p-1 hover:bg-base-200 dark:hover:bg-base-700"
+          >
+            <img
+              src="/refresh.svg"
+              className="contrast-50 invert dark:invert-0"
+            />
+          </button>
+        </h1>
+      </div>
       <div
         ref={containerRef}
         className="relative h-full w-full overflow-y-auto"

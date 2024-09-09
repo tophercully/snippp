@@ -52,8 +52,8 @@ export const Stats = () => {
             value={stats.totalUsers}
           />
           <StatCard
-            name="Members with Creations:"
-            value={stats.activeUsers}
+            name="Average Snippets/User:"
+            value={stats.averageUserSnippets.toFixed(1)}
           />
           <StatCard
             name="Total Snippets:"

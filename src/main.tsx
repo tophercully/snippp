@@ -17,6 +17,8 @@ import { Stats } from "./pages/Stats.tsx";
 import { Roadmap } from "./pages/Roadmap.tsx";
 import UITester from "./pages/UITester.tsx";
 import { UserProvider } from "./hooks/UserProfile.tsx";
+import ModPortal from "./pages/ModPortal.tsx";
+import Featured from "./pages/Featured.tsx";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +64,14 @@ const router = createBrowserRouter([
   {
     path: "/uitest",
     element: <UITester />,
+  },
+  {
+    path: "/mod/:panel?",
+    element: <ModPortal />,
+  },
+  {
+    path: "/featured",
+    element: <Featured />,
   },
 ]);
 
