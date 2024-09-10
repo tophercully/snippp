@@ -260,28 +260,6 @@ export const Builder = () => {
       }
     }
   };
-  // Wrapper function to match the expected onClick type
-  const handleClick = () => {
-    // Create a synthetic event object
-    const syntheticEvent = new Event(
-      "submit",
-    ) as unknown as React.FormEvent<HTMLButtonElement>;
-    handleSubmit(syntheticEvent);
-  };
-
-  //Submit button display logic
-  const getButtonText = () => {
-    if (isEditing) {
-      return isCreator || isForking ? "SAVE" : "YOU ARE NOT THE AUTHOR";
-    }
-    return isForking ? "FORK" : "CREATE";
-  };
-
-  const getColorType = (): "add" | "delete" | "neutral" => {
-    if (isCreator) return "add";
-    if (!isCreator && isEditing) return "delete";
-    return "neutral";
-  };
 
   return (
     <div className="flex h-fit min-h-svh w-full flex-col bg-base-100 p-10 pt-24 xl:h-svh dark:bg-base-900">
