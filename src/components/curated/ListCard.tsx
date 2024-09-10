@@ -10,22 +10,8 @@ const ListCard = ({ list, index }: ListCardProps) => {
     <a
       key={index}
       href={`/list/${list.listid}`}
-      className="group relative z-30 flex h-fit flex-col rounded-sm border border-dashed border-special bg-white shadow-md hover:bg-base-200 dark:bg-base-900 dark:text-white dark:hover:bg-base-800"
+      className="group relative z-30 flex h-fit flex-col rounded-sm border border-dashed border-special bg-white duration-200 ease-in hover:-translate-y-[4px] hover:bg-base-200 hover:shadow-lg dark:bg-base-900 dark:text-white dark:hover:bg-base-800"
     >
-      {/* <MovingOrbs
-        numOrbs={20}
-        minBlur={3}
-        maxBlur={10}
-        maxRotationSpeed={3}
-        maxPhaseSpeed={0.001}
-        minOrbitSpeed={0.02}
-        maxOrbitSpeed={0.08}
-        maxSizePercent={10}
-        minSizePercent={5}
-        showOnHover={true}
-        overflowPercent={35}
-      /> */}
-      <div className="absolute inset-0 bg-transparent blur-xl duration-200 ease-in group-hover:bg-special group-hover:bg-opacity-30 dark:group-hover:bg-opacity-40"></div>
       <div className="z-30 bg-base-100 p-4 duration-200 group-hover:bg-base-50 dark:bg-base-850 group-hover:dark:bg-base-950">
         <div className="mb-4 flex items-center justify-between gap-2">
           <TooltipWrapper
