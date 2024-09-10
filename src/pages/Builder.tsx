@@ -439,7 +439,7 @@ export const Builder = () => {
                 </div>
               </div>
 
-              {/* <button
+              <button
                 onClick={handleSubmit}
                 disabled={!snippet.name || !snippet.code}
                 className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-75 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
@@ -459,23 +459,7 @@ export const Builder = () => {
                     "FORK"
                   : "CREATE"}
                 </span>
-              </button> */}
-              <SnipppButton
-                onClick={handleClick}
-                disabled={!snippet.name || !snippet.code}
-                colorType={getColorType()}
-                className="w-1/2 self-center text-xl font-bold"
-                size="lg"
-                fit={false}
-                pronounced={true}
-                tooltip={
-                  !isCreator && !isForking && isEditing ?
-                    "You cannot edit this snippet"
-                  : undefined
-                }
-              >
-                {getButtonText()}
-              </SnipppButton>
+              </button>
             </div>
           </form>
           <div className="relative flex h-[70svh] w-full flex-col shadow-md xl:h-full xl:w-2/3">
