@@ -23,14 +23,13 @@ import {
 import formatPostgresDate from "../../utils/formatPostgresDate";
 
 import "../../markdown.css";
-import ReactMarkdown from "react-markdown";
 
 import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import { track } from "@vercel/analytics";
 import { useNavigate } from "react-router-dom";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
+
+import { formatDescription } from "../../utils/formatDescription";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -453,17 +452,17 @@ export const Display = ({
                   `${window.location.pathname.includes("/snippet") ? "max-h-none" : "max-h-[40vh] overflow-y-auto"}`
                 : "max-h-[6em]"
               }`}
-              // dangerouslySetInnerHTML={{
-              //   __html: formatDescription(description),
-              // }}
+              dangerouslySetInnerHTML={{
+                __html: formatDescription(description),
+              }}
             >
-              <ReactMarkdown
+              {/* <ReactMarkdown
                 className="markdown"
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
               >
                 {description}
-              </ReactMarkdown>
+              </ReactMarkdown> */}
             </p>
             {isDescriptionExpanded && tags && (
               <div className="mt-2 flex flex-wrap gap-1">
