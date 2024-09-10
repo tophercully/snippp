@@ -20,7 +20,6 @@ import { LoadingSpinner } from "../components/LoadingSpinner";
 import { detectFrameworks } from "../utils/detectFramework";
 import { countCharacters } from "../utils/countCharacters";
 import { linePreservedCode } from "../utils/linePreservedCode";
-import SnipppButton from "../components/SnipppButton";
 
 export const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
