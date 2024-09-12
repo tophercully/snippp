@@ -1,7 +1,7 @@
 import { createPool } from "@vercel/postgres";
 
 const pool = createPool({
-  connectionString: process.env.POSTGRES_URL,
+  connectionString: process.env.SNIPPET_URL,
 });
 
 export default async function handler(req: any, res: any) {
