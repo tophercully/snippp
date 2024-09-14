@@ -2,7 +2,9 @@ import StaffPickLists from "../components/curated/StaffPickLists";
 import { Footer } from "../components/nav/Footer";
 import { Navbar } from "../components/nav/Navbar";
 import "../output.css";
+import { setPageTitle } from "../utils/setPageTitle";
 const Featured = () => {
+  setPageTitle("Featured Toolkits");
   return (
     <div className="relative flex min-h-[100svh] w-full flex-col items-center justify-start gap-16 bg-base-50 p-2 pb-32 pt-32 font-satoshi md:p-16 md:pt-32 dark:bg-base-900">
       <Navbar />
