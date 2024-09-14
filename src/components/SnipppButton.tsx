@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 type ColorType = "add" | "delete" | "neutral";
 type SizeType = "xs" | "sm" | "md" | "lg";
@@ -15,6 +15,7 @@ interface SnipppButtonProps {
   tooltip?: string;
   tooltipPosition?: TooltipPosition;
   pronounced?: boolean;
+  loading?: boolean;
 }
 
 const SnipppButton: React.FC<SnipppButtonProps> = ({
@@ -28,6 +29,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
   tooltip,
   tooltipPosition = "center",
   pronounced = false,
+  loading = false,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -99,16 +101,18 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
       )}
       <button
         onClick={onClick}
-        disabled={disabled}
+        disabled={disabled || loading}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm ${getBaseColorClass()} shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:shadow-sm dark:shadow-base-600`}
+        className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm ${getBaseColorClass()} shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:shadow-sm dark:shadow-base-600 ${
+          loading ? "cursor-wait opacity-70" : ""
+        }`}
       >
         <div
           className={`absolute inset-0 -translate-x-[101%] transform ${getColorClass()} transition-transform duration-75 ease-in-out group-hover:translate-x-0`}
           aria-hidden="true"
         />
-        <span className="relative">{children}</span>
+        <span className="relative">{loading ? "Working..." : children}</span>
       </button>
     </div>
   );

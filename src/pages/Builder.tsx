@@ -28,6 +28,7 @@ export const Builder = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDisallowed, setIsDisallowed] = useState(false);
   const [suggestedFrameworks, setSuggestedFrameworks] = useState<string[]>([]);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const { snippetId, forking } = useParams();
 
@@ -180,6 +181,7 @@ export const Builder = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (snippet.code && snippet.name) {
+      setButtonLoading(true);
       if (userProfile) {
         if (isCreator || isForking) {
           if (countCharacters(snippet.code) < 5000) {
@@ -257,6 +259,7 @@ export const Builder = () => {
       } else {
         showNotif("Snippet missing Name or Content", "error");
       }
+      setButtonLoading(false);
     }
   };
 
@@ -418,8 +421,10 @@ export const Builder = () => {
 
               <button
                 onClick={handleSubmit}
-                disabled={!snippet.name || !snippet.code}
-                className="group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-75 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600"
+                disabled={!snippet.name || !snippet.code || buttonLoading}
+                className={`group relative w-1/2 self-center overflow-hidden rounded-sm p-4 text-base-950 shadow-md duration-75 hover:cursor-pointer hover:text-base-50 disabled:invert-[45%] dark:bg-base-800 dark:text-base-50 dark:shadow-sm dark:shadow-base-600 ${
+                  buttonLoading ? "cursor-wait opacity-70" : ""
+                }`}
               >
                 <div
                   className={`${
@@ -428,7 +433,9 @@ export const Builder = () => {
                   aria-hidden="true"
                 />
                 <span className="relative z-10 text-xl font-bold">
-                  {isEditing ?
+                  {buttonLoading ?
+                    "Working..."
+                  : isEditing ?
                     isCreator || isForking ?
                       "SAVE"
                     : "YOU ARE NOT THE AUTHOR"

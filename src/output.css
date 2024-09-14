@@ -1300,6 +1300,10 @@ video {
   cursor: pointer;
 }
 
+.cursor-wait {
+  cursor: wait;
+}
+
 .resize-none {
   resize: none;
 }
@@ -2082,6 +2086,10 @@ video {
 
 .opacity-100 {
   opacity: 1;
+}
+
+.opacity-70 {
+  opacity: 0.7;
 }
 
 .shadow-lg {
