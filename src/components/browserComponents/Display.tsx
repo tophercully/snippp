@@ -290,25 +290,40 @@ export const Display = ({
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/snippet/${snippetID}`;
-    if (navigator.share) {
+    const shareData = {
+      title: `${name} on Snippp.io`,
+      text: "Check out this code snippet :)",
+      url: shareUrl,
+    };
+
+    // Check if running on macOS
+    const isMacOS = /Mac/.test(navigator.userAgent);
+
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare(shareData) &&
+      !isMacOS
+    ) {
       try {
-        await navigator.share({
-          title: `${name} on Snippp.io`,
-          text: "Check out this code snippet :)",
-          url: shareUrl,
-        });
+        await navigator.share(shareData);
         console.log("Shared successfully");
       } catch (err) {
         console.log("Error sharing:", err);
+        await fallbackShare(shareUrl);
       }
     } else {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        showNotif("SNIPPET LINK COPIED", "info", 3000);
-      } catch (err) {
-        console.log("Error copying to clipboard:", err);
-        alert("Unable to share. Please copy this link manually: " + shareUrl);
-      }
+      await fallbackShare(shareUrl);
+    }
+  };
+
+  const fallbackShare = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      showNotif("SNIPPET LINK COPIED", "info", 3000);
+    } catch (err) {
+      console.log("Error copying to clipboard:", err);
+      alert("Unable to share. Please copy this link manually: " + url);
     }
   };
 
