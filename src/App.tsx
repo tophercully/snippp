@@ -74,8 +74,8 @@ const Home = () => {
               className="text-md flex w-fit flex-col text-left text-black md:p-0 md:text-4xl"
             >
               <p className="mb-6 w-full max-w-[50ch] self-start rounded-md text-xl backdrop-blur-sm md:text-3xl dark:text-white">
-                A community of developers building reusable code snippets and
-                toolkits. Open Source and free to use.
+                Join a community of developers building reusable code snippets
+                and toolkits. Open Source and free to use.
               </p>
 
               {/* <p className="mb-6 w-full max-w-[50ch] self-start text-xl md:text-3xl dark:text-white">
