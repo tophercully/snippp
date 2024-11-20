@@ -19,6 +19,7 @@ import UITester from "./pages/UITester.tsx";
 import { UserProvider } from "./hooks/UserProfile.tsx";
 import ModPortal from "./pages/ModPortal.tsx";
 import Featured from "./pages/Featured.tsx";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy.tsx";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
   {
     path: "/featured",
     element: <Featured />,
+  },
+  {
+    path: "/privacy-policy",
+    element: <PrivacyPolicy />,
   },
 ]);
 

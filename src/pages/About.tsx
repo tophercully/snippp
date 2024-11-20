@@ -40,6 +40,12 @@ export const About = () => {
             flows, and ideas become reality.
           </p>
         </div>
+        <a
+          href="/privacy-policy"
+          className="text-base-500 hover:text-base-950 hover:underline"
+        >
+          Privacy Policy
+        </a>
         <h1 className="mt-24 w-fit self-start bg-success p-1 text-7xl font-bold text-white">
           Roadmap:
         </h1>
