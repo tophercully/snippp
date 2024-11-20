@@ -1,4 +1,3 @@
-import RoadmapDisplay from "../components/RoadmapDisplay";
 import SubtleGridBackground from "../components/global/SubtleGridBackground";
 import { Footer } from "../components/nav/Footer";
 import { Navbar } from "../components/nav/Navbar";
