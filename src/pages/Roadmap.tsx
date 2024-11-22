@@ -198,7 +198,7 @@ export const releases = [
   },
   {
     version: "v1.0.0 - Official Launch!",
-    date: "Oct 2024",
+    date: "Late 2024",
     items: [
       {
         title: "Crash Course",
@@ -212,11 +212,17 @@ export const releases = [
           "A way to browse lists of snippets, not just individual snippets. This is closer to the goal of building toolkits and simple.",
         completed: false,
       },
+      {
+        title: "More Robust Open-Source Tooling",
+        description:
+          "Better environment for open-source contributors: better documentation, read-only keys for the database, etc.",
+        completed: false,
+      },
     ],
   },
   {
     version: "v2.0.0 and Beyond",
-    date: "????",
+    date: "2025",
     items: [
       {
         title: "Self-Hosted Instance",
@@ -233,7 +239,7 @@ export const releases = [
       {
         title: "VSCode Plugin",
         description:
-          "An even faster implementation of the Snippp database of tools to be ",
+          "An even faster implementation of the Snippp database of tools hooked directly into your VSCode editor",
         completed: false,
       },
     ],
