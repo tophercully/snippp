@@ -386,15 +386,12 @@ export const Display = ({
               </span>
             )}
             <div className="flex items-end justify-between gap-10">
-              <button
-                onClick={() => {
-                  track("User Profile Visited");
-                  navigate(`/user/${authorID}`);
-                }}
+              <a
+                href={`/user/${authorID}`}
                 className="text-xl font-light"
               >
                 {author}
-              </button>
+              </a>
               <h1 className="text-sm font-light">
                 {createdAt ? formatPostgresDate(createdAt.toString()) : ""}
               </h1>
@@ -404,16 +401,18 @@ export const Display = ({
             {snippetCategories.length > 0 && (
               <div className="flex flex-nowrap gap-1 self-end">
                 {snippetCategories.map((category, index) => (
-                  <button
+                  <a
                     onClick={() => {
-                      track(`Category ${category.name} Browsed`);
-                      navigate(category.link);
+                      track(
+                        `Category "${category.name}" browsed from snippet tag`,
+                      );
                     }}
+                    href={category.link}
                     key={index}
                     className="flex flex-wrap items-center justify-center text-nowrap rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
                   >
                     {category.name}
-                  </button>
+                  </a>
                 ))}
               </div>
             )}
