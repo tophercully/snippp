@@ -141,6 +141,12 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
             </p>
           </div>
         </div>
+        <a
+          href={`/snippet/${snippetID}`}
+          className="sr-only"
+        >
+          {name}
+        </a>
       </>
     );
 
