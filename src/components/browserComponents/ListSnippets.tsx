@@ -3,6 +3,7 @@ import { Snippet } from "../../typeInterfaces";
 import { useSessionStorage, useWindowSize } from "@uidotdev/usehooks";
 import { simplifyNumber } from "../../utils/simplifyNumber";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
+import { Link } from "react-router-dom";
 
 interface DisplaySelectionsProps {
   selection: Snippet | null;
@@ -141,12 +142,12 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
             </p>
           </div>
         </div>
-        <a
-          href={`/snippet/${snippetID}`}
+        <Link
+          to={`/snippet/${snippetID}`}
           className="sr-only"
         >
           {name}
-        </a>
+        </Link>
       </>
     );
 
@@ -163,14 +164,14 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
       );
     } else {
       return (
-        <a
+        <Link
           ref={(el) => (itemRefs.current[index] = el)}
           className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-5 pb-5 last:border-none hover:cursor-alias ${selectedClass}`}
           key={snippetID}
-          href={`/snippet/${snippetID}`}
+          to={`/snippet/${snippetID}`}
         >
           {commonContent}
-        </a>
+        </Link>
       );
     }
   };
