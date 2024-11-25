@@ -183,11 +183,11 @@ export const Display = ({
   const keyboardControlOptions =
     !isEditing && !isAdding && !isEditingProfile ?
       {
-        enter: (event) => {
+        keyboardRight: (event) => {
           event.preventDefault();
           copySnippet();
         },
-        arrowRight: (event) => {
+        enter: (event) => {
           event.preventDefault();
           if (userProfile) {
             if (favoriteStatus) {
