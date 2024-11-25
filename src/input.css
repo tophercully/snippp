@@ -9,7 +9,7 @@
       url("./assets/fonts/Satoshi-Variable.woff2") format("woff2"),
       url("./assets/fonts/Satoshi-Variable.woff") format("woff"),
       url("./assets/fonts/Satoshi-Variable.ttf") format("truetype");
-    font-weight: 300 900; /* Assuming it's a variable font with this weight range */
+    font-weight: 300 900;
     font-style: normal;
     font-display: swap;
   }
