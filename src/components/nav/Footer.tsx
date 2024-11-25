@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Footer = () => {
   return (
     <div className="mt-5 flex w-full items-end justify-between justify-self-end">
@@ -6,33 +8,33 @@ export const Footer = () => {
         Press '?' to see keyboard shortcuts
       </p>
       <div className="flex gap-3">
-        <a
-          href="https://github.com/tophercully/snippp"
+        <Link
+          to="https://github.com/tophercully/snippp"
           target="_blank"
         >
           <img
             className="h-6 hover:scale-95 dark:invert"
             src="/github.png"
           ></img>
-        </a>
-        <a
-          href="https://twitter.com/snipppio"
+        </Link>
+        <Link
+          to="https://twitter.com/snipppio"
           target="_blank"
         >
           <img
             className="h-6 hover:scale-95 dark:invert"
             src="/twitter.png"
           ></img>
-        </a>
-        <a
-          href="https://ko-fi.com/chrismccully"
+        </Link>
+        <Link
+          to="https://ko-fi.com/chrismccully"
           target="_blank"
         >
           <img
             className="h-6 hover:scale-95"
             src="/kofi.png"
           ></img>
-        </a>
+        </Link>
       </div>
     </div>
   );

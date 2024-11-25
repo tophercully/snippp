@@ -27,7 +27,7 @@ import "../../markdown.css";
 import SnipppButton from "../SnipppButton";
 import { useKeyboardControls } from "../../hooks/KeyboardControls";
 import { track } from "@vercel/analytics";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { formatDescription } from "../../utils/formatDescription";
 
@@ -370,28 +370,28 @@ export const Display = ({
       <div className="flex h-full w-full flex-col gap-3 bg-base-50 pt-0 lg:p-8 lg:pb-4 dark:bg-base-950 dark:text-base-50">
         <div className="flex h-fit w-fit flex-wrap gap-4">
           <div className="flex h-fit w-fit flex-col gap-2 rounded-sm bg-base-950 p-4 text-base-50 dark:bg-base-50 dark:text-base-950">
-            <a
-              href={`/snippet/${snippetID}`}
+            <Link
+              to={`/snippet/${snippetID}`}
               className="text-3xl font-bold"
             >
               {name}
-            </a>
+            </Link>
             {isForked && (
               <span className="-mt-2 mb-2 text-xs">
                 <span>forked from </span>
-                <a
+                <Link
                   className="h-fit max-w-[20ch] truncate underline"
-                  href={forkedFromName ? `/snippet/${forkedFrom}` : ""}
-                >{`${forkedFromName ? forkedFromName : "Deleted Snippet"}`}</a>
+                  to={forkedFromName ? `/snippet/${forkedFrom}` : ""}
+                >{`${forkedFromName ? forkedFromName : "Deleted Snippet"}`}</Link>
               </span>
             )}
             <div className="flex items-end justify-between gap-10">
-              <a
-                href={`/user/${authorID}`}
+              <Link
+                to={`/user/${authorID}`}
                 className="text-xl font-light"
               >
                 {author}
-              </a>
+              </Link>
               <h1 className="text-sm font-light">
                 {createdAt ? formatPostgresDate(createdAt.toString()) : ""}
               </h1>
@@ -401,18 +401,18 @@ export const Display = ({
             {snippetCategories.length > 0 && (
               <div className="flex flex-nowrap gap-1 self-end">
                 {snippetCategories.map((category, index) => (
-                  <a
+                  <Link
                     onClick={() => {
                       track(
                         `Category "${category.name}" browsed from snippet tag`,
                       );
                     }}
-                    href={category.link}
+                    to={category.link}
                     key={index}
                     className="flex flex-wrap items-center justify-center text-nowrap rounded-sm bg-base-950 px-2 py-1 text-xs text-base-50 dark:bg-base-50 dark:text-base-950"
                   >
                     {category.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}

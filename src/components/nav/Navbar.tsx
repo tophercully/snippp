@@ -4,7 +4,7 @@ import { useSessionStorage } from "@uidotdev/usehooks";
 import { categories } from "../../utils/categories";
 
 import { KeyboardShortcuts } from "./KeyboardShortcuts";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { track } from "@vercel/analytics";
 
 import { useUser } from "../../hooks/UserProfile";
@@ -66,8 +66,8 @@ export const Navbar: React.FC = () => {
       <div className="absolute left-0 right-0 top-0 z-50 w-full rounded-b-2xl bg-opacity-10 p-2 shadow-sm backdrop-blur-sm lg:px-10">
         <div className="flex h-fit w-full items-center justify-start gap-5">
           {/* Snippp logo */}
-          <a
-            href="/"
+          <Link
+            to="/"
             className="group flex items-center gap-1 rounded-sm bg-base-950 p-1 text-base-50 dark:bg-base-50 dark:text-base-950"
           >
             <img
@@ -77,20 +77,20 @@ export const Navbar: React.FC = () => {
             <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:px-3">
               {"Snippp"}
             </span>
-          </a>
+          </Link>
           <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
-            <a
-              href="/browse"
+            <Link
+              to="/browse"
               className="hidden w-full items-center p-4 pl-10 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               Browse
-            </a>
-            <a
-              href="/featured"
+            </Link>
+            <Link
+              to="/featured"
               className="hidden w-full items-center p-4 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               Featured
-            </a>
+            </Link>
             {Object.keys(categories).length > 0 && (
               <div className="relative">
                 <button
@@ -118,18 +118,18 @@ export const Navbar: React.FC = () => {
                   className={`absolute ${isCategoryDropdownOpen ? "" : "sr-only"} left-0 z-20 mt-2 w-64 overflow-y-auto rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950`}
                 >
                   <div className="flex flex-col items-start text-sm md:hidden">
-                    <a
-                      href="/browse"
+                    <Link
+                      to="/browse"
                       className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                     >
                       Browse
-                    </a>
-                    <a
-                      href="/featured"
+                    </Link>
+                    <Link
+                      to="/featured"
                       className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                     >
                       Featured
-                    </a>
+                    </Link>
                     <button
                       onClick={() => navigate("/about")}
                       className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
@@ -143,16 +143,16 @@ export const Navbar: React.FC = () => {
                   {Object.entries(categories)
                     .filter(([, info]) => info.type === "language")
                     .map(([key, info]) => (
-                      <a
+                      <Link
                         key={key}
-                        href={`/browse/${key}`}
+                        to={`/browse/${key}`}
                         className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                         onClick={() => {
                           setIsCategoryDropdownOpen(false);
                         }}
                       >
                         {info.name}
-                      </a>
+                      </Link>
                     ))}
                   <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
                     Frameworks/Libraries
@@ -160,26 +160,26 @@ export const Navbar: React.FC = () => {
                   {Object.entries(categories)
                     .filter(([, info]) => info.type === "framework")
                     .map(([key, info]) => (
-                      <a
+                      <Link
                         key={key}
-                        href={`/browse/${key}`}
+                        to={`/browse/${key}`}
                         className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
                         onClick={() => {
                           setIsCategoryDropdownOpen(false);
                         }}
                       >
                         {info.name}
-                      </a>
+                      </Link>
                     ))}
                 </div>
               </div>
             )}
-            <a
-              href="/about"
+            <Link
+              to="/about"
               className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               About
-            </a>
+            </Link>
           </div>
 
           {!userProfile && (
@@ -197,8 +197,8 @@ export const Navbar: React.FC = () => {
             </div>
           )}
           {userProfile && !isBuilderPage && (
-            <a
-              href="/builder"
+            <Link
+              to="/builder"
               className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
             >
               <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
@@ -208,7 +208,7 @@ export const Navbar: React.FC = () => {
                 src="/add.svg"
                 className="rounded-sm p-2"
               />
-            </a>
+            </Link>
           )}
           {userProfile && (
             <div className={`relative ${isBuilderPage ? "ml-auto" : ""}`}>
@@ -220,18 +220,18 @@ export const Navbar: React.FC = () => {
               />
               {isDropdownOpen && (
                 <div className="absolute right-0 z-20 flex max-h-[25vh] w-48 flex-col rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
-                  <a
+                  <Link
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                    href="/dashboard"
+                    to="/dashboard"
                   >
                     Dashboard
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                    href={`/user/${userProfile.id}`}
+                    to={`/user/${userProfile.id}`}
                   >
                     Profile
-                  </a>
+                  </Link>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={handleSignIn}
