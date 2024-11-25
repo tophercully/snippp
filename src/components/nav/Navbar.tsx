@@ -79,22 +79,18 @@ export const Navbar: React.FC = () => {
             </span>
           </a>
           <div className="flex w-fit items-center justify-center md:justify-start md:gap-5">
-            <button
-              onClick={() => {
-                navigate(`/browse`);
-              }}
+            <a
+              href="/browse"
               className="hidden w-full items-center p-4 pl-10 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               Browse
-            </button>
-            <button
-              onClick={() => {
-                navigate(`/featured`);
-              }}
+            </a>
+            <a
+              href="/featured"
               className="hidden w-full items-center p-4 text-base-950 invert-[40%] hover:cursor-pointer hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               Featured
-            </button>
+            </a>
             {Object.keys(categories).length > 0 && (
               <div className="relative">
                 <button
@@ -117,75 +113,73 @@ export const Navbar: React.FC = () => {
                     />
                   </svg>
                 </button>
-                {isCategoryDropdownOpen && (
-                  <div className="absolute left-0 z-20 mt-2 w-64 overflow-y-auto rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950">
-                    <div className="flex flex-col items-start text-sm md:hidden">
-                      <button
-                        onClick={() => navigate("/browse")}
-                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                      >
-                        Browse
-                      </button>
-                      <button
-                        onClick={() => navigate("/featured")}
-                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                      >
-                        Featured
-                      </button>
-                      <button
-                        onClick={() => navigate("/about")}
-                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                      >
-                        About
-                      </button>
-                    </div>
-                    <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
-                      Languages
-                    </div>
-                    {Object.entries(categories)
-                      .filter(([, info]) => info.type === "language")
-                      .map(([key, info]) => (
-                        <button
-                          key={key}
-                          className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                          onClick={() => {
-                            setIsCategoryDropdownOpen(false);
-                            navigate(`/browse/${key}`);
-                          }}
-                        >
-                          {info.name}
-                        </button>
-                      ))}
-                    <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
-                      Frameworks/Libraries
-                    </div>
-                    {Object.entries(categories)
-                      .filter(([, info]) => info.type === "framework")
-                      .map(([key, info]) => (
-                        <button
-                          key={key}
-                          className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
-                          onClick={() => {
-                            setIsCategoryDropdownOpen(false);
-                            navigate(`/browse/${key}`);
-                          }}
-                        >
-                          {info.name}
-                        </button>
-                      ))}
+                {/* Category Dropdown */}
+                <div
+                  className={`absolute ${isCategoryDropdownOpen ? "" : "sr-only"} left-0 z-20 mt-2 w-64 overflow-y-auto rounded-sm bg-base-50 shadow-lg ring-1 ring-base-950 ring-opacity-5 dark:bg-base-950`}
+                >
+                  <div className="flex flex-col items-start text-sm md:hidden">
+                    <a
+                      href="/browse"
+                      className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                    >
+                      Browse
+                    </a>
+                    <a
+                      href="/featured"
+                      className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                    >
+                      Featured
+                    </a>
+                    <button
+                      onClick={() => navigate("/about")}
+                      className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                    >
+                      About
+                    </button>
                   </div>
-                )}
+                  <div className="px-4 py-2 font-bold text-base-950 dark:text-base-50">
+                    Languages
+                  </div>
+                  {Object.entries(categories)
+                    .filter(([, info]) => info.type === "language")
+                    .map(([key, info]) => (
+                      <a
+                        key={key}
+                        href={`/browse/${key}`}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                        onClick={() => {
+                          setIsCategoryDropdownOpen(false);
+                        }}
+                      >
+                        {info.name}
+                      </a>
+                    ))}
+                  <div className="mt-2 px-4 py-2 font-bold text-base-950 dark:text-base-50">
+                    Frameworks/Libraries
+                  </div>
+                  {Object.entries(categories)
+                    .filter(([, info]) => info.type === "framework")
+                    .map(([key, info]) => (
+                      <a
+                        key={key}
+                        href={`/browse/${key}`}
+                        className="block w-full px-4 py-2 text-left text-sm text-base-950 hover:bg-base-200 dark:text-base-50 dark:hover:bg-base-800"
+                        onClick={() => {
+                          setIsCategoryDropdownOpen(false);
+                        }}
+                      >
+                        {info.name}
+                      </a>
+                    ))}
+                </div>
               </div>
             )}
-            <button
-              onClick={() => {
-                track("Open About Page");
-                navigate("/about");
-              }}
+            <a
+              href="/about"
               className="ml-0 hidden items-center p-4 text-base-950 invert-[40%] hover:text-base-800 hover:invert-0 focus:outline-none md:flex dark:text-base-50 dark:hover:text-base-200"
             >
               About
-            </button>
+            </a>
           </div>
 
           {!userProfile && (
@@ -203,11 +197,8 @@ export const Navbar: React.FC = () => {
             </div>
           )}
           {userProfile && !isBuilderPage && (
-            <button
-              onClick={() => {
-                track("Open Builder");
-                navigate("/builder");
-              }}
+            <a
+              href="/builder"
               className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
             >
               <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
@@ -217,7 +208,7 @@ export const Navbar: React.FC = () => {
                 src="/add.svg"
                 className="rounded-sm p-2"
               />
-            </button>
+            </a>
           )}
           {userProfile && (
             <div className={`relative ${isBuilderPage ? "ml-auto" : ""}`}>
@@ -229,22 +220,18 @@ export const Navbar: React.FC = () => {
               />
               {isDropdownOpen && (
                 <div className="absolute right-0 z-20 max-h-[25vh] w-48 rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">
-                  <button
+                  <a
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                    onClick={() => {
-                      navigate("/dashboard");
-                    }}
+                    href="/dashboard"
                   >
                     Dashboard
-                  </button>
-                  <button
+                  </a>
+                  <a
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
-                    onClick={() => {
-                      navigate(`/user/${userProfile.id}`);
-                    }}
+                    href={`/user/${userProfile.id}`}
                   >
                     Profile
-                  </button>
+                  </a>
                   <button
                     className="w-full px-4 py-3 text-left text-sm text-base-50 hover:bg-base-800"
                     onClick={handleSignIn}
