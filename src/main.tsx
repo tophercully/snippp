@@ -21,7 +21,7 @@ import ModPortal from "./pages/ModPortal.tsx";
 import Featured from "./pages/Featured.tsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.tsx";
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
