@@ -56,17 +56,17 @@ export const KeyboardShortcuts = () => {
           <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
             ⏎
           </span>
-          <span>Copy Snippet</span>
-        </li>
-        <li className="flex items-center gap-3">
-          <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
-            →
-          </span>
           <span>
             {isBrowser ?
               "Add/Remove Favorite"
             : "Select List OR Add/Remove Favorite"}
           </span>
+        </li>
+        <li className="flex items-center gap-3">
+          <span className="flex w-8 items-center justify-center rounded-sm border-2 px-2 py-0">
+            →
+          </span>
+          <span>Copy Snippet</span>
         </li>
         {!isBrowser && (
           <li className="flex items-center gap-3">
