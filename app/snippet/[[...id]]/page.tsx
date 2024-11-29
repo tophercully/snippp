@@ -30,22 +30,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const snippet = result[0];
+    const imageUrl = `/snippp1x1.png`;
 
     return {
-      metadataBase: new URL(`https://snippp.io`),
+      metadataBase: new URL("https://snippp.io"),
       title: `${snippet.name || "Untitled Snippet"} | Snippp`,
       description: snippet.description || "A code snippet shared on Snippp",
       openGraph: {
         title: `${snippet.name || "Untitled Snippet"} | Snippp`,
         description: snippet.description || "A code snippet shared on Snippp",
         url: `https://snippp.io/snippet/${snippetId}`,
-        type: "website",
+        type: "article",
         siteName: "Snippp",
+        images: [
+          {
+            url: imageUrl,
+            alt: snippet.name || "Snippet Image",
+          },
+        ],
       },
       twitter: {
         card: "summary_large_image",
         title: `${snippet.name || "Untitled Snippet"} | Snippp`,
         description: snippet.description || "A code snippet shared on Snippp",
+        images: [imageUrl],
       },
       keywords: ["code snippet", "programming", ...(snippet.tags || [])],
       robots: {
@@ -75,7 +83,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 }
-
 const SnippetPage: React.FC = () => {
   return <SnippetPageContent />;
 };
