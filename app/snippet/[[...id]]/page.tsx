@@ -50,6 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch {
+    console.log("Snippet not found");
     return {
       title: "Snippet Not Found | Snippp",
       description: "The requested code snippet could not be found",
