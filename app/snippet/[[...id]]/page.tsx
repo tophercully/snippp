@@ -1,40 +1,35 @@
 import React from "react";
 import { Metadata } from "next";
+import { neon } from "@neondatabase/serverless";
 import SnippetPageContent from "@/app/src/pages/SnippetContent";
-import { Snippet } from "@/app/src/types/typeInterfaces";
-import getBaseURL from "@/app/src/utils/getBaseURL";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
+const sql = neon(process.env.SNIPPET_URL as string);
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const snippetId = Number(id);
-  console.log("id", snippetId);
 
   try {
-    const response = await fetch(
-      `${getBaseURL()}/api/loader/load-snippet-by-id?snippetID=${id}`,
-    );
-    console.log(
-      `fetching snippet from ${getBaseURL()}/api/loader/load-snippet-by-id?snippetID=${id}`,
-    );
+    const result = await sql`
+      SELECT 
+        s.name, 
+        u.name AS author, 
+        s.description, 
+        s.tags
+      FROM snippets s
+      JOIN users u ON s.authorID = u.userID
+      WHERE s.snippetID = ${snippetId};
+    `;
 
-    const responseBody = await response.text();
-    console.log("Response body:", responseBody);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    if (result.length === 0) {
+      throw new Error(`Snippet with ID ${snippetId} not found`);
     }
 
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Received non-JSON response");
-    }
-
-    const snippet: Snippet = JSON.parse(responseBody);
-    console.log("snippet", snippet);
+    const snippet = result[0];
 
     return {
       metadataBase: new URL(`https://snippp.io`),
@@ -54,11 +49,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       keywords: ["code snippet", "programming", ...(snippet.tags || [])],
       robots: {
-        index: snippet.public !== false,
-        follow: snippet.public !== false,
+        index: true,
+        follow: true,
         googleBot: {
-          index: snippet.public !== false,
-          follow: snippet.public !== false,
+          index: true,
+          follow: true,
         },
       },
       creator: snippet.author || "Anonymous",
