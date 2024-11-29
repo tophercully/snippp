@@ -3,6 +3,7 @@ import api from "@/app/src/backend/api";
 import { Metadata } from "next";
 import SnippetPageContent from "@/app/src/pages/SnippetContent";
 import { Snippet } from "@/app/src/types/typeInterfaces";
+import getBaseURL from "@/app/src/utils/getBaseURL";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -14,7 +15,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   console.log("id", snippetId);
 
   try {
-    const snippet: Snippet = await api.snippets.loadById(snippetId);
+    const response = await fetch(
+      `${getBaseURL()}/api/loader/load-snippet-by-id?snippetID=${id}`,
+    );
+    const snippet: Snippet = await response.json();
     // console.log("snippet", snippet);
 
     return {
