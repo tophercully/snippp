@@ -57,8 +57,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         canonical: `https://snippp.io/snippet/${snippetId}`,
       },
     };
-  } catch {
-    console.log("Snippet not found");
+  } catch (error) {
+    console.error("Metadata generation error:", error);
     return {
       title: "Snippet Not Found | Snippp",
       description: "The requested code snippet could not be found",
