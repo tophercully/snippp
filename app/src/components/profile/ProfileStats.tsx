@@ -3,10 +3,9 @@ import { StatCardSmall } from "../statsTools/StatCard";
 import { simplifyNumber } from "../../utils/simplifyNumber";
 import { UserStats, fetchUserStats } from "../../backend/user/userFunctions";
 import Distribution from "../statsTools/Distribution";
-import { useParams } from "next/navigation";
 import { LoadingSpinner } from "../universal/LoadingSpinner";
 
-export const ProfileStats = ({userId}:{userId:string}) => {
+export const ProfileStats = ({ userId }: { userId: string }) => {
   const [stats, setStats] = useState<UserStats | null>();
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {

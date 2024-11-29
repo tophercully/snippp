@@ -1,69 +1,55 @@
 import React from "react";
 import api from "@/app/src/backend/api";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import SnippetPageContent from "@/app/src/pages/SnippetContent";
 import { Snippet } from "@/app/src/types/typeInterfaces";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
-  const id = Number(params.id);
-  console.log("id", id);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const snippetId = Number(id);
+  console.log("id", snippetId);
 
   try {
-    const snippet: Snippet = await api.snippets.loadById(id);
+    const snippet: Snippet = await api.snippets.loadById(snippetId);
     console.log("snippet", snippet);
 
     return {
-      metadataBase: new URL("https://snippp.io"), // Replace with actual base URL
+      metadataBase: new URL("https://snippp.io"),
       title: `${snippet.name || "Untitled Snippet"} | Snippp`,
       description: snippet.description || "A code snippet shared on Snippp",
-
-      // Open Graph Metadata
       openGraph: {
         title: `${snippet.name || "Untitled Snippet"} | Snippp`,
         description: snippet.description || "A code snippet shared on Snippp",
-        url: `https://snippp.io/snippet/${id}`, // Dynamic snippet URL
+        url: `https://snippp.io/snippet/${snippetId}`,
         type: "website",
         siteName: "Snippp",
       },
-
-      // Twitter Card Metadata
       twitter: {
         card: "summary_large_image",
         title: `${snippet.name || "Untitled Snippet"} | Snippp`,
         description: snippet.description || "A code snippet shared on Snippp",
       },
-
-      // Keywords
       keywords: ["code snippet", "programming", ...(snippet.tags || [])],
-
-      // Robots instructions
       robots: {
-        index: snippet.public !== false, // Only index public snippets
+        index: snippet.public !== false,
         follow: snippet.public !== false,
         googleBot: {
           index: snippet.public !== false,
           follow: snippet.public !== false,
         },
       },
-
-      // Additional metadata
       creator: snippet.author || "Anonymous",
       authors: [{ name: snippet.author || "Anonymous" }],
       referrer: "no-referrer",
-
-      // Alternate languages if applicable
       alternates: {
-        canonical: `https://snippp.io/snippet/${id}`,
+        canonical: `https://snippp.io/snippet/${snippetId}`,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Snippet Not Found | Snippp",
       description: "The requested code snippet could not be found",

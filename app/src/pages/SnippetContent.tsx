@@ -9,7 +9,6 @@ import { LoadingSpinner } from "@/app/src/components/universal/LoadingSpinner";
 import { Display } from "@/app/src/components/browser/Display";
 import { Footer } from "@/app/src/components/nav/Footer";
 import Link from "next/link";
-import { Metadata, ResolvingMetadata } from "next";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -19,83 +18,6 @@ type SnippetMod = {
 };
 
 type SnippetMods = { [snippetID: number]: SnippetMod };
-
-// type Props = {
-//   params: { id: string };
-// };
-
-// export async function generateMetadata(
-//   { params }: Props,
-//   parent: ResolvingMetadata,
-// ): Promise<Metadata> {
-//   const id = Number(params.id);
-
-//   try {
-//     const snippet: Snippet = await api.snippets.loadById(id);
-
-//     return {
-//       metadataBase: new URL("https://yourwebsite.com"), // Replace with actual base URL
-//       title: `${snippet.name || "Untitled Snippet"} | CodeSnippet`,
-//       description:
-//         snippet.description || "A code snippet shared on CodeSnippet",
-
-//       // Open Graph Metadata
-//       openGraph: {
-//         title: `${snippet.name || "Untitled Snippet"} | CodeSnippet`,
-//         description:
-//           snippet.description || "A code snippet shared on CodeSnippet",
-//         url: `https://yourwebsite.com/snippet/${id}`, // Dynamic snippet URL
-//         type: "website",
-//         siteName: "CodeSnippet",
-//       },
-
-//       // Twitter Card Metadata
-//       twitter: {
-//         card: "summary_large_image",
-//         title: `${snippet.name || "Untitled Snippet"} | CodeSnippet`,
-//         description:
-//           snippet.description || "A code snippet shared on CodeSnippet",
-//       },
-
-//       // Keywords
-//       keywords: [
-//         "code snippet",
-//         "programming",
-//         snippet.tags || "",
-//         ...(snippet.tags || []),
-//       ],
-
-//       // Robots instructions
-//       robots: {
-//         index: snippet.public !== false, // Only index public snippets
-//         follow: snippet.public !== false,
-//         googleBot: {
-//           index: snippet.public !== false,
-//           follow: snippet.public !== false,
-//         },
-//       },
-
-//       // Additional metadata
-//       creator: snippet.author || "Anonymous",
-//       authors: [{ name: snippet.author || "Anonymous" }],
-//       referrer: "no-referrer",
-
-//       // Alternate languages if applicable
-//       alternates: {
-//         canonical: `https://yourwebsite.com/snippet/${id}`,
-//       },
-//     };
-//   } catch (error) {
-//     return {
-//       title: "Snippet Not Found | CodeSnippet",
-//       description: "The requested code snippet could not be found",
-//       robots: {
-//         index: false,
-//         follow: false,
-//       },
-//     };
-//   }
-// }
 
 const SnippetPageContent: React.FC = () => {
   const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);

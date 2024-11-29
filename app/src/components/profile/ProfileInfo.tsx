@@ -1,19 +1,16 @@
-import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
-
+import { useSessionStorage } from "@uidotdev/usehooks";
 
 import { useEffect, useState } from "react";
 import { editUserProfile, UserStats } from "../../backend/user/userFunctions";
 
 import { formatDescription } from "../../utils/formatDescription";
-import { GoogleUser, SnipppProfile } from "../../types/typeInterfaces";
+import { SnipppProfile } from "../../types/typeInterfaces";
 import { useParams } from "next/navigation";
 import { useUser } from "../../contexts/UserContext";
 import { useNotif } from "../../contexts/NotificationContext";
 import SnipppButton from "../universal/SnipppButton";
 import api from "../../backend/api";
-import { StatCardSmall } from "../statsTools/StatCard";
 import { simplifyNumber } from "../../utils/simplifyNumber";
-import Distribution from "../statsTools/Distribution";
 import { ClipboardCopy, Heart, Scissors } from "lucide-react";
 
 interface ProfileInfoParams {
@@ -39,9 +36,9 @@ export const ProfileInfo = ({
   onUpdateUser,
 }: ProfileInfoParams) => {
   const { options } = useParams();
-  const userid = options ? options[0] : null
+  const userid = options ? options[0] : null;
   const { name, bio, profile_picture, last_login } = snipppUser;
-  const {userProfile} = useUser();
+  const { userProfile } = useUser();
   const [isEditing, setIsEditing] = useSessionStorage(
     "isEditingProfile",
     false,
@@ -51,7 +48,7 @@ export const ProfileInfo = ({
     bio: bio,
   });
   const [stats, setStats] = useState<UserStats | null>();
-  
+
   const { showNotif } = useNotif();
 
   const isOnline = isWithinOneHour(last_login);
@@ -113,11 +110,11 @@ export const ProfileInfo = ({
   };
 
   return (
-    <div className="flex w-full border flex-col gap-4 rounded-sm bg-base-50 p-4 shadow-md lg:flex-row lg:gap-10 dark:bg-base-950 dark:text-base-50">
+    <div className="flex w-full flex-col gap-4 rounded-sm border bg-base-50 p-4 shadow-md lg:flex-row lg:gap-10 dark:bg-base-950 dark:text-base-50">
       {/* <div className="relative aspect-square w-full rounded-full lg:w-96"> */}
       <img
         src={profile_picture}
-        className={`h-full aspect-square rounded-md object-contain border-4  ${isOnline ? "animate-online" : "border-transparent"}`}
+        className={`aspect-square h-full rounded-md border-4 object-contain ${isOnline ? "animate-online" : "border-transparent"}`}
         alt="Profile"
         // style={{ objectPosition: "top" }}
       />
@@ -151,7 +148,7 @@ export const ProfileInfo = ({
             ></h1>
           </div>
         }
-        
+
         {userProfile && userProfile.id == userid && !isEditing && (
           <div
             id="editButton"
@@ -193,22 +190,35 @@ export const ProfileInfo = ({
           </div>
         )}
       </div>
-      {stats && <div
+      {stats && (
+        <div
           id="stats"
-          className="flex flex-col h-full gap-4"
+          className="flex h-full flex-col gap-4"
         >
-          <div className="flex flex-col h-fit gap-4 w-full justify-between">
+          <div className="flex h-fit w-full flex-col justify-between gap-4">
             <div className="flex flex-col">
-              <span className="font-bold flex items-center text-xl">{stats?.totalSnippets}<Scissors className="p-1" /></span>
-              <span className=" text-base-200">Snippets</span>
+              <span className="flex items-center text-xl font-bold">
+                {stats?.totalSnippets}
+                <Scissors className="p-1" />
+              </span>
+              <span className="text-base-200">Snippets</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold flex items-center text-xl">{simplifyNumber(stats?.totalSnippetCopies)}<ClipboardCopy className="p-1" /></span>
-              <span className=" text-base-200">Snippet Copies</span>
+              <span className="flex items-center text-xl font-bold">
+                {simplifyNumber(stats?.totalSnippetCopies)}
+                <ClipboardCopy className="p-1" />
+              </span>
+              <span className="text-base-200">Snippet Copies</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold flex items-center text-xl">{simplifyNumber(stats?.totalFavorites)} <Heart className="p-1" fill="black"/></span>
-              <span className=" text-base-200">Total Favorites</span>
+              <span className="flex items-center text-xl font-bold">
+                {simplifyNumber(stats?.totalFavorites)}{" "}
+                <Heart
+                  className="p-1"
+                  fill="black"
+                />
+              </span>
+              <span className="text-base-200">Total Favorites</span>
             </div>
           </div>
           {/* {Object.keys(stats?.languageDistribution as any).length != 0 && (
@@ -225,7 +235,8 @@ export const ProfileInfo = ({
               title="Framework Distribution"
             />
           )} */}
-        </div>}
+        </div>
+      )}
     </div>
   );
 };

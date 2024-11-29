@@ -1,8 +1,12 @@
-"use client"
+"use client";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "../../src/contexts/UserContext";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ListData, Snippet, SnipppProfile } from "../../src/types/typeInterfaces";
+import {
+  ListData,
+  Snippet,
+  SnipppProfile,
+} from "../../src/types/typeInterfaces";
 import api from "../../src/backend/api";
 import { setPageTitle } from "../../src/utils/setPageTitle";
 import { useSessionStorage } from "@uidotdev/usehooks";
@@ -13,7 +17,6 @@ import { ListSnippets } from "../../src/components/browser/ListSnippets";
 import { LoadingSpinner } from "../../src/components/universal/LoadingSpinner";
 import { Navbar } from "../../src/components/nav/Navbar";
 import { ProfileInfo } from "../../src/components/profile/ProfileInfo";
-import { ProfileStats } from "../../src/components/profile/ProfileStats";
 import { ListLists } from "../../src/components/browser/ListLists";
 import SnipppButton from "../../src/components/universal/SnipppButton";
 import { exportAndDownloadUserSnippets } from "../../src/utils/downloadUserSnippets";
@@ -23,9 +26,6 @@ import ConfirmationPopup from "../../src/components/modals/ConfirmationPopup";
 import { Display } from "../../src/components/browser/Display";
 import { Footer } from "../../src/components/nav/Footer";
 import EditListPopup from "../../src/components/modals/EditListPopup";
-
-
-
 
 const getHighResGoogleProfilePicture = (pictureUrl: string): string => {
   // Check if the URL is a Google profile picture URL and replace for higher resolution
@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
   const userid = options ? options[0] : null;
   const listid = options ? options[1] : null;
   const router = useRouter();
-  const {userProfile} = useUser();
+  const { userProfile } = useUser();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [filteredAndSortedSnippets, setFilteredAndSortedSnippets] = useState<
@@ -284,12 +284,16 @@ const Profile: React.FC = () => {
       setIsEditing(false);
 
       try {
-        await api.lists.update(list?.listid as number, newListName, newDescription);
+        await api.lists.update(
+          list?.listid as number,
+          newListName,
+          newDescription,
+        );
         fetchAndSetLists();
         showNotif("List Updated", "success", 5000);
         setIsSaving(false);
       } catch (error) {
-        showNotif("Error Updating List", "error", 5000);
+        showNotif(`Error Updating List: ${error}`, "error", 5000);
         setIsSaving(false);
       }
     }
@@ -335,11 +339,11 @@ const Profile: React.FC = () => {
             userProfile ? userProfile.id : "",
           );
         } else if (list.listid === "favorites") {
-          result = await api.snippets.loadFavorites({ userID: userid as string });
+          result = await api.snippets.loadFavorites({
+            userID: userid as string,
+          });
         } else {
-          result = await api.snippets.loadByListId(
-            (list.listid) as number,
-          );
+          result = await api.snippets.loadByListId(list.listid as number);
         }
       }
       if (Array.isArray(result)) {
@@ -513,7 +517,7 @@ const Profile: React.FC = () => {
       <Navbar />
       {!isLoading ?
         <>
-          <div className="flex w-full h-fit flex-col gap-4 lg:flex-row">
+          <div className="flex h-fit w-full flex-col gap-4 lg:flex-row">
             <ProfileInfo
               snipppUser={profile as SnipppProfile}
               onUpdateUser={handleUpdateProfile}
@@ -632,9 +636,7 @@ const Profile: React.FC = () => {
                           </div>
                         )}
                     </div>
-                    <Link
-                      href={`/user/${profile?.userId}`}
-                    >
+                    <Link href={`/user/${profile?.userId}`}>
                       {profile?.name}
                     </Link>
 
