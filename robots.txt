@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /dashboard
-Disallow: /builder
-
-Sitemap: https://snippp.io/sitemap.xml
