@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
     domains: ["lh3.googleusercontent.com"],
   },
-  distDir: "dist",
+  // distDir: "dist",
 };
 
 export default nextConfig;
