@@ -12,6 +12,7 @@ export const loadSnippetById = async (
         `${baseUrl}/api/loader/load-snippet-by-id?snippetID=${snippetID}&userID=${userID}`
       : `${baseUrl}/api/loader/load-snippet-by-id?snippetID=${snippetID}`;
 
+    console.log("Loading snippet from:", url);
     const response = await fetch(url);
 
     if (!response.ok) {

@@ -1,3 +1,4 @@
+import getBaseURL from "@/app/src/utils/getBaseURL";
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -70,6 +71,7 @@ export async function GET(request: NextRequest) {
 
     const snippet = result[0];
     console.log("Raw snippet data:", snippet);
+    console.log(getBaseURL());
 
     const formattedSnippet = {
       snippetID: snippet.snippetid,
