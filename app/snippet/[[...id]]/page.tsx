@@ -9,6 +9,7 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  console.log("fetching params");
   const { id } = await params;
   const snippetId = Number(id);
   console.log("id", snippetId);
@@ -17,8 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const response = await fetch(
       `${getBaseURL()}/api/loader/load-snippet-by-id?snippetID=${id}`,
     );
+    console.log(
+      `fetching snippet from ${getBaseURL()}/api/loader/load-snippet-by-id?snippetID=${id}`,
+    );
     const snippet: Snippet = await response.json();
-    // console.log("snippet", snippet);
+
+    console.log("snippet", snippet);
 
     return {
       metadataBase: new URL(`https://snippp.io`),
