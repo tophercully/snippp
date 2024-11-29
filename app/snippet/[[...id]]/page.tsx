@@ -1,4 +1,5 @@
 import React from "react";
+import api from "@/app/src/backend/api";
 import { Metadata } from "next";
 import SnippetPageContent from "@/app/src/pages/SnippetContent";
 import { Snippet } from "@/app/src/types/typeInterfaces";
@@ -9,7 +10,6 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  console.log("fetching params");
   const { id } = await params;
   const snippetId = Number(id);
   console.log("id", snippetId);
@@ -21,8 +21,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     console.log(
       `fetching snippet from ${getBaseURL()}/api/loader/load-snippet-by-id?snippetID=${id}`,
     );
-    const snippet: Snippet = await response.json();
 
+    const responseBody = await response.text();
+    console.log("Response body:", responseBody);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Received non-JSON response");
+    }
+
+    const snippet: Snippet = JSON.parse(responseBody);
     console.log("snippet", snippet);
 
     return {
