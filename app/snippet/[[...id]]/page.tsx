@@ -1,5 +1,4 @@
 import React from "react";
-import api from "@/app/src/backend/api";
 import { Metadata } from "next";
 import SnippetPageContent from "@/app/src/pages/SnippetContent";
 import { Snippet } from "@/app/src/types/typeInterfaces";
