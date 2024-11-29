@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const snippet = result[0];
-    const imageUrl = `/snippp1x1.png`;
+    const imageUrl = `/snippp1x1.svg`;
 
     return {
       metadataBase: new URL("https://snippp.io"),
