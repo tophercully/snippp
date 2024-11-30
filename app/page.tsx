@@ -29,10 +29,10 @@ const Home = () => {
               id="desc"
               className="text-md flex w-fit flex-col text-left text-black md:p-0 md:text-4xl"
             >
-              <h3 className="mb-6 w-full max-w-[50ch] self-start rounded-md text-xl backdrop-blur-sm md:text-3xl dark:text-white">
+              <h2 className="mb-6 w-full max-w-[50ch] self-start rounded-md text-xl backdrop-blur-sm md:text-3xl dark:text-white">
                 Join a community of developers building reusable code snippets
                 and toolkits. Open Source and free to use.
-              </h3>
+              </h2>
             </div>
           </div>
           <div className="relative hidden h-1/2 w-2/3 flex-col items-center justify-center xl:flex">
@@ -71,13 +71,13 @@ const Home = () => {
       <div className="flex min-h-[70svh] w-full flex-col items-center justify-center">
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 p-2 text-black md:gap-16 dark:text-white">
-            <h2 className="flex w-2/3 flex-col text-7xl font-bold text-black md:text-9xl dark:text-white">
+            <h3 className="flex w-2/3 flex-col text-7xl font-bold text-black md:text-9xl dark:text-white">
               <span className="w-fit bg-error p-1 text-white">Sort</span>
               <span className="w-fit bg-error p-1 text-white">smarter,</span>
               <span className="w-fit text-nowrap bg-error p-1 text-white">
                 build faster
               </span>
-            </h2>
+            </h3>
             <p className="text-xl backdrop-blur-sm md:text-3xl">
               Create tailored lists to keep your go-to snippets within reach—
               boost your productivity and never waste time searching again.
@@ -94,7 +94,7 @@ const Home = () => {
       <div className="mb-12 flex min-h-[90svh] w-full flex-col items-center justify-center">
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 text-black md:gap-16 dark:text-white">
-            <h2 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
+            <h3 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
               <span className="z-10 w-fit bg-success p-1 text-white">
                 Leverage
               </span>
@@ -102,7 +102,7 @@ const Home = () => {
                 collective
               </span>
               <span className="w-fit bg-success p-1 text-white">knowledge</span>
-            </h2>
+            </h3>
             <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Explore a rich library of snippets from developers around the
               world or share your own with the community. Learning and
@@ -126,7 +126,7 @@ const Home = () => {
       <div className="mb-12 flex min-h-[90svh] w-full flex-col items-center justify-center">
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 text-black md:gap-16 dark:text-white">
-            <h2 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
+            <h3 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
               <span className="flex w-fit flex-wrap">
                 <span className="w-fit bg-special p-1 text-white">Your</span>
                 <span className="w-fit bg-special p-1 text-white">code,</span>
@@ -137,7 +137,7 @@ const Home = () => {
                 </span>
                 <span className="w-fit bg-special p-1 text-white">control</span>
               </span>
-            </h2>
+            </h3>
             <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               We prioritize your privacy. Control who sees your snippets with
               customizable privacy settings, ensuring your code is safe and
@@ -175,11 +175,11 @@ const Home = () => {
       <div className="mb-12 flex min-h-[90svh] w-full flex-col items-center justify-center">
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 text-black md:gap-16 dark:text-white">
-            <h2 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
+            <h3 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
               <span className="w-fit bg-info p-1 text-white">Start </span>
               <span className="w-fit bg-info p-1 text-white">for </span>
               <span className="w-fit bg-info p-1 text-white">$free</span>
-            </h2>
+            </h3>
             <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Sign up now and join a growing community of developers optimizing
               their workflow with our powerful snippet organizer.

@@ -16,7 +16,8 @@ const satoshi = localFont({
 
 export const metadata: Metadata = {
   title: "Snippp - Code Toolkit Organizer",
-  description: "Code Toolkit and Snippet Manager for Developers",
+  description:
+    "Join a community of developers building reusable code snippets and toolkits. Open Source and free to use.",
   icons: { icon: "/snippp1x1.svg" },
 };
 
