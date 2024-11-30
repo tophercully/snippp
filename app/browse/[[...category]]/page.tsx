@@ -1,16 +1,11 @@
 import React from "react";
-import { Metadata } from "next";
 import { neon } from "@neondatabase/serverless";
 import BrowserContent from "@/app/src/pages/BrowserContent";
 import Link from "next/link";
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
-
 const sql = neon(process.env.SNIPPET_URL as string);
 
-export async function getAllSnippets() {
+async function getAllSnippets() {
   try {
     const result = await sql`
       WITH FavoriteCounts AS (
