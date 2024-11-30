@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CategoryDropdown from "./CategoryDropdown";
 import ProfileDropdown from "./ProfileDropdown";
+import BuilderButton from "./BuilderButton";
 
 export const Navbar: React.FC = () => {
   return (
@@ -57,19 +58,7 @@ export const Navbar: React.FC = () => {
               About
             </Link>
           </div>
-          <Link
-            href="/builder"
-            className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
-          >
-            <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
-              CREATE SNIPPET
-            </span>
-            <img
-              src="/add.svg"
-              alt="plus"
-              className="rounded-sm p-2"
-            />
-          </Link>
+          <BuilderButton />
           <ProfileDropdown />
         </div>
       </div>
