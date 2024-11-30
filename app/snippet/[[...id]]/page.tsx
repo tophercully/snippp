@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
       metadataBase: new URL("https://snippp.io"),
-      title: `${snippet.name || "Untitled Snippet"} | Snippp`,
+      title: `${snippet.name || "Untitled Snippet"} - ${snippet.author} | Snippp`,
       description: snippet.description || "A code snippet shared on Snippp",
       openGraph: {
         title: `${snippet.name || "Untitled Snippet"} | Snippp`,
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: "summary_large_image",
-        title: `${snippet.name || "Untitled Snippet"} | Snippp`,
+        title: `${snippet.name || "Untitled Snippet"} - ${snippet.author} | Snippp`,
         description: snippet.description || "A code snippet shared on Snippp",
         images: [imageUrl],
       },
