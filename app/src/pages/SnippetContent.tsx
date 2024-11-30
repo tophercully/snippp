@@ -111,7 +111,10 @@ const SnippetPageContent: React.FC = () => {
           <div className="flex h-full w-full flex-col items-center justify-center gap-4">
             <h1 className="flex gap-4 bg-red-600 p-4 text-base-50">
               SNIPPET NOT AVAILABLE
-              <img src="/lock.svg" />
+              <img
+                src="/lock.svg"
+                alt="Lock"
+              />
             </h1>
             <Link
               href="/"
