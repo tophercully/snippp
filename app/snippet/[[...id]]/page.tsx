@@ -31,14 +31,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     const snippet = result[0];
     const imageUrl = `/snippp1x1.svg`;
+    const truncatedDescription = `${snippet.description.slice(0, 120)}${snippet.description.length > 120 ? "..." : ""}`;
+    const fallbackDescription = `${snippet.author} shared a code snippet on Snippp - the code toolkit organizer for developers`;
 
     return {
       metadataBase: new URL("https://snippp.io"),
       title: `${snippet.name || "Untitled Snippet"} - ${snippet.author} | Snippp`,
-      description: snippet.description || "A code snippet shared on Snippp",
+      description: truncatedDescription || fallbackDescription,
       openGraph: {
         title: `${snippet.name || "Untitled Snippet"} | Snippp`,
-        description: snippet.description || "A code snippet shared on Snippp",
+        description: truncatedDescription || fallbackDescription,
         url: `https://snippp.io/snippet/${snippetId}`,
         type: "article",
         siteName: "Snippp",
@@ -52,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       twitter: {
         card: "summary_large_image",
         title: `${snippet.name || "Untitled Snippet"} - ${snippet.author} | Snippp`,
-        description: snippet.description || "A code snippet shared on Snippp",
+        description: truncatedDescription || fallbackDescription,
         images: [imageUrl],
       },
       keywords: ["code snippet", "programming", ...(snippet.tags || [])],
@@ -75,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     console.error("Metadata generation error:", error);
     return {
       title: "Snippet Not Found | Snippp",
-      description: "The requested code snippet could not be found",
+      description: "Snippet could not be found",
       robots: {
         index: false,
         follow: false,
