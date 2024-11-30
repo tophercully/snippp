@@ -11,6 +11,7 @@ export const Footer = () => {
         <Link
           href="https://github.com/tophercully/snippp"
           target="_blank"
+          rel="nofollow"
         >
           <img
             className="h-6 hover:scale-95 dark:invert"
@@ -21,9 +22,10 @@ export const Footer = () => {
         <Link
           href="https://bsky.app/profile/snippp.io"
           target="_blank"
+          rel="nofollow"
         >
           <img
-            className="h-6 hover:scale-95 dark:grayscale dark:brightness-200 "
+            className="h-6 hover:scale-95 dark:brightness-200 dark:grayscale"
             alt="bluesky"
             src="/blueskyLogo.png"
           />
@@ -31,6 +33,7 @@ export const Footer = () => {
         <Link
           href="https://twitter.com/snipppio"
           target="_blank"
+          rel="nofollow"
         >
           <img
             className="h-6 hover:scale-95 dark:invert"
@@ -41,9 +44,10 @@ export const Footer = () => {
         <Link
           href="https://ko-fi.com/chrismccully"
           target="_blank"
+          rel="nofollow"
         >
           <img
-            className="h-6 aspect-auto hover:scale-95"
+            className="aspect-auto h-6 hover:scale-95"
             alt="ko-fi"
             src="/kofi.png"
           />
