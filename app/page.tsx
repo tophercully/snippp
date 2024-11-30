@@ -29,10 +29,10 @@ const Home = () => {
               id="desc"
               className="text-md flex w-fit flex-col text-left text-black md:p-0 md:text-4xl"
             >
-              <p className="mb-6 w-full max-w-[50ch] self-start rounded-md text-xl backdrop-blur-sm md:text-3xl dark:text-white">
+              <h3 className="mb-6 w-full max-w-[50ch] self-start rounded-md text-xl backdrop-blur-sm md:text-3xl dark:text-white">
                 Join a community of developers building reusable code snippets
                 and toolkits. Open Source and free to use.
-              </p>
+              </h3>
             </div>
           </div>
           <div className="relative hidden h-1/2 w-2/3 flex-col items-center justify-center xl:flex">

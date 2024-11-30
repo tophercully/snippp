@@ -1,7 +1,6 @@
 "use client";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import React, { useEffect, useState, useCallback } from "react";
-import { GoogleUser, Snippet } from "../../src/types/typeInterfaces";
+import { Snippet } from "../../src/types/typeInterfaces";
 import { useParams } from "next/navigation";
 import api from "@/app/src/backend/api";
 import { Navbar } from "@/app/src/components/nav/Navbar";
@@ -9,6 +8,7 @@ import { LoadingSpinner } from "@/app/src/components/universal/LoadingSpinner";
 import { Display } from "@/app/src/components/browser/Display";
 import { Footer } from "@/app/src/components/nav/Footer";
 import Link from "next/link";
+import { useUser } from "../contexts/UserContext";
 
 type SnippetMod = {
   favoriteStatus?: boolean;
@@ -20,7 +20,7 @@ type SnippetMod = {
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 const SnippetPageContent: React.FC = () => {
-  const [userProfile] = useLocalStorage<GoogleUser | null>("userProfile", null);
+  const { userProfile } = useUser();
   const [selection, setSelection] = useState<Snippet | null>(null);
   const [snippetMods, setSnippetMods] = useState<SnippetMods>({});
   const [isLoading, setIsLoading] = useState(true);
