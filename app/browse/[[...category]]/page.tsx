@@ -83,7 +83,7 @@ const BrowserPage: React.FC = () => {
           key={snippet.snippetID}
           href={`/snippet/${snippet.snippetID}`}
         >
-          <p>{snippet.name}</p>
+          {`${snippet.name} - ${snippet.author}`}
         </Link>
       ))}
     </>
