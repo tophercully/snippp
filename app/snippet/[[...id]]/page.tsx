@@ -83,6 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 }
+
 const SnippetPage: React.FC = () => {
   return <SnippetPageContent />;
 };
