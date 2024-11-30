@@ -44,7 +44,7 @@ const ProfileDropdown: React.FC = () => {
             onClick={toggleDropdown}
             src={userProfile.picture || "/person.svg"}
             className={`z-30 aspect-square max-h-12 cursor-pointer ${isDropdownOpen ? "rounded-t-sm" : "rounded-sm"} bg-base-950`}
-            alt="Profile"
+            alt="Profile Picture"
           />
           {isDropdownOpen && (
             <div className="absolute right-0 z-20 flex max-h-[25vh] w-48 flex-col rounded-sm rounded-tr-none bg-base-950 shadow-lg ring-1 ring-base-50 ring-opacity-5">

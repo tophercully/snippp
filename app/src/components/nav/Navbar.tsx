@@ -14,6 +14,7 @@ export const Navbar: React.FC = () => {
           >
             <img
               src="/snippp1x1.svg"
+              alt="Snippp Logo"
               className="h-10 w-10 brightness-0 invert dark:invert-0"
             />
             <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:px-3">
