@@ -21,6 +21,16 @@ export const metadata: Metadata = {
   icons: { icon: "/snippp1x1.svg" },
 };
 
+export const Head = () => (
+  <head>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9619673959926931"
+      crossOrigin="anonymous"
+    ></script>
+  </head>
+);
+
 export default function RootLayout({
   children,
 }: Readonly<{
