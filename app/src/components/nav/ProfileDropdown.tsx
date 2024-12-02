@@ -26,7 +26,7 @@ const ProfileDropdown: React.FC = () => {
       {!userProfile && (
         <button
           onClick={handleSignIn}
-          className="group flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
+          className="group ml-auto flex h-full items-center rounded-sm bg-base-950 text-base-50 duration-100 hover:cursor-pointer hover:bg-base-900 dark:invert"
         >
           <span className="max-w-0 overflow-hidden whitespace-nowrap transition-all duration-100 ease-in-out group-hover:max-w-xs group-hover:pl-4">
             Sign in with Google
