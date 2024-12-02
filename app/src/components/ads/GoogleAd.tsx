@@ -24,10 +24,11 @@ const AdComponent: React.FC<AdComponentProps> = ({
     <ins
       className="adsbygoogle"
       style={{ display: "block" }}
-      data-ad-client="ca-pub-XXXX"
+      data-ad-client="ca-pub-9619673959926931"
       data-ad-slot={adSlot}
       data-ad-format={adFormat}
       data-ad-layout={adLayout}
+      data-full-width-responsive="true"
     ></ins>
   );
 };
