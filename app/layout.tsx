@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserProvider } from "./src/contexts/UserContext";
 import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./src/contexts/NotificationContext";
+import Head from "next/head";
 
 const satoshi = localFont({
   src: "./fonts/Satoshi-Variable.woff",
@@ -21,16 +22,6 @@ export const metadata: Metadata = {
   icons: { icon: "/snippp1x1.svg" },
 };
 
-export const Head = () => (
-  <head>
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9619673959926931"
-      crossOrigin="anonymous"
-    ></script>
-  </head>
-);
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,6 +32,13 @@ export default function RootLayout({
       <GoogleOAuthProvider clientId="673717995116-smr2d3etjmkfqt4p0ns5puq7forh2lc8.apps.googleusercontent.com">
         <UserProvider>
           <html lang="en">
+            <Head>
+              <script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9619673959926931"
+                crossOrigin="anonymous"
+              ></script>
+            </Head>
             <body className={`${satoshi.variable} antialiased`}>
               {children}
               <Analytics />

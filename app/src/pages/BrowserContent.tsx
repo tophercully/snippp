@@ -14,6 +14,7 @@ import { setPageTitle } from "@/app/src/utils/setPageTitle";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import GoogleAd from "../components/ads/GoogleAd";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -135,6 +136,8 @@ const BrowserContent: React.FC = () => {
   return (
     <div className="over flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
+      {/* <GoogleAd /> */}
+      <GoogleAd adSlot="6797801111" />
       <div className="flex h-fit w-full flex-col-reverse shadow-lg lg:h-[96%] lg:flex-row">
         <div className="flex h-full w-full flex-col lg:w-1/3">
           <SearchBar
