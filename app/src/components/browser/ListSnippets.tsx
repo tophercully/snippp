@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
+import { signal } from "@preact-signals/safe-react";
 import { Snippet } from "../../types/typeInterfaces";
 import useCookie from "../../hooks/useCookie";
 import { useKeyboardControls } from "../../hooks/useKeyboardControls";
@@ -115,8 +116,8 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
 
     const commonContent = (
       <>
-        <div className="flex w-4/5 flex-col text-black gap-1">
-          <div className="flex  items-center font-medium gap-2 text-lg">
+        <div className="flex w-4/5 flex-col gap-1 text-black">
+          <div className="flex items-center gap-2 text-lg font-medium">
             {name}
             {!isPublic && (
               <img
