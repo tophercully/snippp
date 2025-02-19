@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
+import { useSignal } from "@preact-signals/safe-react";
 
 type ColorType = "add" | "delete" | "neutral";
 type SizeType = "xs" | "sm" | "md" | "lg";
@@ -35,8 +36,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
   pronounced = false,
   loading = false,
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
+  const showTooltip = useSignal<boolean>(false);
   const getColorClass = (): string => {
     switch (colorType) {
       case "add":
@@ -93,7 +93,7 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
 
   const CommonContent = () => (
     <>
-    {tooltip && showTooltip && (
+      {tooltip && showTooltip.value && (
         <div
           className={`absolute bottom-full mb-2 whitespace-nowrap rounded-sm bg-base-800 px-3 py-2 text-sm text-white dark:bg-base-100 dark:text-black ${getTooltipPositionClass()}`}
         >
@@ -106,8 +106,8 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
       <button
         onClick={onClick}
         disabled={disabled || loading}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
+        onMouseEnter={() => (showTooltip.value = true)}
+        onMouseLeave={() => (showTooltip.value = false)}
         className={`group relative ${fit ? "w-fit" : "w-full"} ${getSize()} overflow-hidden rounded-sm ${getBaseColorClass()} shadow-md duration-75 hover:cursor-pointer hover:text-base-50 dark:shadow-sm dark:shadow-base-600 ${
           loading ? "cursor-wait opacity-70" : ""
         }`}
@@ -118,20 +118,26 @@ const SnipppButton: React.FC<SnipppButtonProps> = ({
         />
         <span className="relative">{loading ? "Working..." : children}</span>
       </button>
-      </>
-  )
-
-  if(href) {
-    return (
-    <Link href={href} className={`relative ${fit ? "inline-block" : "w-full"} ${className}`}>
-     <CommonContent/>
-    </Link>
-  );} else {
-    return (
-    <div className={`relative ${fit ? "inline-block" : "w-full"} ${className}`}>
-     <CommonContent/>
-    </div>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={`relative ${fit ? "inline-block" : "w-full"} ${className}`}
+      >
+        <CommonContent />
+      </Link>
+    );
+  } else {
+    return (
+      <div
+        className={`relative ${fit ? "inline-block" : "w-full"} ${className}`}
+      >
+        <CommonContent />
+      </div>
+    );
   }
 };
 
