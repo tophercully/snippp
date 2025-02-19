@@ -134,7 +134,10 @@ export const ListLists: React.FC<UserListsProps> = ({
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden">
+    <div
+      id="listLists"
+      className="flex h-full w-full flex-col overflow-y-hidden"
+    >
       <div>
         <h1 className="flex items-center justify-between bg-base-150 p-4 font-bold dark:bg-base-850 dark:text-base-50">
           {`${profile ? profile.name.toUpperCase() : "User"}'S LISTS`}

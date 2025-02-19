@@ -1,11 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import axios from "axios";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { track } from "@vercel/analytics";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
 import { GoogleUser } from "../types/typeInterfaces";
+import { useSignal } from "@preact-signals/safe-react";
 
 // Interfaces for type safety
 interface UserContextType {
@@ -20,16 +21,17 @@ interface UserContextType {
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // State management with synchronization to cookies
-  const [userToken, setUserToken] = useState<string | null>(
-    () => getCookie("userToken") as string | null,
+  // Signal management with synchronization to cookies
+  const userToken = useSignal<string | null>(
+    getCookie("userToken") as string | null,
   );
-  const [userProfile, setUserProfile] = useState<GoogleUser | null>(() => {
-    const storedProfile = getCookie("userProfile") as string | null;
-    return storedProfile ? JSON.parse(storedProfile) : null;
-  });
-  const [isUserCreated, setIsUserCreated] = useState<boolean>(
-    () => getCookie("isUserCreated") === "true",
+  const userProfile = useSignal<GoogleUser | null>(
+    (getCookie("userProfile") as string | null) ?
+      JSON.parse(getCookie("userProfile") as string)
+    : null,
+  );
+  const isUserCreated = useSignal<boolean>(
+    getCookie("isUserCreated") === "true",
   );
 
   // Updated setters to sync with cookies
@@ -41,7 +43,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       deleteCookie("userToken");
     }
-    setUserToken(token);
+    userToken.value = token;
   };
 
   const updateUserProfile = (profile: GoogleUser | null) => {
@@ -52,14 +54,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       deleteCookie("userProfile");
     }
-    setUserProfile(profile);
+    userProfile.value = profile;
   };
 
   const updateIsUserCreated = (created: boolean) => {
     setCookie("isUserCreated", created.toString(), {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
-    setIsUserCreated(created);
+    isUserCreated.value = created;
   };
 
   // Google login hook
@@ -80,13 +82,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch user profile effect
   useEffect(() => {
     const getProfile = async () => {
-      if (userToken && !userProfile) {
+      if (userToken.value && !userProfile.value) {
         try {
           const res = await axios.get(
-            `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`,
+            `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken.value}`,
             {
               headers: {
-                Authorization: `Bearer ${userToken}`,
+                Authorization: `Bearer ${userToken.value}`,
                 Accept: "application/json",
               },
             },
@@ -129,19 +131,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     getProfile();
-  }, [userToken, userProfile]);
+  }, [userToken.value, userProfile.value]);
 
   // Create user effect
   useEffect(() => {
     const checkAndCreateUser = async () => {
-      if (userProfile && !isUserCreated) {
+      if (userProfile.value && !isUserCreated.value) {
         try {
           // Check if user already exists before creating
-          const existingProfile = await fetchUserProfile(userProfile.id);
+          const existingProfile = await fetchUserProfile(userProfile.value.id);
 
           if (!existingProfile) {
             // Only create user if profile doesn't exist
-            await newUser(userProfile);
+            await newUser(userProfile.value);
             updateIsUserCreated(true);
           } else {
             // If profile exists, mark as created
@@ -154,14 +156,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     checkAndCreateUser();
-  }, [userProfile, isUserCreated]);
+  }, [userProfile.value, isUserCreated.value]);
 
   return (
     <UserContext.Provider
       value={{
-        userToken,
-        userProfile,
-        isUserCreated,
+        userToken: userToken.value,
+        userProfile: userProfile.value,
+        isUserCreated: isUserCreated.value,
         login,
         logout,
       }}

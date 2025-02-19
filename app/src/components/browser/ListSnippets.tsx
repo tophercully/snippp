@@ -3,8 +3,8 @@ import React, { useRef, useEffect, useState } from "react";
 import { Snippet } from "../../types/typeInterfaces";
 import useCookie from "../../hooks/useCookie";
 import { useKeyboardControls } from "../../hooks/useKeyboardControls";
-import { simplifyNumber } from "../../utils/simplifyNumber";
-import Link from "next/link";
+import { useWindowSize } from "@uidotdev/usehooks";
+import ListSnippetItem from "./ListSnippetItem";
 
 interface DisplaySelectionsProps {
   selection: Snippet | null;
@@ -31,6 +31,9 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   );
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
+  const mobileItemRefs = useRef<(HTMLElement | null)[]>([]);
+  const { width } = useWindowSize();
+  const isMobile = (width as number) < 768;
   const [isEditing] = useCookie("isEditingList", false);
   const [isAdding] = useCookie("isAddingList", false);
   const [isEditingProfile] = useCookie("isEditingProfile", false);
@@ -42,23 +45,27 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
     }
   };
 
-  const scrollToSelectedItem = () => {
-    if (itemRefs.current[selectedIndex]) {
-      itemRefs.current[selectedIndex]?.scrollIntoView({
-        behavior: "auto",
-        block: "nearest",
-      });
-    }
-  };
-
   useEffect(() => {
-    scrollToSelectedItem();
-  }, [selectedIndex]);
+    if (itemRefs.current[selectedIndex]) {
+      if (isMobile) {
+        mobileItemRefs.current[selectedIndex]?.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+      } else {
+        itemRefs.current[selectedIndex]?.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+      }
+    }
+  }, [selection, selectedIndex, isMobile]);
 
   const keyboardControlOptions =
     !isEditing && !isAdding && !isEditingProfile ?
       {
         arrowUp: (event: KeyboardEvent) => {
+          event.preventDefault();
           if (!event.ctrlKey && !event.metaKey) {
             setSelectedIndex((prev) => {
               let newIndex;
@@ -73,6 +80,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
           }
         },
         arrowDown: (event: KeyboardEvent) => {
+          event.preventDefault();
           if (!event.ctrlKey && !event.metaKey) {
             setSelectedIndex((prev) => {
               let newIndex;
@@ -94,80 +102,6 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
     itemRefs.current = itemRefs.current.slice(0, snippets.length);
   }, [snippets]);
 
-  const Item = ({ item, index }: { item: Snippet; index: number }) => {
-    const {
-      snippetID,
-      name,
-      author,
-      favoriteCount,
-      isFavorite,
-      public: isPublic,
-    } = item;
-
-    const mod = snippetMods[Number(snippetID)];
-
-    const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount ?? 0;
-    const favorited = mod?.favoriteStatus ?? isFavorite ?? false;
-    const selectedClass =
-      index === selectedIndex ?
-        "invert dark:invert-0"
-      : "active:bg-base-150 dark:invert hover:bg-base-100";
-
-    const commonContent = (
-      <>
-        <div className="flex w-4/5 flex-col text-black gap-1">
-          <div className="flex  items-center font-medium gap-2 text-lg">
-            {name}
-            {!isPublic && (
-              <img
-                src="/lock.svg"
-                className="mr-auto h-5 invert"
-                alt="Private"
-              />
-            )}
-          </div>
-          <h1 className="text-xs">{author}</h1>
-        </div>
-        <div className="ml-5 flex w-fit flex-col items-end justify-center gap-3 justify-self-end">
-          <div className="flex items-center justify-end gap-1">
-            <img
-              src={favorited ? "/heart-full.svg" : "/heart-empty.svg"}
-              className="ml-auto h-5"
-              alt="Favorites"
-            />
-            <p>{simplifyNumber(modifiedFavoriteCount)}</p>
-          </div>
-        </div>
-      </>
-    );
-
-    return (
-      <>
-        <div
-          ref={(el) => {
-            itemRefs.current[index] = el;
-          }}
-          className={`hidden w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-3 pb-5 last:border-none hover:cursor-pointer md:flex ${selectedClass}`}
-          key={snippetID}
-          onClick={() => handleClick(item, index)}
-        >
-          {commonContent}
-        </div>
-
-        <Link
-          ref={(el) => {
-            itemRefs.current[index] = el;
-          }}
-          className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-3 pb-5 last:border-none hover:cursor-alias md:hidden ${selectedClass}`}
-          key={snippetID + "crawler"}
-          href={`/snippet/${snippetID}`}
-        >
-          {commonContent}
-        </Link>
-      </>
-    );
-  };
-
   return (
     <div
       ref={containerRef}
@@ -175,10 +109,15 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
     >
       {snippets &&
         snippets.map((a, index) => (
-          <Item
+          <ListSnippetItem
             item={a}
             index={index}
             key={a.snippetID}
+            handleClick={handleClick}
+            selectedIndex={selectedIndex}
+            snippetMods={snippetMods}
+            itemRefs={itemRefs}
+            mobileItemRefs={mobileItemRefs}
           />
         ))}
     </div>

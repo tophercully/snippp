@@ -2,13 +2,14 @@
 import { CheckCircle, Info, XCircle } from "lucide-react";
 import React, {
   createContext,
-  useState,
   useEffect,
   useRef,
   useCallback,
   useContext,
+  useState,
 } from "react";
 import ReactDOM from "react-dom";
+import { signal } from "@preact-signals/safe-react";
 
 export type NotifType = "success" | "error" | "info";
 
@@ -26,55 +27,50 @@ export const NotifContext = createContext<NotifContextType | undefined>(
   undefined,
 );
 
+const notifMessage = signal<string | null>(null);
+const notifType = signal<NotifType>("info");
+const notifTimeout = signal<number | undefined>(undefined);
+const notifShowCountdown = signal<boolean>(true);
+
 export const NotifProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [notifMessage, setNotifMessage] = useState<string | null>(null);
-  const [notifType, setNotifType] = useState<NotifType>("info");
-  const [notifTimeout, setNotifTimeout] = useState<number | undefined>(
-    undefined,
-  );
-  const [notifShowCountdown, setNotifShowCountdown] = useState<boolean>(true);
+  const showNotif = (
+    message: string,
+    type: NotifType,
+    timeout?: number,
+    showCountdown: boolean = true,
+  ) => {
+    notifMessage.value = message;
+    notifType.value = type;
+    notifTimeout.value = timeout;
+    notifShowCountdown.value = showCountdown;
+  };
 
-  const showNotif = useCallback(
-    (
-      message: string,
-      type: NotifType,
-      timeout?: number,
-      showCountdown: boolean = true,
-    ) => {
-      setNotifMessage(message);
-      setNotifType(type);
-      setNotifTimeout(timeout);
-      setNotifShowCountdown(showCountdown);
-    },
-    [],
-  );
-
-  const hideNotif = useCallback(() => {
-    setNotifMessage(null);
-    setNotifType("info");
-    setNotifTimeout(undefined);
-    setNotifShowCountdown(true);
-  }, []);
+  const hideNotif = () => {
+    notifMessage.value = null;
+    notifType.value = "info";
+    notifTimeout.value = undefined;
+    notifShowCountdown.value = true;
+  };
 
   return (
     <NotifContext.Provider value={{ showNotif, hideNotif }}>
       {children}
-      {notifMessage &&  ReactDOM.createPortal(
-            <Notif
-              message={notifMessage}
-              type={notifType}
-              onClose={hideNotif}
-              timeout={notifTimeout}
-              showCountdown={notifShowCountdown}
-            />,
-            document.body
-          )}
+      {notifMessage.value &&
+        ReactDOM.createPortal(
+          <Notif
+            message={notifMessage.value}
+            type={notifType.value}
+            onClose={hideNotif}
+            timeout={notifTimeout.value}
+            showCountdown={notifShowCountdown.value}
+          />,
+          document.body,
+        )}
     </NotifContext.Provider>
   );
 };
-
 
 interface NotifProps {
   message: string;
@@ -101,35 +97,33 @@ const Notif: React.FC<NotifProps> = ({
   }, [onClose]);
 
   useEffect(() => {
-    setIsVisible(true);
+    // Set visible after a brief delay to ensure mount animation
+    const showTimer = setTimeout(() => setIsVisible(true), 10);
 
     if (timeout) {
       const startTime = Date.now();
       const tick = () => {
         const elapsed = Date.now() - startTime;
         const remaining = Math.max(0, timeout - elapsed);
-        setProgress((remaining / timeout) * 100);
 
         if (remaining > 0) {
+          setProgress((remaining / timeout) * 100);
           timerRef.current = setTimeout(tick, 16); // ~60 fps
         } else {
           setProgress(0);
-          setTimeout(handleClose, 100); // Slight delay to ensure the bar reaches 0
+          handleClose();
         }
       };
 
       if (showCountdown) {
         timerRef.current = setTimeout(tick, 16);
       } else {
-        timerRef.current = setTimeout(tick, 16);
-        // timerRef.current = setTimeout(
-        //   () => setTimeout(handleClose, timeout),
-        //   timeout,
-        // );
+        timerRef.current = setTimeout(handleClose, timeout);
       }
     }
 
     return () => {
+      clearTimeout(showTimer);
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
@@ -146,62 +140,49 @@ const Notif: React.FC<NotifProps> = ({
     : type === "error" ? "bg-red-500"
     : "bg-blue-600";
 
-  // const notifIcon =
-  //   type === "success" ? "/check.svg"
-  //   : type === "error" ? "/exclamation.svg"
-  //   : "/info.svg";
-
   const notifIconClass = `${iconColor} flex aspect-square h-6 items-center justify-center rounded-full p-1`;
-  const NotifIcon = () => {
-    if (type === "success") {
-      return (
-        <CheckCircle
-          color="white"
-          className={notifIconClass}
-        />
-      );
-    } else if (type === "error") {
-      return (
-        <XCircle
-          color="white"
-          className={notifIconClass}
-        />
-      );
-    } else {
-      return (
-        <Info
-          color="white"
-          className={notifIconClass}
-        />
-      );
-    }
-  };
+
   return (
     <div
-      className={`fixed bottom-4 right-4 transition-all duration-200 ease-in-out ${
-        isVisible ?
-          "translate-x-0 transform opacity-100"
-        : "translate-x-full transform opacity-0"
+      className={`fixed bottom-4 right-4 transition-all duration-300 ease-in-out ${
+        isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       }`}
     >
       <div
         className={`${borderColor} relative flex max-w-[80vw] flex-col rounded-xl border bg-base-50 p-4 text-black shadow-lg dark:bg-base-950 dark:text-white`}
       >
         <div className="flex items-center">
-          <NotifIcon />
+          {type === "success" && (
+            <CheckCircle
+              color="white"
+              className={notifIconClass}
+            />
+          )}
+          {type === "error" && (
+            <XCircle
+              color="white"
+              className={notifIconClass}
+            />
+          )}
+          {type === "info" && (
+            <Info
+              color="white"
+              className={notifIconClass}
+            />
+          )}
           <p className="mx-4">{message}</p>
-          <div
+          <button
             onClick={handleClose}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-xl bg-white text-gray-800 focus:outline-none"
           >
             <span>✕</span>
-          </div>
+          </button>
         </div>
         {timeout && showCountdown && (
           <div className="mt-2 h-1 w-full bg-white bg-opacity-30">
             <div
               className={`h-full ${iconColor} transition-all duration-100 ease-linear`}
-              style={{ width: `${progress}%`, float: "right" }}
+              style={{ width: `${progress}%` }}
             />
           </div>
         )}
@@ -217,3 +198,5 @@ export const useNotif = (): NotifContextType => {
   }
   return context;
 };
+
+export default NotifProvider;
