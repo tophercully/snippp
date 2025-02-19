@@ -5,6 +5,7 @@ import useCookie from "../../hooks/useCookie";
 import { useKeyboardControls } from "../../hooks/useKeyboardControls";
 import { simplifyNumber } from "../../utils/simplifyNumber";
 import Link from "next/link";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 interface DisplaySelectionsProps {
   selection: Snippet | null;
@@ -31,6 +32,9 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   );
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
+  const mobileItemRefs = useRef<(HTMLElement | null)[]>([]);
+  const { width } = useWindowSize();
+  const isMobile = (width as number) < 768;
   const [isEditing] = useCookie("isEditingList", false);
   const [isAdding] = useCookie("isAddingList", false);
   const [isEditingProfile] = useCookie("isEditingProfile", false);
@@ -42,18 +46,19 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
     }
   };
 
-  const scrollToSelectedItem = () => {
-    if (itemRefs.current[selectedIndex]) {
-      itemRefs.current[selectedIndex]?.scrollIntoView({
-        behavior: "instant",
-        block: "center",
-      });
-    }
-  };
-
   useEffect(() => {
-    scrollToSelectedItem();
-  }, [selectedIndex]);
+    if (itemRefs.current[selectedIndex]) {
+      isMobile ?
+        mobileItemRefs.current[selectedIndex]?.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        })
+      : itemRefs.current[selectedIndex]?.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+    }
+  }, [selection]);
 
   const keyboardControlOptions =
     !isEditing && !isAdding && !isEditingProfile ?
@@ -135,7 +140,9 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
               className="ml-auto h-5"
               alt="Favorites"
             />
-            <p>{simplifyNumber(modifiedFavoriteCount)}</p>
+            <p className="dark:invert">
+              {simplifyNumber(modifiedFavoriteCount)}
+            </p>
           </div>
         </div>
       </>
@@ -156,7 +163,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
 
         <Link
           ref={(el) => {
-            itemRefs.current[index] = el;
+            mobileItemRefs.current[index] = el;
           }}
           className={`flex w-full flex-row justify-between border-b border-dashed border-base-300 bg-base-50 p-3 pb-5 last:border-none hover:cursor-alias md:hidden ${selectedClass}`}
           key={snippetID + "crawler"}

@@ -185,7 +185,9 @@ export const SnippetExplorer: React.FC<DisplaySelectionsProps> = ({
                 src="/arrow-left.svg"
                 className="h-full invert"
               />
-              <p className="hidden group-hover:flex">BACK TO LISTS</p>
+              <p className="hidden group-hover:flex dark:invert">
+                BACK TO LISTS
+              </p>
             </button>
             <div className="rounded-sm bg-base-150 p-4 text-base-950 dark:bg-base-800 dark:text-base-50">
               <div className="flex items-center justify-between">
