@@ -1,5 +1,5 @@
 import { ListData, Snippet } from "../../types/typeInterfaces";
-import { Signal, signal, useSignal } from "@preact-signals/safe-react";
+import { Signal, signal } from "@preact-signals/safe-react";
 import sortByProperty from "../../utils/sortByProperty";
 import { useEffect } from "react";
 import SearchBar from "../browser/SearchBar";
@@ -57,8 +57,8 @@ export const SnippetExplorer: React.FC<DisplaySelectionsProps> = ({
   const { showNotif } = useNotif();
   const { userProfile } = useUser();
   const [isAdding] = useCookie("isAddingList", false);
-  const [isEditing, setIsEditing] = useCookie("isEditingList", false);
-  const newList = useSignal<ListData>(list as ListData);
+  const [isEditing] = useCookie("isEditingList", false);
+  // const newList = useSignal<ListData>(list as ListData);
   useEffect(() => {
     const filterAndSortSnippets = () => {
       let filteredSnippets = snippets.filter(

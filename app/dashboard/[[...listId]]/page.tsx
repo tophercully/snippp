@@ -50,8 +50,8 @@ const Dashboard = () => {
     [userProfile],
   );
   const { showNotif } = useNotif();
-  const [isAdding] = useCookie("isAddingList", false);
-  const [isEditing, setIsEditing] = useCookie("isEditingList", false);
+  // const [isAdding] = useCookie("isAddingList", false);
+  // const [isEditing, setIsEditing] = useCookie("isEditingList", false);
   const [lists, setLists] = useCookie<ListData[]>(
     "dashboardCachedLists",
     defaultLists,
