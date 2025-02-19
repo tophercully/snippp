@@ -12,10 +12,11 @@ import searchAndScoreSnippets from "@/app/src/utils/Search";
 import searchSuggestions from "@/app/src/utils/searchSuggestions";
 import { setPageTitle } from "@/app/src/utils/setPageTitle";
 import Link from "next/link";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import GoogleAd from "../components/ads/GoogleAd";
-import { computed, effect, signal } from "@preact-signals/safe-react";
+import { computed, signal } from "@preact-signals/safe-react";
 import sortByProperty from "../utils/sortByProperty";
+import { usePathname } from "next/navigation"; // Import usePathname
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -29,15 +30,15 @@ const snippetMods = signal<SnippetMods>({});
 const query = signal<string>("");
 const sortMethod = signal<SortableSnippetKeys>("copyCount");
 const sortOrder = signal<SortOrder>("desc");
-const category = window.location.pathname.split("/").slice(2, 3)[0] || "";
-console.log(`category: ${category}`);
+const category = signal<string>(""); // Initialize category as a signal
+
 const filteredAndSortedSnippets = computed(() => {
   let filteredSnippets = snippets.value.filter(
     (snippet) => !snippetMods.peek()[snippet.snippetID]?.isDeleted,
   );
 
-  if (category && categories[category[0]]) {
-    const categoryTags = categories[category[0]].tags;
+  if (category.value && categories[category.value]) {
+    const categoryTags = categories[category.value].tags;
     filteredSnippets = filteredSnippets.filter((snippet) =>
       categoryTags.some((catTag) =>
         snippet.tags
@@ -49,26 +50,33 @@ const filteredAndSortedSnippets = computed(() => {
     );
   }
 
-  if (query) {
+  if (query.value) {
     return searchAndScoreSnippets(query.value, filteredSnippets);
   }
 
   return sortByProperty(filteredSnippets, sortMethod.value, sortOrder.value);
 });
+
 const selection = signal<Snippet | null>(null);
 const isLoading = signal<boolean>(true);
 const isTransitioning = signal<boolean>(false);
 
 const BrowserContent: React.FC = () => {
+  const pathname = usePathname(); // Get the current pathname
+
+  // Update the category signal whenever the pathname changes
   useEffect(() => {
-    if (category) {
+    const newCategory = pathname.split("/").slice(2, 3)[0] || "";
+    category.value = newCategory;
+
+    if (newCategory) {
       setPageTitle(
-        `${categories[category] ? categories[category].name : "All"} Snippets`,
+        `${categories[newCategory] ? categories[newCategory].name : "All"} Snippets`,
       );
     } else {
       setPageTitle("All Snippets");
     }
-  }, []);
+  }, [pathname]);
 
   const fetchSnippets = async () => {
     try {
@@ -89,9 +97,10 @@ const BrowserContent: React.FC = () => {
     }
   };
 
+  // Fetch snippets when the component mounts or when the category changes
   useEffect(() => {
     fetchSnippets();
-  }, []);
+  }, [category.value]); // Re-fetch snippets when category changes
 
   const updateSnippetMod = (id: number, mod: Partial<SnippetMod>) => {
     snippetMods.value = {
@@ -113,8 +122,8 @@ const BrowserContent: React.FC = () => {
             query={query.value}
             setQuery={(newQuery) => (query.value = newQuery as string)}
             placeHolder={
-              category ?
-                `search ${categories[category]?.name.toLowerCase()} snipppets`
+              category.value ?
+                `search ${categories[category.value]?.name.toLowerCase()} snipppets`
               : searchAllPlaceholder
             }
             setSortMethod={(newValue) => (sortMethod.value = newValue)}
