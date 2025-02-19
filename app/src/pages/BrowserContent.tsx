@@ -17,6 +17,7 @@ import GoogleAd from "../components/ads/GoogleAd";
 import { computed, signal } from "@preact-signals/safe-react";
 import sortByProperty from "../utils/sortByProperty";
 import { usePathname } from "next/navigation"; // Import usePathname
+import { useUser } from "../contexts/UserContext";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -63,6 +64,7 @@ const isTransitioning = signal<boolean>(false);
 
 const BrowserContent: React.FC = () => {
   const pathname = usePathname(); // Get the current pathname
+  const { userProfile } = useUser();
 
   // Update the category signal whenever the pathname changes
   useEffect(() => {
@@ -82,11 +84,7 @@ const BrowserContent: React.FC = () => {
     try {
       isLoading.value = true;
       isTransitioning.value = true;
-      const userProfile = JSON.parse(
-        localStorage.getItem("userProfile") || "null",
-      );
-      const userID = userProfile ? userProfile.id : undefined;
-      const snippetsArray = await loadAllSnippets(userID);
+      const snippetsArray = await loadAllSnippets(userProfile?.id);
       console.log(`Setting snippets to ${snippetsArray.length} snippets`);
       snippets.value = snippetsArray;
       snippetMods.value = {}; // Reset snippet mods when snippets change

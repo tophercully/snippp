@@ -35,7 +35,6 @@ const ListSnippetItem: React.FC<ListSnippetItemProps> = ({
     isFavorite,
     public: isPublic,
   } = item;
-
   const mod = snippetMods[Number(snippetID)];
   const modifiedFavoriteCount = mod?.favoriteCount ?? favoriteCount ?? 0;
   const favorited = mod?.favoriteStatus ?? isFavorite ?? false;

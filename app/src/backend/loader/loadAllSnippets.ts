@@ -1,6 +1,5 @@
 import { Snippet } from "../../types/typeInterfaces";
 
-
 export const loadAllSnippets = async (userID?: string): Promise<Snippet[]> => {
   try {
     const url =
