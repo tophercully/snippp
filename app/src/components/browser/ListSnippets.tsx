@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import { signal } from "@preact-signals/safe-react";
 import { Snippet } from "../../types/typeInterfaces";
 import useCookie from "../../hooks/useCookie";
 import { useKeyboardControls } from "../../hooks/useKeyboardControls";
@@ -46,8 +45,8 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
   const scrollToSelectedItem = () => {
     if (itemRefs.current[selectedIndex]) {
       itemRefs.current[selectedIndex]?.scrollIntoView({
-        behavior: "auto",
-        block: "nearest",
+        behavior: "instant",
+        block: "center",
       });
     }
   };
