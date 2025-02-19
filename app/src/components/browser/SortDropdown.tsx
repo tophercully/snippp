@@ -62,10 +62,10 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       {isOpen && (
         <div className="absolute right-0 top-full z-50 flex w-52 flex-col items-center gap-3 bg-base-50 p-2 shadow-lg shadow-base-500 dark:border dark:border-black dark:shadow-lg dark:invert">
           <div className="flex w-full flex-col gap-2">
-            <h1 className="p-3 font-bold">SORT BY </h1>
+            <h1 className="p-3 font-bold dark:text-black"> SORT BY </h1>
             <div className="grid grid-cols-1">
               <button
-                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "name" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 dark:text-black ${sortMethod == "name" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("name")}
               >
                 Alphabetical
@@ -75,7 +75,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 />
               </button>
               <button
-                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "snippetID" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 dark:text-black ${sortMethod == "snippetID" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("snippetID")}
               >
                 Time
@@ -85,14 +85,14 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                 />
               </button>
               <button
-                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 dark:text-black ${sortMethod == "favoriteCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("favoriteCount")}
               >
                 Popularity
                 <img src="/heart-full.svg" />
               </button>
               <button
-                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 ${sortMethod == "copyCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
+                className={`flex w-full items-center justify-between gap-3 bg-base-50 p-3 dark:text-black ${sortMethod == "copyCount" ? "invert" : "hover:bg-base-150 dark:hover:bg-base-200"}`}
                 onClick={() => setSortMethod("copyCount")}
               >
                 Most Copied

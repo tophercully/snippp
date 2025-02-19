@@ -104,3 +104,12 @@ export interface EditableUserFields {
   bio?: string;
   profilePicture?: string;
 }
+
+export type SortOrder = "asc" | "desc";
+
+export type SnippetMod = {
+  favoriteStatus?: boolean;
+  favoriteCount?: number;
+  copyCount?: number;
+  isDeleted?: boolean;
+};
