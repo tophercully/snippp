@@ -63,6 +63,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
     !isEditing && !isAdding && !isEditingProfile ?
       {
         arrowUp: (event: KeyboardEvent) => {
+          event.preventDefault();
           if (!event.ctrlKey && !event.metaKey) {
             setSelectedIndex((prev) => {
               let newIndex;
@@ -77,6 +78,7 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
           }
         },
         arrowDown: (event: KeyboardEvent) => {
+          event.preventDefault();
           if (!event.ctrlKey && !event.metaKey) {
             setSelectedIndex((prev) => {
               let newIndex;

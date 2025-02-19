@@ -71,7 +71,6 @@ export const Display = ({
     forkCount,
   } = selection;
   const { showNotif } = useNotif();
-  const router = useRouter();
   const snippetMod = snippetMods[snippetID] || {};
   const [isAdding, setIsAdding] = useSessionStorage("isAddingList", false);
   const isForked = Boolean(forkedFrom != null);
@@ -505,8 +504,7 @@ export const Display = ({
           isLoading={isAdding}
           handleShare={handleShare}
           showDeleteConfirm={showDeleteConfirm}
-          handleDeleteSnippet={handleDeleteSnippet}
-          showListPopup={showListPopup.value}
+          showListPopup={showListPopup}
           fetchUserLists={fetchUserLists}
           authorID={authorID}
         />

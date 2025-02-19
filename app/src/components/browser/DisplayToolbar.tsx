@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useUser } from "../../contexts/UserContext";
 import SnipppButton from "../universal/SnipppButton";
-import { track } from "@vercel/analytics";
 import { Snippet } from "../../types/typeInterfaces";
 import { Signal } from "@preact-signals/safe-react";
 
@@ -15,8 +14,7 @@ interface DisplayToolbarProps {
   handleShare: () => Promise<void>;
   isLoading: boolean;
   handleRemoveFavorite: () => void;
-  handleDeleteSnippet: () => void;
-  showListPopup: boolean;
+  showListPopup: Signal<boolean>;
   showDeleteConfirm: Signal<boolean>;
 }
 
@@ -30,7 +28,6 @@ const DisplayToolbar: React.FC<DisplayToolbarProps> = ({
   handleShare,
   authorID,
   handleRemoveFavorite,
-  handleDeleteSnippet,
   showListPopup,
   showDeleteConfirm,
 }) => {
@@ -101,7 +98,7 @@ const DisplayToolbar: React.FC<DisplayToolbarProps> = ({
           <>
             <SnipppButton
               onClick={() => {
-                showListPopup = true;
+                showListPopup.value = true;
                 fetchUserLists();
               }}
               colorType="neutral"
@@ -147,10 +144,7 @@ const DisplayToolbar: React.FC<DisplayToolbarProps> = ({
           className="ml-auto flex w-full gap-3 lg:w-fit"
         >
           <SnipppButton
-            onClick={() => {
-              track("Open Editor");
-              router.push(`/builder/${selection.snippetID}`);
-            }}
+            href={`/builder/${selection.snippetID}`}
             colorType="neutral"
             size="md"
             fit={false}
