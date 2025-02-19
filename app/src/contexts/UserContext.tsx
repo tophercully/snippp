@@ -6,7 +6,7 @@ import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { track } from "@vercel/analytics";
 import { getCookie, setCookie, deleteCookie } from "cookies-next";
 import { GoogleUser } from "../types/typeInterfaces";
-import { signal, useSignal, useComputed } from "@preact-signals/safe-react";
+import { useSignal } from "@preact-signals/safe-react";
 
 // Interfaces for type safety
 interface UserContextType {

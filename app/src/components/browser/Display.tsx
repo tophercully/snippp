@@ -20,7 +20,6 @@ import { track } from "@vercel/analytics";
 import { formatDescription } from "../../utils/formatDescription";
 import { Snippet, SnippetMod } from "../../types/typeInterfaces";
 import { useNotif } from "../../contexts/NotificationContext";
-import { useRouter } from "next/navigation";
 import { categories } from "../../data/categories";
 import { useKeyboardControls } from "../../hooks/useKeyboardControls";
 import Link from "next/link";
@@ -551,52 +550,55 @@ export const Display = ({
               </div>
               {isLoadingLists.value ?
                 <p className="mb-4 dark:text-base-200">Loading lists...</p>
-              : <div className="mb-4 flex max-h-[40svh] flex-col gap-2">
-                  {userLists.value.length > 0 ?
-                    userLists.value.map((list) => (
-                      <div
-                        key={list.listid}
-                        className="flex gap-2"
-                      >
-                        <button
+              : <>
+                  <div className="mb-4 flex max-h-[50vh] flex-col gap-2 overflow-y-auto overflow-x-visible">
+                    {userLists.value.length > 0 ?
+                      userLists.value.map((list) => (
+                        <div
                           key={list.listid}
-                          onClick={() => handleAddOrRemoveFromList(list)}
-                          className={`flex w-full items-center justify-between rounded-sm p-2 text-left shadow-md ${
-                            list.has_snippet ?
-                              "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
-                            : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
-                          }`}
+                          className="flex gap-2"
                         >
-                          <span>{list.listname}</span>
-                          {list.has_snippet ?
+                          <button
+                            key={list.listid}
+                            onClick={() => handleAddOrRemoveFromList(list)}
+                            className={`flex w-full items-center justify-between rounded-sm p-2 text-left shadow-md ${
+                              list.has_snippet ?
+                                "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-800 dark:text-green-100 dark:hover:bg-green-700"
+                              : "bg-base-100 text-base-950 hover:bg-base-200 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
+                            }`}
+                          >
+                            <span>{list.listname}</span>
+                            {list.has_snippet ?
+                              <img
+                                src="/x.svg"
+                                className="h-5 w-5 invert dark:invert-0"
+                              />
+                            : <img
+                                src="/add.svg"
+                                className="h-5 w-5 invert dark:invert-0"
+                              />
+                            }
+                          </button>
+                          <SnipppButton
+                            size="md"
+                            tooltip="View List in New Tab"
+                            colorType="neutral"
+                            tooltipPosition="right"
+                            onClick={() =>
+                              window.open(
+                                `${window.location.origin}/list/${list.listid}`,
+                              )
+                            }
+                          >
                             <img
-                              src="/x.svg"
-                              className="h-5 w-5 invert dark:invert-0"
+                              src="/opennew.svg"
+                              className="invert group-hover:invert-0 dark:invert-0"
                             />
-                          : <img
-                              src="/add.svg"
-                              className="h-5 w-5 invert dark:invert-0"
-                            />
-                          }
-                        </button>
-                        <SnipppButton
-                          size="md"
-                          tooltip="View List in New Tab"
-                          colorType="neutral"
-                          onClick={() =>
-                            window.open(
-                              `${window.location.origin}/list/${list.listid}`,
-                            )
-                          }
-                        >
-                          <img
-                            src="/opennew.svg"
-                            className="invert group-hover:invert-0 dark:invert-0"
-                          />
-                        </SnipppButton>
-                      </div>
-                    ))
-                  : <p className="dark:text-base-200">No lists available.</p>}
+                          </SnipppButton>
+                        </div>
+                      ))
+                    : <p className="dark:text-base-200">No lists available.</p>}
+                  </div>
                   <p
                     onClick={() => {
                       setIsAdding(true);
@@ -609,7 +611,7 @@ export const Display = ({
                       className="ml-1 h-full dark:invert"
                     />
                   </p>
-                </div>
+                </>
               }
             </div>
           </div>

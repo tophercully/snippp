@@ -47,17 +47,19 @@ export const ListSnippets: React.FC<DisplaySelectionsProps> = ({
 
   useEffect(() => {
     if (itemRefs.current[selectedIndex]) {
-      isMobile ?
+      if (isMobile) {
         mobileItemRefs.current[selectedIndex]?.scrollIntoView({
           behavior: "instant",
           block: "nearest",
-        })
-      : itemRefs.current[selectedIndex]?.scrollIntoView({
+        });
+      } else {
+        itemRefs.current[selectedIndex]?.scrollIntoView({
           behavior: "instant",
           block: "nearest",
         });
+      }
     }
-  }, [selection]);
+  }, [selection, selectedIndex, isMobile]);
 
   const keyboardControlOptions =
     !isEditing && !isAdding && !isEditingProfile ?
