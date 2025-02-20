@@ -26,6 +26,7 @@ import ConfirmationPopup from "../../src/components/modals/ConfirmationPopup";
 import { Display } from "../../src/components/browser/Display";
 import { Footer } from "../../src/components/nav/Footer";
 import EditListPopup from "../../src/components/modals/EditListPopup";
+export const runtime = "edge";
 
 const getHighResGoogleProfilePicture = (pictureUrl: string): string => {
   // Check if the URL is a Google profile picture URL and replace for higher resolution

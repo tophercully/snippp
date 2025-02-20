@@ -1,6 +1,7 @@
 import getBaseURL from "@/app/src/utils/getBaseURL";
 import { neon } from "@neondatabase/serverless";
 import { NextRequest, NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 

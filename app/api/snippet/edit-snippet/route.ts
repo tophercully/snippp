@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -17,7 +18,10 @@ export async function PUT(request: Request) {
   const newParams: UpdateParams = await request.json();
 
   if (!snippetIDToUpdate || !newParams) {
-    return NextResponse.json({ error: "snippetID and update parameters are required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "snippetID and update parameters are required" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -34,9 +38,15 @@ export async function PUT(request: Request) {
     `;
 
     console.log(`Snippet with SnippetID ${snippetIDToUpdate} updated`);
-    return NextResponse.json({ message: "Snippet updated successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Snippet updated successfully" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error updating snippet:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

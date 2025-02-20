@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -16,12 +17,21 @@ export async function PUT(request: Request) {
 
   try {
     const added = await addListPick(listID);
-    return NextResponse.json({
-      message: added ? `List ${listID} added to Staff Picks` : `List ${listID} already in Staff Picks`,
-    }, { status: added ? 201 : 200 });
+    return NextResponse.json(
+      {
+        message:
+          added ?
+            `List ${listID} added to Staff Picks`
+          : `List ${listID} already in Staff Picks`,
+      },
+      { status: added ? 201 : 200 },
+    );
   } catch (error) {
     console.error("Error managing staff picks:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }
 
@@ -34,10 +44,16 @@ export async function DELETE(request: Request) {
 
   try {
     await removeListPick(listID);
-    return NextResponse.json({ message: `List ${listID} removed from Staff Picks` }, { status: 200 });
+    return NextResponse.json(
+      { message: `List ${listID} removed from Staff Picks` },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error managing staff picks:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }
 

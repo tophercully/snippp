@@ -2,6 +2,7 @@ import React from "react";
 import { neon } from "@neondatabase/serverless";
 import BrowserContent from "@/app/src/pages/BrowserContent";
 import Link from "next/link";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 

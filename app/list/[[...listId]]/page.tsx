@@ -15,6 +15,7 @@ import { Display } from "../../src/components/browser/Display";
 import { LoadingSpinner } from "../../src/components/universal/LoadingSpinner";
 import DeleteConfirmationPopup from "../../src/components/modals/DeleteConfirmationPopup";
 import { Footer } from "../../src/components/nav/Footer";
+export const runtime = "edge";
 
 type SortOrder = "asc" | "desc";
 

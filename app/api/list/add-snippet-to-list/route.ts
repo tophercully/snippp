@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -7,7 +8,10 @@ export async function POST(request: Request) {
   const { listId, snippetId } = await request.json();
 
   if (!listId || !snippetId) {
-    return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing required parameters" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -24,9 +28,15 @@ export async function POST(request: Request) {
       WHERE listid = ${listId};
     `;
 
-    return NextResponse.json({ message: "Snippet added to list successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Snippet added to list successfully" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error adding snippet to list:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

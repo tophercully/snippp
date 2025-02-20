@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(
   "postgresql://neondb_owner:tA4rGo6VImgZ@ep-square-rice-a5lxntll-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require",

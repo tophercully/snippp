@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { track } from "@vercel/analytics";
@@ -6,7 +6,10 @@ import { useParams, useRouter } from "next/navigation";
 import { Snippet, SnippetInBuilder } from "@/app/src/types/typeInterfaces";
 import { useNotif } from "@/app/src/contexts/NotificationContext";
 import { loadSnippetById } from "@/app/src/backend/loader/loadSnippetByID";
-import { categorizeLanguage, determineCategories } from "@/app/src/utils/categoryTools";
+import {
+  categorizeLanguage,
+  determineCategories,
+} from "@/app/src/utils/categoryTools";
 import { detectLanguage } from "@/app/src/utils/detectLanguage";
 import { detectFrameworks } from "@/app/src/utils/detectFramework";
 import { countCharacters } from "@/app/src/utils/countCharacters";
@@ -16,9 +19,13 @@ import { Navbar } from "@/app/src/components/nav/Navbar";
 import { LoadingSpinner } from "@/app/src/components/universal/LoadingSpinner";
 import { linePreservedCode } from "@/app/src/utils/linePreservedCode";
 import { Footer } from "@/app/src/components/nav/Footer";
-import { CategoryInfo, categories as allCategories } from "../../src/data/categories";
+import {
+  CategoryInfo,
+  categories as allCategories,
+} from "../../src/data/categories";
 import { useUser } from "@/app/src/contexts/UserContext";
 
+export const runtime = "edge";
 
 const Builder = () => {
   const [message, setMessage] = useState<string | null>(null);
@@ -31,7 +38,7 @@ const Builder = () => {
 
   const { options } = useParams();
   const snippetId = options ? options[0] : null;
-  const forking = options ? options[1]: null;
+  const forking = options ? options[1] : null;
 
   // if (snippetId) {
   //   document.title = `Editor - Snippp`;
@@ -40,7 +47,7 @@ const Builder = () => {
   // }
   const isEditing = Boolean(snippetId);
   const isForking = Boolean(forking);
-  const {userProfile} = useUser();
+  const { userProfile } = useUser();
 
   const [snippet, setSnippet] = useState<SnippetInBuilder | Snippet>({
     authorID: "",

@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -20,15 +21,24 @@ export async function PUT(request: Request) {
       `;
 
       console.log("Update result:", result);
-      return NextResponse.json({ message: "User updated", userUpdated: true }, { status: 200 });
+      return NextResponse.json(
+        { message: "User updated", userUpdated: true },
+        { status: 200 },
+      );
     } catch (error) {
       console.error("Database error:", error);
-      return NextResponse.json({ error: "Database error", details: (error as Error).message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Database error", details: (error as Error).message },
+        { status: 500 },
+      );
     }
   } else {
-    return NextResponse.json({
-      error: "Invalid user profile",
-      details: "Missing id or other required fields",
-    }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: "Invalid user profile",
+        details: "Missing id or other required fields",
+      },
+      { status: 400 },
+    );
   }
 }

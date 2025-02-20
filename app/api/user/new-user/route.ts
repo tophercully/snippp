@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -32,13 +33,19 @@ export async function POST(request: Request) {
                 last_login = CURRENT_TIMESTAMP
             WHERE userId = ${userProfile.id};
           `;
-          return NextResponse.json({ message: "User updated", userUpdated: true }, { status: 200 });
+          return NextResponse.json(
+            { message: "User updated", userUpdated: true },
+            { status: 200 },
+          );
         } else {
           console.log("User exists and no update needed");
-          return NextResponse.json({
-            message: "User exists and no update needed",
-            userUpdated: false,
-          }, { status: 200 });
+          return NextResponse.json(
+            {
+              message: "User exists and no update needed",
+              userUpdated: false,
+            },
+            { status: 200 },
+          );
         }
       } else {
         console.log("Creating new user");
@@ -46,14 +53,23 @@ export async function POST(request: Request) {
           INSERT INTO users (userId, name, email, profile_picture, createdAt, last_login)
           VALUES (${userProfile.id}, ${userProfile.name}, ${userProfile.email}, ${userProfile.picture}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
         `;
-        return NextResponse.json({ message: "New user created", userCreated: true }, { status: 201 });
+        return NextResponse.json(
+          { message: "New user created", userCreated: true },
+          { status: 201 },
+        );
       }
     } catch (error) {
       console.error("Database error:", error);
-      return NextResponse.json({ error: "Database error", details: (error as Error).message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Database error", details: (error as Error).message },
+        { status: 500 },
+      );
     }
   } else {
-    return NextResponse.json({ error: "Invalid user profile" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid user profile" },
+      { status: 400 },
+    );
   }
 }
 

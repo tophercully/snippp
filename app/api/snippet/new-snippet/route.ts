@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -7,7 +8,10 @@ export async function POST(request: Request) {
   const params = await request.json();
 
   if (!params || !params.name || !params.code || !params.authorID) {
-    return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing required parameters" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -24,7 +28,10 @@ export async function POST(request: Request) {
     `;
 
     if (userRows.length === 0) {
-      return NextResponse.json({ error: `User with ID ${params.authorID} not found` }, { status: 404 });
+      return NextResponse.json(
+        { error: `User with ID ${params.authorID} not found` },
+        { status: 404 },
+      );
     }
 
     const authorName = userRows[0].name;
@@ -59,6 +66,9 @@ export async function POST(request: Request) {
     return NextResponse.json(newSnippet, { status: 200 });
   } catch (error) {
     console.error("Error creating new snippet:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

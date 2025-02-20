@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 export async function GET() {
   try {
     return new Response(JSON.stringify({ message: "Test route is working!" }), {

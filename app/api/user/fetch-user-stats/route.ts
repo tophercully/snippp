@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -83,7 +84,10 @@ export async function GET(request: Request) {
     `;
 
     if (rows.length === 0 || rows[0].total_snippets === 0) {
-      return NextResponse.json({ error: "No snippets found for this user" }, { status: 404 });
+      return NextResponse.json(
+        { error: "No snippets found for this user" },
+        { status: 404 },
+      );
     }
 
     const userStats = rows[0];
@@ -125,10 +129,13 @@ export async function GET(request: Request) {
     return NextResponse.json(stats, { status: 200 });
   } catch (error) {
     console.error("Error fetching user stats:", error);
-    return NextResponse.json({
-      error: "Internal Server Error",
-      details: (error as Error).message,
-      stack: (error as Error).stack,
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Internal Server Error",
+        details: (error as Error).message,
+        stack: (error as Error).stack,
+      },
+      { status: 500 },
+    );
   }
 }

@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -17,9 +18,15 @@ export async function DELETE(request: Request) {
       WHERE listID = ${listID};
     `;
 
-    return NextResponse.json({ message: `List with ID ${listID} has been deleted` }, { status: 200 });
+    return NextResponse.json(
+      { message: `List with ID ${listID} has been deleted` },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error deleting list:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

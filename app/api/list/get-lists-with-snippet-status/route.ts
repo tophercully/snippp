@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+export const runtime = "edge";
 
 const sql = neon(process.env.SNIPPET_URL as string);
 
@@ -9,7 +10,10 @@ export async function GET(request: Request) {
   const snippetId = searchParams.get("snippetId");
 
   if (!userId || !snippetId) {
-    return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing required parameters" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -25,6 +29,9 @@ export async function GET(request: Request) {
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("Error fetching lists with snippet status:", error);
-    return NextResponse.json({ error: "Internal Server Error", details: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

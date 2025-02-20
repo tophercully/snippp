@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { neon } from "@neondatabase/serverless";
 import SnippetPageContent from "@/app/src/pages/SnippetContent";
+export const runtime = "edge";
 
 type Props = {
   params: Promise<{ id: string }>;

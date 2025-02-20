@@ -1,4 +1,5 @@
 "use client";
+
 import { Navbar } from "@/app/src/components/nav/Navbar";
 import { useUser } from "@/app/src/contexts/UserContext";
 import { ListData, Snippet, SnippetMod } from "@/app/src/types/typeInterfaces";
@@ -13,6 +14,8 @@ import { Display } from "@/app/src/components/browser/Display";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Footer } from "@/app/src/components/nav/Footer";
+export const runtime = "edge";
+
 type SnippetMods = { [snippetID: number]: SnippetMod };
 
 const snippets = signal<Snippet[]>([]);
