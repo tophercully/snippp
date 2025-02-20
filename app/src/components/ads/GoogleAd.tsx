@@ -11,7 +11,10 @@ const AdComponent: React.FC<AdComponentProps> = ({
   adFormat = "auto",
   adLayout = "",
 }) => {
+  console.log(`AdComponent Rendered`);
+
   useEffect(() => {
+    console.log(`AdComponent Mount`);
     try {
       (window as any).adsbygoogle = (window as any).adsbygoogle || [];
       (window as any).adsbygoogle.push({});

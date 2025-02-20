@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     domains: ["lh3.googleusercontent.com"],
   },
   experimental: {
+    reactCompiler: true,
     swcPlugins: [
       [
         "@preact-signals/safe-react/swc",

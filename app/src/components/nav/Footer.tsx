@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <div className="mt-auto flex w-full items-end justify-between justify-self-end">
+    <div className="mt-auto flex w-full items-end justify-between pt-4">
       <p className="text-sm dark:text-base-50">© 2024 Chris McCully</p>
       <p className="hidden items-end text-sm text-base-500 lg:flex">
         Press {`'?'`} to see keyboard shortcuts
