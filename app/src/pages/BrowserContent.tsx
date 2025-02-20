@@ -113,7 +113,6 @@ const BrowserContent: React.FC = () => {
   return (
     <div className="over flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
-      <GoogleAd adSlot="6797801111" />
       <div className="flex h-fit w-full flex-col-reverse shadow-lg lg:h-[96%] lg:flex-row">
         <div className="flex h-full w-full flex-col lg:w-1/3">
           <SearchBar
@@ -132,15 +131,17 @@ const BrowserContent: React.FC = () => {
             }
           />
           <div className="relative h-full w-full overflow-hidden">
-            <div
-              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${
-                isLoading.value || isTransitioning.value ?
-                  "opacity-100"
-                : "pointer-events-none opacity-0"
-              }`}
-            >
-              <LoadingSpinner />
-            </div>
+            {isLoading && (
+              <div
+                className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${
+                  isLoading.value || isTransitioning.value ?
+                    "opacity-100"
+                  : "pointer-events-none opacity-0"
+                }`}
+              >
+                <LoadingSpinner />
+              </div>
+            )}
             <div
               className={`h-full w-full transition-opacity duration-75 ${
                 isLoading.value || isTransitioning.value ?
@@ -184,6 +185,9 @@ const BrowserContent: React.FC = () => {
               snippetMods={snippetMods.value}
             />
           )}
+        </div>
+        <div className="flex h-full w-[10vw] items-center justify-center">
+          <GoogleAd adSlot="6797801111" />
         </div>
       </div>
       <Footer />

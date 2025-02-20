@@ -7,6 +7,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserProvider } from "./src/contexts/UserContext";
 import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./src/contexts/NotificationContext";
+import { ReactScan } from "./src/components/ReactScan";
+import Head from "next/head";
 
 const satoshi = localFont({
   src: "./fonts/Satoshi-Variable.woff",
@@ -29,23 +31,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <ReactScan />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9619673959926931"
-          crossOrigin="anonymous"
+          // crossOrigin="anonymous"
         ></script>
       </head>
-      <NotifProvider>
-        <GoogleOAuthProvider clientId="673717995116-smr2d3etjmkfqt4p0ns5puq7forh2lc8.apps.googleusercontent.com">
-          <UserProvider>
-            {/* <ReactScan /> */}
-            <body className={`${satoshi.variable} antialiased`}>
-              {children}
-              <Analytics />
-            </body>
-          </UserProvider>
-        </GoogleOAuthProvider>
-      </NotifProvider>
+      <body className={`${satoshi.variable} antialiased`}>
+        <NotifProvider>
+          <GoogleOAuthProvider clientId="673717995116-smr2d3etjmkfqt4p0ns5puq7forh2lc8.apps.googleusercontent.com">
+            <UserProvider>{children}</UserProvider>
+          </GoogleOAuthProvider>
+        </NotifProvider>
+        <Analytics />
+      </body>
     </html>
   );
 }
