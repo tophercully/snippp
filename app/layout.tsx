@@ -7,8 +7,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserProvider } from "./src/contexts/UserContext";
 import { Analytics } from "@vercel/analytics/react";
 import { NotifProvider } from "./src/contexts/NotificationContext";
-import { ReactScan } from "./src/components/ReactScan";
-import Head from "next/head";
 
 const satoshi = localFont({
   src: "./fonts/Satoshi-Variable.woff",
@@ -31,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ReactScan />
+        {/* <ReactScan /> */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9619673959926931"
-          // crossOrigin="anonymous"
+          crossOrigin="anonymous"
         ></script>
       </head>
       <body className={`${satoshi.variable} antialiased`}>
