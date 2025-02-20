@@ -1,43 +1,31 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-
 import ConfirmationPopup from "./ConfirmationPopup";
 import SnipppButton from "../universal/SnipppButton";
 
 interface EditListPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
-  initialName: string;
-  initialDescription: string;
+  onSave: (newName: string, newDesc: string) => void;
   isSaving: boolean;
   name: string;
-  setName: (name: string) => void;
   description: string;
-  setDescription: (description: string) => void;
 }
 
 const EditListPopup: React.FC<EditListPopupProps> = ({
   isOpen,
   onClose,
   onSave,
-  initialName,
-  initialDescription,
   isSaving,
   name,
-  setName,
   description,
-  setDescription,
 }) => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  console.log(`editListPopup Rendered`);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      setName(initialName);
-      setDescription(initialDescription);
-    }
-  }, [isOpen, initialName, initialDescription, setName, setDescription]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,7 +50,10 @@ const EditListPopup: React.FC<EditListPopupProps> = ({
   if (!isOpen) return null;
 
   const handleCancel = () => {
-    if (name !== initialName || description !== initialDescription) {
+    if (
+      nameRef.current?.value != name ||
+      descriptionRef.current?.value != description
+    ) {
       setShowConfirmation(true);
     } else {
       onClose();
@@ -71,9 +62,14 @@ const EditListPopup: React.FC<EditListPopupProps> = ({
 
   const confirmClose = () => {
     setShowConfirmation(false);
-    setName(initialName);
-    setDescription(initialDescription);
     onClose();
+  };
+
+  const handleSave = () => {
+    console.warn(
+      `Saving list with name in popup: ${nameRef.current?.value} and desc: ${descriptionRef.current?.value}`,
+    );
+    onSave(nameRef.current?.value || "", descriptionRef.current?.value || "");
   };
 
   return (
@@ -91,9 +87,9 @@ const EditListPopup: React.FC<EditListPopupProps> = ({
               List Name
             </label>
             <input
+              ref={nameRef}
+              defaultValue={name}
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
             />
           </div>
@@ -102,8 +98,8 @@ const EditListPopup: React.FC<EditListPopupProps> = ({
               Description
             </label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              ref={descriptionRef}
+              defaultValue={description}
               className="mt-1 block w-full rounded-sm border border-base-300 p-2 dark:border-base-700 dark:bg-base-900 dark:text-white"
             />
           </div>
@@ -115,7 +111,7 @@ const EditListPopup: React.FC<EditListPopupProps> = ({
               CANCEL
             </SnipppButton>
             <SnipppButton
-              onClick={onSave}
+              onClick={handleSave}
               disabled={isSaving}
             >
               SAVE

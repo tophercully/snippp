@@ -46,7 +46,7 @@ const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
       {children}
       {isVisible && (
         <div
-          className={`pointer-events-none absolute bottom-full z-20 mb-2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white transition-opacity duration-100 dark:bg-base-100 dark:text-black ${getTooltipPositionClass()}`}
+          className={`pointer-events-none absolute bottom-full z-[999999] mb-2 whitespace-nowrap rounded-sm bg-base-700 px-3 py-2 text-sm text-white transition-opacity duration-100 dark:bg-base-100 dark:text-black ${getTooltipPositionClass()}`}
         >
           {tooltip}
           <div

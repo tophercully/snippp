@@ -155,8 +155,6 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useSessionStorage("isEditingList", false);
   const [isEditingProfile] = useSessionStorage("isEditingProfile", false);
   const [isSaving, setIsSaving] = useState(false);
-  const [newListName, setNewListName] = useState("");
-  const [newDescription, setNewDescription] = useState("");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const { showNotif } = useNotif();
@@ -268,27 +266,19 @@ const Profile: React.FC = () => {
 
   const handleEditList = () => {
     if (list) {
-      setNewListName(list?.listname);
-      setNewDescription(list?.description);
       setIsEditing(true);
     }
   };
 
-  const handleSaveList = async () => {
+  const handleSaveList = async (newName: string, newDesc: string) => {
     if (userProfile) {
       setIsSaving(true);
 
       // Reset form and hide it
-      setNewListName("");
-      setNewDescription("");
       setIsEditing(false);
 
       try {
-        await api.lists.update(
-          list?.listid as number,
-          newListName,
-          newDescription,
-        );
+        await api.lists.update(list?.listid as number, newName, newDesc);
         fetchAndSetLists();
         showNotif("List Updated", "success", 5000);
         setIsSaving(false);
@@ -325,8 +315,6 @@ const Profile: React.FC = () => {
 
   const handleCancel = () => {
     setIsEditing(false);
-    setNewListName("");
-    setNewDescription("");
   };
   const fetchSnippets = useCallback(async () => {
     if (userid) {
@@ -442,16 +430,6 @@ const Profile: React.FC = () => {
       }
       return prevProfile;
     });
-
-    // setUserProfile((prevProfile) => {
-    //   if (prevProfile) {
-    //     return {
-    //       ...prevProfile,
-    //       name: updatedProfileData.name ?? prevProfile.name, // Ensure name is not undefined
-    //     };
-    //   }
-    //   return prevProfile;
-    // });
   };
 
   const SnippetExplorer: React.FC = () => {
@@ -522,7 +500,7 @@ const Profile: React.FC = () => {
               snipppUser={profile as SnipppProfile}
               onUpdateUser={handleUpdateProfile}
             />
-            {/* <ProfileStats userId={userid as string}/> */}
+            {/* <ProfileStats userId={userid as string} /> */}
           </div>
           <div className="flex h-[96%] min-h-[96%] w-full shadow-lg">
             {!list && (
@@ -696,13 +674,9 @@ const Profile: React.FC = () => {
         isOpen={isEditing}
         onClose={handleCancel}
         onSave={handleSaveList}
-        initialName={list?.listname || ""}
-        initialDescription={list?.description || ""}
         isSaving={isSaving}
-        name={newListName}
-        setName={setNewListName}
-        description={newDescription}
-        setDescription={setNewDescription}
+        name={list?.listname || ""}
+        description={list?.description || ""}
       />
     </div>
   );
