@@ -1,0 +1,9 @@
+name = "snippp"
+compatibility_date = "2025-02-20"
+
+[build]
+command = "npm run deploy"
+
+[build.environment]
+NODE_VERSION = "18.18.0"
+NPM_VERSION = "9.8.0"
