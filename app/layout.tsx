@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./output.css";
-// import "./globals.css";
+import "./globals.css";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserProvider } from "./src/contexts/UserContext";
