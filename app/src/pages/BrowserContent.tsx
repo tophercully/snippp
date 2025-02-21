@@ -115,9 +115,15 @@ const BrowserContent: React.FC = () => {
     <div className="over flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
 
-      <GoogleAd
+      {/* <GoogleAd
         adSlot="6797801111"
+        adFormat="banner"
+        // adLayout="banner"
+      /> */}
+      <GoogleAd
+        adSlot="9025182620"
         adFormat="overlay"
+        adLayout="overlay"
       />
 
       <div className="flex h-fit w-full flex-col-reverse shadow-lg lg:h-[96%] lg:flex-row">
