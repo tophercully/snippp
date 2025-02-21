@@ -18,6 +18,7 @@ import { computed, signal } from "@preact-signals/safe-react";
 import sortByProperty from "../utils/sortByProperty";
 import { usePathname } from "next/navigation"; // Import usePathname
 import { useUser } from "../contexts/UserContext";
+import "../../output.css";
 
 type SortOrder = "asc" | "desc";
 type SortableSnippetKeys = keyof Snippet;
@@ -113,6 +114,12 @@ const BrowserContent: React.FC = () => {
   return (
     <div className="over flex h-screen w-screen flex-col bg-base-100 p-2 pt-24 lg:p-10 lg:pt-24 dark:bg-base-900">
       <Navbar />
+
+      <GoogleAd
+        adSlot="6797801111"
+        adFormat="overlay"
+      />
+
       <div className="flex h-fit w-full flex-col-reverse shadow-lg lg:h-[96%] lg:flex-row">
         <div className="flex h-full w-full flex-col lg:w-1/3">
           <SearchBar
@@ -185,9 +192,6 @@ const BrowserContent: React.FC = () => {
               snippetMods={snippetMods.value}
             />
           )}
-        </div>
-        <div className="flex h-full w-[10vw] items-center justify-center">
-          <GoogleAd adSlot="6797801111" />
         </div>
       </div>
       <Footer />
