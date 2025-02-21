@@ -11,10 +11,7 @@ const AdComponent: React.FC<AdComponentProps> = ({
   adFormat = "auto",
   adLayout = "",
 }) => {
-  console.log(`AdComponent Rendered`);
-
   useEffect(() => {
-    console.log(`AdComponent Mount`);
     try {
       (window as any).adsbygoogle = (window as any).adsbygoogle || [];
       (window as any).adsbygoogle.push({});
@@ -24,15 +21,24 @@ const AdComponent: React.FC<AdComponentProps> = ({
   }, []);
 
   return (
-    <ins
-      className="adsbygoogle"
-      style={{ display: "block" }}
-      data-ad-client="ca-pub-9619673959926931"
-      data-ad-slot={adSlot}
-      data-ad-format={adFormat}
-      data-ad-layout={adLayout}
-      data-full-width-responsive="true"
-    ></ins>
+    <div
+      style={{
+        width: "100%",
+        height: "auto",
+        margin: "0 auto",
+        textAlign: "center",
+      }}
+    >
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block", width: "100%", height: "100%" }}
+        data-ad-client="ca-pub-9619673959926931"
+        data-ad-slot={adSlot}
+        data-ad-format={adFormat}
+        data-ad-layout={adLayout}
+        data-full-width-responsive="true"
+      ></ins>
+    </div>
   );
 };
 
