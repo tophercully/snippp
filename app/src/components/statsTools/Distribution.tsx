@@ -12,7 +12,7 @@ const categoryMeta = {
   python: { displayName: "Python", color: "#275891" },
   css: { displayName: "CSS", color: "#563d7c" },
   reactjs: { displayName: "React", color: "#61dafb" },
-  reactnative: { displayName: "React Native", color: "#61dafb" },
+  reactnative: { displayName: "React Native", color: "#51b5d1" },
   p5: { displayName: "p5.js", color: "#ed225d" },
   three: { displayName: "Three.js", color: "#000000" },
   glsl: { displayName: "GLSL", color: "#5686a5" },
@@ -47,7 +47,11 @@ const Distribution: React.FC<DistributionProps> = ({ data, title, small }) => {
                   categoryMeta[key as keyof typeof categoryMeta]?.color ||
                   "#ccc",
               }}
-              className="group relative h-full"
+              className="group relative h-2"
+              title={`${
+                categoryMeta[key as keyof typeof categoryMeta]?.displayName ||
+                key
+              }: ${value} (${percentage.toFixed(1)}%)`}
               onMouseEnter={() => setHoveredItem(key)}
               onMouseLeave={() => setHoveredItem(null)}
             >

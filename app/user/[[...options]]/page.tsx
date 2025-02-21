@@ -495,7 +495,7 @@ const Profile: React.FC = () => {
       <Navbar />
       {!isLoading ?
         <>
-          <div className="flex h-fit w-full flex-col gap-4 lg:flex-row">
+          <div className="flex h-fit w-full flex-col gap-4">
             <ProfileInfo
               snipppUser={profile as SnipppProfile}
               onUpdateUser={handleUpdateProfile}
