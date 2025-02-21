@@ -1,3 +1,4 @@
+"use client";
 import { useSessionStorage } from "@uidotdev/usehooks";
 
 import { useEffect, useState } from "react";
@@ -10,8 +11,8 @@ import { useUser } from "../../contexts/UserContext";
 import { useNotif } from "../../contexts/NotificationContext";
 import SnipppButton from "../universal/SnipppButton";
 import api from "../../backend/api";
-import { simplifyNumber } from "../../utils/simplifyNumber";
-import { ClipboardCopy, Heart, Scissors } from "lucide-react";
+
+import Distribution from "../statsTools/Distribution";
 
 interface ProfileInfoParams {
   snipppUser: SnipppProfile;
@@ -110,18 +111,18 @@ export const ProfileInfo = ({
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-sm border bg-base-50 p-4 shadow-md lg:flex-row lg:gap-10 dark:bg-base-950 dark:text-base-50">
+    <div className="flex w-full flex-col flex-wrap gap-4 rounded-sm p-4 shadow-md lg:flex-row lg:gap-10 dark:text-base-50">
       {/* <div className="relative aspect-square w-full rounded-full lg:w-96"> */}
       <img
         src={profile_picture}
-        className={`aspect-square h-full rounded-md border-4 object-contain ${isOnline ? "animate-online" : "border-transparent"}`}
+        className={`aspect-square h-32 rounded-md border-4 object-contain ${isOnline ? "animate-online" : "border-transparent"}`}
         alt="Profile"
         // style={{ objectPosition: "top" }}
       />
       {/* </div> */}
       <div
         id="allInfo"
-        className="flex h-full flex-1 flex-col justify-between gap-4"
+        className="flex flex-1 flex-col justify-between gap-4"
       >
         {isEditing ?
           <div
@@ -193,35 +194,26 @@ export const ProfileInfo = ({
       {stats && (
         <div
           id="stats"
-          className="flex h-full flex-col gap-4"
+          className="flex h-full w-full flex-col gap-4"
         >
-          <div className="flex h-fit w-full flex-col justify-between gap-4">
-            <div className="flex flex-col">
-              <span className="flex items-center text-xl font-bold">
-                {stats?.totalSnippets}
-                <Scissors className="p-1" />
-              </span>
-              <span className="text-base-200">Snippets</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="flex items-center text-xl font-bold">
-                {simplifyNumber(stats?.totalSnippetCopies)}
-                <ClipboardCopy className="p-1" />
-              </span>
-              <span className="text-base-200">Snippet Copies</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="flex items-center text-xl font-bold">
-                {simplifyNumber(stats?.totalFavorites)}{" "}
-                <Heart
-                  className="p-1"
-                  fill="black"
-                />
-              </span>
-              <span className="text-base-200">Total Favorites</span>
-            </div>
-          </div>
-          {/* {Object.keys(stats?.languageDistribution as any).length != 0 && (
+          {/* <div className="flex h-fit w-full max-w-[80vw] flex-col gap-4">
+            <StatCard
+              title="SNIPPETS CREATED"
+              value={simplifyNumber(stats?.totalSnippets)}
+              icon={<Scissors />}
+            />
+            <StatCard
+              title="COPIES RECEIVED"
+              value={simplifyNumber(stats?.totalSnippetCopies)}
+              icon={<Plus />}
+            />
+            <StatCard
+              title="FAVORITES RECEIVED"
+              value={simplifyNumber(stats?.totalFavorites)}
+              icon={<Heart />}
+            />
+          </div> */}
+          {Object.keys(stats?.languageDistribution as any).length != 0 && (
             <Distribution
               small={true}
               data={stats?.languageDistribution as { [key: string]: number }}
@@ -234,7 +226,7 @@ export const ProfileInfo = ({
               data={stats?.frameworkDistribution as { [key: string]: number }}
               title="Framework Distribution"
             />
-          )} */}
+          )}
         </div>
       )}
     </div>

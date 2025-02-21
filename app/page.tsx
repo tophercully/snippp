@@ -3,8 +3,8 @@ import SnipppButton from "./src/components/universal/SnipppButton";
 import SubtleGridBackground from "./src/components/universal/SubtleGridBackground";
 import { Navbar } from "./src/components/nav/Navbar";
 import { Footer } from "./src/components/nav/Footer";
-import Link from "next/link";
 import CTA from "./src/components/home/CTA";
+import LandingStats from "./src/components/statsTools/LandingStats";
 
 const Home = () => {
   return (
@@ -68,19 +68,21 @@ const Home = () => {
         </div>
       </div>
 
+      <LandingStats />
+
       <div className="flex min-h-[70svh] w-full flex-col items-center justify-center">
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 p-2 text-black md:gap-16 dark:text-white">
             <h3 className="flex w-2/3 flex-col text-7xl font-bold text-black md:text-9xl dark:text-white">
-              <span className="w-fit bg-error p-1 text-white">Sort</span>
-              <span className="w-fit bg-error p-1 text-white">smarter,</span>
+              <span className="w-fit bg-error p-1 text-white">Toolkits</span>
+              <span className="w-fit bg-error p-1 text-white">{`>>>>>>>`}</span>
               <span className="w-fit text-nowrap bg-error p-1 text-white">
-                build faster
+                libraries
               </span>
             </h3>
             <p className="text-xl backdrop-blur-sm md:text-3xl">
-              Create tailored lists to keep your go-to snippets within reach—
-              boost your productivity and never waste time searching again.
+              Keep relevant snippets within reach, without bloating your
+              project.
             </p>
           </div>
           <img
@@ -105,8 +107,7 @@ const Home = () => {
             </h3>
             <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Explore a rich library of snippets from developers around the
-              world or share your own with the community. Learning and
-              contributing has never been easier.
+              world, and share your own with the community.
             </p>
             <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               At Snippp, contributors are valued, empowering new developers and
@@ -143,7 +144,7 @@ const Home = () => {
               customizable privacy settings, ensuring your code is safe and
               secure.
             </p>
-            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
+            {/* <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Need more security? Keep an ear out for our upcoming desktop app
               by following us on{" "}
               <a
@@ -154,7 +155,7 @@ const Home = () => {
                 Twitter
               </a>
               . All of the power of Snippp, without sharing your code with us.
-            </p>
+            </p> */}
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex w-full flex-col gap-4 p-2 md:p-0">
@@ -176,9 +177,11 @@ const Home = () => {
         <div className="flex h-full w-full flex-col items-center justify-around gap-8 xl:flex-row">
           <div className="flex flex-col gap-8 text-black md:gap-16 dark:text-white">
             <h3 className="flex w-2/3 flex-col p-2 text-7xl font-bold text-black md:text-9xl dark:text-white">
-              <span className="w-fit bg-info p-1 text-white">Start </span>
-              <span className="w-fit bg-info p-1 text-white">for </span>
-              <span className="w-fit bg-info p-1 text-white">$free</span>
+              {/* <span className="w-fit bg-info p-1 text-white">Start </span> */}
+              {/* <span className="w-fit bg-info p-1 text-white">It's </span> */}
+              <span className="w-fit bg-info p-1 text-white">Free</span>
+              <span className="w-fit bg-info p-1 text-white">ninety</span>
+              <span className="w-fit bg-info p-1 text-white">nine</span>
             </h3>
             <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Sign up now and join a growing community of developers optimizing
@@ -187,20 +190,20 @@ const Home = () => {
             <div className="self-center">
               <CTA />
             </div>
-            <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
+            {/* <p className="p-2 text-xl backdrop-blur-sm md:text-3xl">
               Unlock advanced features and unlimited storage with our upcoming
               Pro plan.
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
       <div className="absolute bottom-0 w-[95%] p-2">
-        <Link
+        {/* <Link
           href="/stats"
           className="my-4 justify-self-end text-sm text-base-500"
         >
           stats
-        </Link>
+        </Link> */}
         <Footer />
       </div>
     </div>
