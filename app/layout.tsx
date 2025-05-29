@@ -35,6 +35,11 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9619673959926931"
           crossOrigin="anonymous"
         ></script>
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="9mviAXmbdOyad6AQ4gbfCg"
+          async
+        ></script>
       </head>
       <body className={`${satoshi.variable} antialiased`}>
         <NotifProvider>
